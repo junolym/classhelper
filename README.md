@@ -1,5 +1,5 @@
 # classhelper
-## Created by [express-generator](http://expressjs.com/en/starter/generator.html)
+## Created by [express-generator](http://expressjs.com/en/starter/generator.html) with [handlebarsjs](http://handlebarsjs.com/)
 ```
 # npm install express-generator -g
 $ express --view=hbs --git classhelper
