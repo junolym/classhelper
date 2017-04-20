@@ -6,7 +6,7 @@ body {
     color: #888;
     line-height: 30px;
     text-align: center;
-    background: url(../img/1.jpg);
+    background: url(../images/1.jpg);
 }
 
 strong { font-weight: 500; }
@@ -43,7 +43,7 @@ img { max-width: 100%; }
 .top-content .description a {
   color: #fff;
 }
-.top-content .description a:hover, 
+.top-content .description a:hover,
 .top-content .description a:focus { border-bottom: 1px dotted #fff; }
 
 .form-box {
@@ -120,7 +120,7 @@ img { max-width: 100%; }
 @media (min-width: 768px) and (max-width: 991px) {}
 
 @media (max-width: 767px) {
-  
+
   .inner-bg { padding: 60px 0 110px 0; }
 
 }*/

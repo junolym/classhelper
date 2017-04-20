@@ -3,7 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  /*  if login, render index
+   *  else redirect to login page
+   */
+  // 把0换成登陆状态
+  if (0) {
+    res.render('index', { title: 'Classhelper' });
+  } else {
+    res.redirect('/login');
+  }
+
 });
 
 module.exports = router;
