@@ -13,10 +13,22 @@ db.connection.on("open", function () {
  console.log("Connect success");
 });
 
+function login(username, passwd, success, failure) {
+    User.findOne({user: username}).exec(function(err, doc) {
+        if (!err && doc && doc.password == passwd) {
+            success();
+        } else {
+            failure();
+        }
+    });
+}
 
-User.findOne({user: user}).exec(function(err, doc) {
-    if (!err && doc && doc.password == passwd) {
-    }
-});
+function getcourse(courseID, callback) {
+    Course.findById(courseID, function(err, doc) {
+        if (!err) {
+            callback(doc);
+        }
+    });
+}
 
 mongoose.disconnect();
