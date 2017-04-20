@@ -1,7 +1,9 @@
-var mongoose = require('mongoose');
+var DAO = require('./DAO.js');
 var User = require('./User.js');
 var Course = require('./Course.js');
 var Exam = require('./Exam.js');
+
+var mongoose = require('mongoose');
 
 var db = mongoose.connect('127.0.0.1/test');
 
@@ -20,17 +22,7 @@ var me = new User ({
     "name" : "wenxr",
 });
 
-me.save(function(err, t) {
-    if (err) console.log(err);
-    console.log(t);
-});
-
-User.find(function(err, t) {
-    if (err) console.log(err);
-    console.log(t);
-});
-
-var c = new Course({
+var cos = {
     "name" : "op2",
     "student" : [{
         "stu_id" : "14331279",
@@ -41,37 +33,54 @@ var c = new Course({
     }],
     "time" : "1-15周星期三4-7节",
     "check" : {
-        date: new Date,
-        student: ["wenxr3", "wenxr2"]
+        'date': new Date,
+        'student': ["wenxr3", "wenxr2"]
+    }
+};
+
+var ex = {
+    'name' : 'Finall exam',
+    'state': '0',
+    'time' : new Date,
+    'question' : [
+        {
+            'type' : 0,
+            'head' : 'php is the best language?',
+            'ans' : true
+        }, {
+            'type' : 1,
+            'number': 4,
+            'head' : 'which is the best language?',
+            'A' : 'C/C++',
+            'B' : 'Java',
+            'C' : 'Python',
+            'D' : 'PhP',
+            'ans' : 'D'
+        }
+    ]
+};
+
+// me.save();
+
+DAO.getuserbyname('wenxr11', function(err, doc) {
+    if (!err && doc && doc.password == '2333') {
+        console.log('log in!');
+        // test1(doc);
+        test2(doc);
+    } else {
+        console.log('fail!');
     }
 });
 
-c.save(function(err, t) {
-    if (err) console.log(err);
-});
+function test1(doc) {
+    DAO.addcourse(cos, doc.id, function(course) {
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+    });
+}
 
-Course.find(function(err, t) {
-    if (err) console.log(err);
-    console.log(t);
-});
-
-// Exam
-var e = new Exam({
-    name: "final",
-    state: 2,
-    time: new Date
-});
-
-e.save(function(err, t) {
-    if (err) console.log(err);
-});
-
-
-mongoose.disconnect();
-
-
-
-
-
-
+function test2(doc) {
+    console.log(doc.course[0] + doc.id);
+    DAO.delcourse(doc.course[0], doc.id, function() {});
+}
 

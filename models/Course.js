@@ -14,9 +14,9 @@ var Course = mongoose.model('Course', new Schema({
     }],
     exam: [{
         name: String,
-        id: {
+        _id: {
             type: ObjectId,
-            ref: 'Exam'
+            re: 'Exam'
         }
     }],
     check: [{
