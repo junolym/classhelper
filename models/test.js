@@ -15,12 +15,13 @@ db.connection.on("open", function () {
  console.log("Connect success");
 });
 
-var me = new User ({
+        
+var us = {
     "user" : "wenxr11",
     "password" : "2333",
     "mode" : 0,
     "name" : "wenxr",
-});
+}
 
 var cos = {
     "name" : "op2",
@@ -60,7 +61,16 @@ var ex = {
     ]
 };
 
+var me = new User(us);
 // me.save();
+
+// DAO.adduser(us, function(err, doc) {
+//     if (!err && doc) {
+//         console.log(doc);
+//     } else {
+//         console.log('err' + err + 'doc' + doc);
+//     }
+// });
 
 DAO.getuserbyname('wenxr11', function(err, doc) {
     if (!err && doc && doc.password == '2333') {
@@ -73,14 +83,16 @@ DAO.getuserbyname('wenxr11', function(err, doc) {
 });
 
 function test1(doc) {
-    DAO.addcourse(cos, doc.id, function(course) {
-        DAO.addexam(ex, course.id, function(exam) {
+    DAO.addcourse(cos, doc.id, function(err, course) {
+        DAO.addexam(ex, course.id, function(err, exam) {
+            DAO.addexam(ex, course.id, function(err, exam) {
+            })
         });
     });
 }
 
 function test2(doc) {
-    console.log(doc.course[0] + doc.id);
-    DAO.delcourse(doc.course[0], doc.id, function() {});
+    DAO.delcourse(doc.course[0], doc.id, function(err, doc) {
+    });
 }
 
