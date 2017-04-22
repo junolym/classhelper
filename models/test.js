@@ -15,13 +15,12 @@ db.connection.on("open", function () {
  console.log("Connect success");
 });
 
-        
-var us = {
+var me = new User ({
     "user" : "wenxr11",
     "password" : "2333",
     "mode" : 0,
     "name" : "wenxr",
-}
+});
 
 var cos = {
     "name" : "op2",
@@ -61,38 +60,52 @@ var ex = {
     ]
 };
 
-var me = new User(us);
 // me.save();
-
-// DAO.adduser(us, function(err, doc) {
-//     if (!err && doc) {
-//         console.log(doc);
-//     } else {
-//         console.log('err' + err + 'doc' + doc);
-//     }
-// });
 
 DAO.getuserbyname('wenxr11', function(err, doc) {
     if (!err && doc && doc.password == '2333') {
         console.log('log in!');
         // test1(doc);
-        test2(doc);
+        // test2(doc);
+        test3(doc._id);
     } else {
-        console.log('fail!');
+        me.save();
     }
 });
 
 function test1(doc) {
     DAO.addcourse(cos, doc.id, function(err, course) {
-        DAO.addexam(ex, course.id, function(err, exam) {
-            DAO.addexam(ex, course.id, function(err, exam) {
-            })
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
+        });
+        DAO.addexam(ex, course.id, function(exam) {
         });
     });
 }
 
 function test2(doc) {
     DAO.delcourse(doc.course[0], doc.id, function(err, doc) {
+    });
+}
+
+function test3(user) {
+    DAO.deluser(user, function(err, doc) {
+        console.log('user' + user);
+        console.log('err' + err);
+        console.log('doc' + doc);
     });
 }
 
