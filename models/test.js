@@ -75,23 +75,18 @@ DAO.getuserbyname('wenxr11', function(err, doc) {
 
 function test1(doc) {
     DAO.addcourse(cos, doc.id, function(err, course) {
-        DAO.addexam(ex, course.id, function(exam) {
+        
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
-        DAO.addexam(ex, course.id, function(exam) {
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
-        DAO.addexam(ex, course.id, function(exam) {
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
-        DAO.addexam(ex, course.id, function(exam) {
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
-        DAO.addexam(ex, course.id, function(exam) {
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
-        DAO.addexam(ex, course.id, function(exam) {
-        });
-        DAO.addexam(ex, course.id, function(exam) {
-        });
-        DAO.addexam(ex, course.id, function(exam) {
-        });
-        DAO.addexam(ex, course.id, function(exam) {
+        DAO.addexam(ex, course.id, function(err, exam) {
         });
     });
 }
@@ -103,9 +98,6 @@ function test2(doc) {
 
 function test3(user) {
     DAO.deluser(user, function(err, doc) {
-        console.log('user' + user);
-        console.log('err' + err);
-        console.log('doc' + doc);
     });
 }
 
