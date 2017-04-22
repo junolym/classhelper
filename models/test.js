@@ -66,38 +66,21 @@ DAO.getuserbyname('wenxr11', function(err, doc) {
     if (!err && doc && doc.password == '2333') {
         console.log('log in!');
         // test1(doc);
-        // test2(doc);
-        test3(doc._id);
+        test2(doc);
     } else {
-        me.save();
+        console.log('fail!');
     }
 });
 
 function test1(doc) {
-    DAO.addcourse(cos, doc.id, function(err, course) {
-        
-        DAO.addexam(ex, course.id, function(err, exam) {
-        });
-        DAO.addexam(ex, course.id, function(err, exam) {
-        });
-        DAO.addexam(ex, course.id, function(err, exam) {
-        });
-        DAO.addexam(ex, course.id, function(err, exam) {
-        });
-        DAO.addexam(ex, course.id, function(err, exam) {
-        });
-        DAO.addexam(ex, course.id, function(err, exam) {
+    DAO.addcourse(cos, doc.id, function(course) {
+        DAO.addexam(ex, course.id, function(exam) {
         });
     });
 }
 
 function test2(doc) {
-    DAO.delcourse(doc.course[0], doc.id, function(err, doc) {
-    });
-}
-
-function test3(user) {
-    DAO.deluser(user, function(err, doc) {
-    });
+    console.log(doc.course[0] + doc.id);
+    DAO.delcourse(doc.course[0], doc.id, function() {});
 }
 
