@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dao = require('./../models/DAO.js');
-var app = require('./../app.js')
+var cm = require('../plugins/cookie-manager.js');
 var User = require('./../models/User.js');
 
 var mongoose = require('mongoose');
@@ -22,10 +22,10 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res) {
     response = {
-         name:req.body.form_username,
-         password:req.body.form_password
-     };
-      console.log(response);
+        name:req.body.form_username,
+        password:req.body.form_password
+    };
+    console.log(response);
 
     dao.getuserbyname(req.body.form_username, function(err, doc) {
         if(err)
@@ -38,15 +38,14 @@ router.post('/', function(req, res) {
         }
         else {
              console.log("登陆成功！！");
-             res.render('index', { title: 'Login-success' });
 
              //set cookie
              require('crypto').randomBytes(16, function(ex, buf) {
                 var token = buf.toString('hex');
                 console.log(token);
                 res.cookie('id', token);
-                app.cookieid = token;
-                console.log(app.cookieid);
+                res.redirect('/');
+                cm.add(token, req.body.form_username);
                 //response.end(token);
             });
 
