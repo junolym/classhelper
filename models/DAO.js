@@ -3,6 +3,16 @@ var User = require('./User.js');
 var Course = require('./Course.js');
 var Exam = require('./Exam.js');
 
+var db = mongoose.connect('127.0.0.1/test');
+
+db.connection.on("error", function (error) {
+    console.log("Connect error:" + error);
+});
+
+db.connection.on("open", function () {
+    console.log("Connect success");
+});
+
 // callback(err, doc)
 exports.getuserbyname = function(username, callback) {  // OK
     User.findOne({user: username}).exec(callback);
@@ -32,7 +42,7 @@ exports.deluser = function(userID, callback) {
         // 删除所教课程
         if (doc && doc.course) {
             for (var i = 0; i < doc.course.length; ++i) {
-                coursearr.push(delcourseonly(doc.course[i], 
+                coursearr.push(delcourseonly(doc.course[i],
                     function(err, doc) {}));
             }
         }
@@ -80,7 +90,7 @@ exports.addcourse = function(course, userID, callback) {    // OK
                 callback(err, 1);
             }
         });
-    }); 
+    });
 };
 
 // callback(err, doc)
@@ -108,8 +118,8 @@ exports.delcourse = function(courseID, userID, callback) {  // OK
 exports.addexam = function(exam, courseID, callback) {  // OK
     var exam_ = new Exam(exam);
     exam_.save(function(err, doc) {
-        Course.update({_id: courseID}, 
-            {$push : {'exam' : {'name':exam.name, '_id': doc.id}}}, 
+        Course.update({_id: courseID},
+            {$push : {'exam' : {'name':exam.name, '_id': doc.id}}},
                 function(err, updatedoc) {
                 if (!err && updatedoc.n == 1) {
                     console.log('add exam ' + doc.id + ' success!');
@@ -119,7 +129,7 @@ exports.addexam = function(exam, courseID, callback) {  // OK
                     Exam.remove({_id : doc.id}, function(err, doc){});
                     callback(err, 1);
                 }
-        }); 
+        });
     });
 };
 
