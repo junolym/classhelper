@@ -1,4 +1,5 @@
 callback(err, result)
+普通插入数据为json
 
 exports.login = function(account, password, callback)   // OK
 err=0  用户不存在  
@@ -18,19 +19,20 @@ result  新用户id
 exports.deluser = function(account, callback)           // OK
 result  删除行数
 
-exports.getcoursebyaccount = function(account, callback)
+exports.getcoursebyaccount = function(account, callback)    //OK
 result  course_id, course_name
+// 不判断account是否存在，result可以为[]
 
 exports.addcourse = function(course, callback)          // OK
 result  course_id
 
-exports.delcourse = function(course_id, callback)
+exports.delcourse = function(course_id, callback)       // OK
 result  删除行数
 
-exports.getexambycourse = function(course_id, callback)
+exports.getexambycourse = function(course_id, callback) 
 result  exam_id, exam_name, exam_state, exam_time
 
-exports.addexam = function(exam, callback) 
+exports.addexam = function(exam, callback)
 result  exam_id
 
 exports.delexam = function(course_id, callback)
@@ -41,4 +43,15 @@ result  sign_id
 
 exports.studentsign = function(sign_id, student_id)
 result  
+
+exports.addstutocourse = function(course_student, callback) 
+可插入多组student, 格式     
+[ [course_id1, student_id1],
+  [course_id2, student_id2] ]
+
+exports.addstudent = function(student, callback)        // OK
+可插入多组student, 格式     // student.js 储存14级软院数据
+[ [id1, name1],
+  [id2, name2] ]
+
 

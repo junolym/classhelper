@@ -1,4 +1,5 @@
 var dao = require('./dao.js');
+var student = require('./student.js');
 
 var user = {
     "account" : "wenxr11",
@@ -14,15 +15,27 @@ var course = {
 };
 
 dao.login("root", "root", function(err, doc) {
+    // dao.getcoursebyaccount('wenxr12', function(err, doc){
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    // dao.delcourse(1, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    dao.addstudent(student, function(err, doc) {
+        console.log(err);
+        console.log(doc);
+    })
     // testadd();
     // dao.getuser('wenxr11', function(err, doc) {
     //     console.log(err)
     //     console.log(doc[0].password);
     // })
-    dao.deluser('wenxr11', function(err, doc) {
-        console.log(err);
-        console.log(doc);
-    })
+    // dao.deluser('wenxr11', function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // })
 });
 
 var testadd = function() {

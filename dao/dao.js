@@ -1,8 +1,8 @@
 var mysql = require('mysql');
 var connect = mysql.createConnection({
-    host: 'localhost',
+    host: 'tx.wenxr.com',
     user: 'root',
-    password: '123456',
+    password: 'sysusdcs',
     database: 'test'
 });
 connect.connect();
@@ -24,7 +24,7 @@ exports.getuser = function getuser(account, callback) {
         }
         callback(err, result);
     });
-} 
+};
 
 exports.adduser = function(admin, newuser, callback) {
     // 权限
@@ -46,7 +46,7 @@ exports.adduser = function(admin, newuser, callback) {
             });
         }
     });
-}
+};
 
 exports.deluser = function(account, callback) {
     var sql = "delete from users where account=?";
@@ -56,14 +56,14 @@ exports.deluser = function(account, callback) {
         else
             callback(err, result.affectedRows);
     });
-}
+};
 
 exports.getcoursebyaccount = function(account, callback) {
     var sql = "select course_id, course_name from courses where account=?";
     connect.query(sql, account, function(err, result, fields) {
         callback(err, result);
     });
-}
+};
 
 exports.addcourse = function(course, callback) {
     var sql = "insert into courses set ?";
@@ -73,7 +73,7 @@ exports.addcourse = function(course, callback) {
         else
             callback(err, result.insertId);
     });
-}
+};
 
 exports.delcourse = function(course_id, callback) {
     var sql = "delete from courses where course_id=?";
@@ -83,7 +83,7 @@ exports.delcourse = function(course_id, callback) {
         else
             callback(err, result.affectedRows);
     });
-}
+};
 
 exports.getexambycourse = function(course_id, callback) {
     var sql = "select exam_id, exam_name, exam_state, exam_time"
@@ -91,7 +91,7 @@ exports.getexambycourse = function(course_id, callback) {
     connect.query(sql, course_id, function(err, result, fields) {
         callback(err, result);
     });
-}
+};
 
 exports.addexam = function(exam, callback) {
     var sql = "insert into exams set ?";
@@ -101,7 +101,7 @@ exports.addexam = function(exam, callback) {
         else 
             callback(err, result.insertId);
     });
-}
+};
 
 exports.delexam = function(course_id, callback) {
     var sql = "delete from exams where exam_id=?";
@@ -111,7 +111,7 @@ exports.delexam = function(course_id, callback) {
         else
             callback(err, result.affectedRows);
     });
-}
+};
 
 exports.addsign = function(course_id, callback) {
     var sql = "insert into sign_up_sheet set course_id=?";
@@ -121,21 +121,25 @@ exports.addsign = function(course_id, callback) {
         else
             callback(err, result.insertId);
     });
-}
+};
 
 exports.studentsign = function(sign_id, student_id) {
     var sql = "insert into student_sign set sign_id=?, student_id=?";
     connect.query(sql, sign_id, student_id, function(err, result, fields) {
         callback(err, result);
     });
-}
+};
 
-exports.addstutocourse = function(student, callback) {
-    var sql = "insert into students set ?";
-    connect.query(sql, student, function(err, result, fields) {
-        var sql = "insert into students set ?";
-        
-    
+exports.addstutocourse = function(course_student, callback) {
+    var sql="insert into course_student(student_id,student_name) values ?";
+    connect.query(sql, [course_student], function(err, result, fields) {
+            callback(err, result);
     });
+};
 
-}
+exports.addstudent = function(student, callback) {
+    var sql = "insert into students(student_id, student_name) values ?";
+    connect.query(sql, [student], function(err, result, fields) {
+        callback(err, result);
+    });
+};
