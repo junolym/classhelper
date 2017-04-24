@@ -46,8 +46,16 @@ img { max-width: 100%; }
 .top-content .description a:hover,
 .top-content .description a:focus { border-bottom: 1px dotted #fff; }
 
+
+.container {
+  position: relative;
+  top: 50%;
+  transform: translateY(50%);
+}
+
 .form-box {
-  margin-top: 15%;
+  /*margin-top: 13%;*/
+
 }
 
 .form-top {
