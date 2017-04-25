@@ -8,12 +8,6 @@ $ npm install <package name> --save
 ```
 
 
-## Run Mongodb
-自行安装Mongodb，在classhelper目录下执行
-```
-$ mongod --config data/mongodb.conf
-```
-
 ## Install and Run classhelper
 ### install
 ```
