@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/04/25 15:06:58                          */
+/* Created on:     2017/04/25 19:24:16                          */
 /*==============================================================*/
 
 
@@ -12,7 +12,7 @@ drop table if exists exams;
 
 drop table if exists signup;
 
-drop table if exists stu_sign;
+drop table if exists student_sign;
 
 drop table if exists students;
 
@@ -37,7 +37,8 @@ create table courses
 create table coz_stu
 (
    cs_course_id         int,
-   cs_student_id        int
+   cs_student_id        int,
+   cs_student_name      char(20)
 );
 
 /*==============================================================*/
@@ -50,7 +51,7 @@ create table exams
    exam_state           tinyint,
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    ex_course_id         int,
-   exam_question        text,
+   exam_question        json,
    primary key (exam_id)
 );
 
@@ -60,19 +61,18 @@ create table exams
 create table signup
 (
    sign_id              int not null auto_increment,
-   sign_time            datetime,
+   sign_time            datetime default CURRENT_TIMESTAMP,
    sg_course_id         int,
    primary key (sign_id)
 );
 
 /*==============================================================*/
-/* Table: stu_sign                                              */
+/* Table: student_sign                                          */
 /*==============================================================*/
-create table stu_sign
+create table student_sign
 (
    student_sign_time    datetime default CURRENT_TIMESTAMP,
-   ss_sign_id           int,
-   ss_student_id        int
+   ss_sign_id           int
 );
 
 /*==============================================================*/
@@ -91,7 +91,7 @@ create table students
 create table users
 (
    account              char(20) not null,
-   password             char(20) not null,
+   password             char(32) not null,
    username             char(40) not null,
    email                char(40),
    phone                char(20),
@@ -114,11 +114,10 @@ alter table exams add constraint FK_course_exam foreign key (ex_course_id)
 alter table signup add constraint FK_couser_sign foreign key (sg_course_id)
       references courses (course_id) on delete cascade on update restrict;
 
-alter table stu_sign add constraint FK_Reference_8 foreign key (ss_student_id)
-      references coz_stu (cs_student_id) on delete cascade on update restrict;
-
-alter table stu_sign add constraint FK_student_sign foreign key (ss_sign_id)
+alter table student_sign add constraint FK_student_sign foreign key (ss_sign_id)
       references signup (sign_id) on delete cascade on update restrict;
 
-insert into users set account='root', password='root', username='admin', admin=1;
+insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
+insert into users set account='test', password='FDB6C662D36651211F14977097250CCA', username='test', admin=0;
+
 
