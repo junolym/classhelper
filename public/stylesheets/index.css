@@ -138,8 +138,9 @@ html {
 }
 
 .bottomnav {
-	height: 50%;
 	bottom: 0px;
+	position:relative;
+	height: 20%;
 }
 /*-------------------------------*/
 /*       Hamburger-Cross         */
@@ -149,12 +150,12 @@ html {
   border: none;
   display: block;
   height: 32px;
-  margin-left: 15px;
   position: relative;
-  float: right;
+  float: left;
   top: 8px;
   width: 32px;
   z-index: 999;
+  margin-right: 15px;
 }
 .hamburger:hover {
   outline: none;
