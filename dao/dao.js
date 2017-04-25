@@ -164,7 +164,7 @@ exports.addexam = function(exam, callback) {
     });
 };
 
-exports.delexam = function(course_id, callback) {
+exports.delexam = function(exam_id, callback) {
     pool.getConnection(function(err, connect) {
         if (err) {
             callback(err);
@@ -200,30 +200,44 @@ exports.addsign = function(course_id, callback) {
     });
 };
 
-exports.studentsign = function(sign_id, student_id) {
+exports.studentsign = function(sign_id, student, callback) {
     pool.getConnection(function(err, connect) {
         if (err) {
             callback(err);
         } else {
-            var sql = "insert into stu_sign set ss_sign_id=?,"
-                    + "ss_student_id=?";
-            connect.query(sql, sign_id, student_id, 
+            var sql = "select cs_student_name from coz_stu where cs_student_id=?";
+            connect.query(sql, student.id, student.name, 
                             function(err, result, fields) {
-                connect.release();
-                callback(err, result);
+                if (err) {
+                    callback(err);
+                } else if (result.length == 0) {
+                    connect.release();
+                    callback(1, A)
+                } else if (result[0].cs_student_name != student.name) {
+                    connect.release();
+                    callback(2, A)
+                } else {
+                    var sql = "insert into stu_sign set ss_sign_id=?,"
+                            + "ss_student_id=?";
+                    connect.query(sql, sign_id, student_id, 
+                                    function(err, result, fields) {
+                        connect.release();
+                        callback(err, result);
+                    });
+                }
             });
         }
     });
 };
 
-exports.addstutocourse = function(course_student, callback) {
+exports.addstutocourse = function(coz_stu, callback) {
     pool.getConnection(function(err, connect) {
         if (err) {
             callback(err);
         } else {
-            var sql = "insert into coz_stu(cs_course_id, cs_student_id)" 
-                    + " values ?";
-            connect.query(sql, [course_student], 
+            var sql = "insert into coz_stu(cs_course_id, cs_student_id, "
+                    + "cs_student_name) values ?";
+            connect.query(sql, [coz_stu], 
                             function(err, result, fields) {
                 connect.release();
                 callback(err, result);
