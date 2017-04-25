@@ -42,10 +42,7 @@ exports.addsign = function(course_id, callback)         // OK
 result  sign_id
 
 exports.studentsign = function(sign_id, student, callback)
-student = {
-    id:     xxx,
-    name:   xxx;
-}
+student = {id: xxx, name: xxx}
 err=1  student.id 不在此课程中
 err=2  学号名字不符合
 result  
