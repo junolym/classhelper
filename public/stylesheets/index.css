@@ -155,7 +155,8 @@ html {
   top: 8px;
   width: 32px;
   z-index: 999;
-  margin-right: 15px;
+  /*margin-right: 15px;*/
+  margin-left: 0px;
 }
 .hamburger:hover {
   outline: none;
@@ -254,6 +255,20 @@ html {
   display: block;
   opacity: 1;
 }
+/*-------------------------------*/
+/*          navbar-header        */
+/*-------------------------------*/
+
+.navheader {
+  background: #1a1a1a;
+}
+
+.navbar {
+  margin-bottom: 0px;
+  height: 20px
+}
+
+
 /*-------------------------------*/
 /*          Dark Overlay         */
 /*-------------------------------*/
