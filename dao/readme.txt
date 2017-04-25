@@ -30,7 +30,7 @@ exports.delcourse = function(course_id, callback)       // OK
 result  删除行数
 
 exports.getexambycourse = function(course_id, callback) 
-result  exam_id, exam_name, exam_state, exam_time
+result  *
 
 exports.addexam = function(exam, callback)
 result  exam_id

@@ -1,43 +1,43 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/04/24 15:37:26                          */
+/* Created on:     2017/04/25 15:06:58                          */
 /*==============================================================*/
 
 
-drop table if exists course_student;
-
 drop table if exists courses;
+
+drop table if exists coz_stu;
 
 drop table if exists exams;
 
-drop table if exists sign_up_sheet;
+drop table if exists signup;
 
-drop table if exists student_sign;
+drop table if exists stu_sign;
 
 drop table if exists students;
 
 drop table if exists users;
 
 /*==============================================================*/
-/* Table: course_student                                        */
-/*==============================================================*/
-create table course_student
-(
-   course_id            int,
-   student_id           int
-);
-
-/*==============================================================*/
 /* Table: courses                                               */
 /*==============================================================*/
 create table courses
 (
-   account              char(20),
+   coz_account          char(20),
    course_id            int not null auto_increment,
    course_name          char(20),
    course_time          text,
    course_info          text,
    primary key (course_id)
+);
+
+/*==============================================================*/
+/* Table: coz_stu                                               */
+/*==============================================================*/
+create table coz_stu
+(
+   cs_course_id         int,
+   cs_student_id        int
 );
 
 /*==============================================================*/
@@ -49,30 +49,30 @@ create table exams
    exam_name            char(20),
    exam_state           tinyint,
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-   course_id            int,
+   ex_course_id         int,
    exam_question        text,
    primary key (exam_id)
 );
 
 /*==============================================================*/
-/* Table: sign_up_sheet                                         */
+/* Table: signup                                                */
 /*==============================================================*/
-create table sign_up_sheet
+create table signup
 (
    sign_id              int not null auto_increment,
    sign_time            datetime,
-   course_id            int,
+   sg_course_id         int,
    primary key (sign_id)
 );
 
 /*==============================================================*/
-/* Table: student_sign                                          */
+/* Table: stu_sign                                              */
 /*==============================================================*/
-create table student_sign
+create table stu_sign
 (
    student_sign_time    datetime default CURRENT_TIMESTAMP,
-   sign_id              int,
-   student_id           int
+   ss_sign_id           int,
+   ss_student_id        int
 );
 
 /*==============================================================*/
@@ -99,25 +99,26 @@ create table users
    primary key (account)
 );
 
-alter table course_student add constraint FK_Reference_6 foreign key (course_id)
-      references courses (course_id) on delete cascade on update restrict;
-
-alter table course_student add constraint FK_Reference_7 foreign key (student_id)
-      references students (student_id) on delete cascade on update restrict;
-
-alter table courses add constraint FK_user_course foreign key (account)
+alter table courses add constraint FK_user_course foreign key (coz_account)
       references users (account) on delete cascade on update restrict;
 
-alter table exams add constraint FK_course_exam foreign key (course_id)
+alter table coz_stu add constraint FK_Reference_6 foreign key (cs_course_id)
       references courses (course_id) on delete cascade on update restrict;
 
-alter table sign_up_sheet add constraint FK_couser_sign foreign key (course_id)
+alter table coz_stu add constraint FK_Reference_7 foreign key (cs_student_id)
+      references students (student_id) on delete cascade on update restrict;
+
+alter table exams add constraint FK_course_exam foreign key (ex_course_id)
       references courses (course_id) on delete cascade on update restrict;
 
-alter table student_sign add constraint FK_Reference_8 foreign key (student_id)
-      references course_student (student_id) on delete cascade on update restrict;
+alter table signup add constraint FK_couser_sign foreign key (sg_course_id)
+      references courses (course_id) on delete cascade on update restrict;
 
-alter table student_sign add constraint FK_student_sign foreign key (sign_id)
-      references sign_up_sheet (sign_id) on delete cascade on update restrict;
+alter table stu_sign add constraint FK_Reference_8 foreign key (ss_student_id)
+      references coz_stu (cs_student_id) on delete cascade on update restrict;
+
+alter table stu_sign add constraint FK_student_sign foreign key (ss_sign_id)
+      references signup (sign_id) on delete cascade on update restrict;
 
 insert into users set account='root', password='root', username='admin', admin=1;
+
