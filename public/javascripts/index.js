@@ -1,38 +1,25 @@
 $(document).ready(function () {
     var trigger = $('.hamburger');
+    var flag = false;
 
-    if (!isMobile()) {
+    if (document.body.clientWidth >= 767) {
     	$('#wrapper').toggleClass('toggled');
+        flag = true;
     }
     
     trigger.click(function () {
       $('#wrapper').toggleClass('toggled');
     });
 
-
-    function isMobile(){ //judge if is in phone
-        if(/android/i.test(navigator.userAgent)){
-                //document.write("This is Android'browser.");//这是Android平台下浏览器
-                return true;
+    window.onresize = function(){
+        if (document.body.clientWidth >= 767 && flag == false) {
+            $('#wrapper').toggleClass('toggled');
+            flag = true;
         }
-        if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){
-                //document.write("This is iOS'browser.");//这是iOS平台下浏览器
-                return true;
+        else if (document.body.clientWidth < 767 && flag == true) {
+            $('#wrapper').toggleClass('toggled');
+            flag = false;
         }
-        if(/Linux/i.test(navigator.userAgent)){
-                //document.write("This is Linux'browser.");//这是Linux平台下浏览器
-                return true;
-        }
-        if(/Linux/i.test(navigator.platform)){
-                //document.write("This is Linux operating system.");//这是Linux操作系统平台
-                return true;
-        }
-        if(/MicroMessenger/i.test(navigator.userAgent)){
-                //document.write("This is MicroMessenger'browser.");//这是微信平台下浏览器
-                return true;
-        }
-        
-        return false;
-	}
+    }
 });
 
