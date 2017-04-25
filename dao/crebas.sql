@@ -1,8 +1,10 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/04/25 19:24:16                          */
+/* Created on:     2017/04/26 0:45:29                           */
 /*==============================================================*/
 
+
+drop trigger Trigger_delete;
 
 drop table if exists courses;
 
@@ -12,7 +14,9 @@ drop table if exists exams;
 
 drop table if exists signup;
 
-drop table if exists student_sign;
+drop index Index_sign_id on stu_sign;
+
+drop table if exists stu_sign;
 
 drop table if exists students;
 
@@ -38,7 +42,7 @@ create table coz_stu
 (
    cs_course_id         int,
    cs_student_id        int,
-   cs_student_name      char(20)
+   cs_student_name      char(20) not null
 );
 
 /*==============================================================*/
@@ -67,12 +71,21 @@ create table signup
 );
 
 /*==============================================================*/
-/* Table: student_sign                                          */
+/* Table: stu_sign                                              */
 /*==============================================================*/
-create table student_sign
+create table stu_sign
 (
    student_sign_time    datetime default CURRENT_TIMESTAMP,
+   ss_student_id        int,
    ss_sign_id           int
+);
+
+/*==============================================================*/
+/* Index: Index_sign_id                                         */
+/*==============================================================*/
+create index Index_sign_id on stu_sign
+(
+   ss_sign_id
 );
 
 /*==============================================================*/
@@ -114,10 +127,10 @@ alter table exams add constraint FK_course_exam foreign key (ex_course_id)
 alter table signup add constraint FK_couser_sign foreign key (sg_course_id)
       references courses (course_id) on delete cascade on update restrict;
 
-alter table student_sign add constraint FK_student_sign foreign key (ss_sign_id)
-      references signup (sign_id) on delete cascade on update restrict;
 
+create trigger Trigger_delete after delete
+on signup for each row
+delete from student_sign where ss_sign_id=old.sign_id;
 insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
 insert into users set account='test', password='FDB6C662D36651211F14977097250CCA', username='test', admin=0;
-
 

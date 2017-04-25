@@ -134,7 +134,7 @@ exports.studentsign = function(sign_id, student, callback) {
         } else if (result[0].cs_student_name != student.name) {
             callback(2, A)
         } else {
-            var sql = "insert into student_sign set ss_sign_id=?,"
+            var sql = "insert into stu_sign set ss_sign_id=?,"
                     + "ss_student_id=?";
             pool.query(sql, sign_id, student_id, 
                             function(err, result, fields) {
