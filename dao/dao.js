@@ -263,7 +263,7 @@ exports.delexam = function(exam_id, callback) {
  * result sign_id
  */
 exports.addsign = function(course_id, callback) {
-    var sql = "insert into signup set ss_course_id=?";
+    var sql = "insert into signup set sg_course_id=?";
     pool.query(sql, course_id, function(err, result, fields) {
         if (err)
             callback(err, result)
@@ -290,21 +290,22 @@ exports.studentsign = function(course_id, sign_id, stu_id,
     // 检查学号、姓名、课程相符
     var sql = "select cs_student_name from coz_stu "
             + "where cs_course_id=? and cs_student_id=?";
-    var parameter = [course_id, sign_id, stu_id];
+    var parameter = [course_id, stu_id];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err) {
             callback(err);
         } else if (result.length == 0) {
-            callback(1, A)
+            callback(1, result);
         } else if (result[0].cs_student_name != stu_name) {
-            callback(2, A)
+            callback(2, result);
         } else {
-            var sql = "insert into stu_sign(ss_sign_id, ss_student_id) "
-                    + "values ?";
+            var sql = "insert into stu_sign set ss_sign_id=?, "
+                    + "ss_student_id=? "
+            console.log(sign_id + " " + stu_id);
             var parameter = [sign_id, stu_id];
             pool.query(sql, parameter, function(err, result, fields) {
                 callback(err, result);
-            });
+            })
         }
     });
 };
