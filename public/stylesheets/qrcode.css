@@ -1,0 +1,11 @@
+/*body {
+	margin: 0px;
+	padding: 0px;
+}
+
+*/
+#qrcodeCanvas {
+	margin-left: auto;
+	margin-right: auto;
+	width:600px;
+}
