@@ -16,11 +16,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res) {
-    if (!req.cookies || !req.cookies.signin) {
+    if (!req.cookies || !cm.check(req.cookies.signin)) {
         res.redirect('/signinresult?error='+'无效的签到');
         return;
     }
-    dao.studentsign(1, req.cookies.signin, req.body.form_number, req.body.form_username, function(err, result) {
+    var cookie = cm.getCookie(req.cookies.signin);
+    dao.studentsign(cookie.cid, cookie.sid, req.body.form_number, req.body.form_username, function(err, result) {
         if (!err) {
             res.clearCookie('signin');
             res.redirect('/signinresult?success=true');

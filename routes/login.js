@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var dao = require('./../dao/dao.js');
 var cm = require('../plugins/cookie-manager.js');
+var crypto = require('crypto');
 
 router.get('/', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
@@ -14,9 +15,8 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res) {
     dao.login(req.body.form_username, req.body.form_password, function(err, doc) {
         if (!err) {
-            require('crypto').randomBytes(16, function(ex, buf) {
+            crypto.randomBytes(16, function(ex, buf) {
                 var token = buf.toString('hex');
-                console.log(token);
                 res.cookie('id', token);
                 res.redirect('/');
                 cm.add(token, req.body.form_username);

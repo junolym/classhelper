@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   if (req.cookies && cm.check(req.cookies.id)) {
-    res.render('index', { title: 'Classhelper', user: cm.getUser(req.cookies.id) });
+    res.render('index', { title: 'Classhelper', user: cm.getCookie(req.cookies.id) });
   } else {
     res.redirect('/login');
   }

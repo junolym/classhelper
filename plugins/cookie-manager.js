@@ -12,7 +12,7 @@ CookieManager = {
     del : function(cookie) {
         delete this.cookies[cookie];
     },
-    getUser : function(cookie) {
+    getCookie : function(cookie) {
         return this.cookies[cookie] || 'ERROR!!';
     }
 }

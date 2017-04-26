@@ -8,7 +8,6 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-    	var params = url.parse(req.url, true).query;
         res.render('qrcode', { title: '签到二维码' });
     } else {
         res.redirect('/login');
