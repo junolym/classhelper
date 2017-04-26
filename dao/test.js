@@ -1,8 +1,17 @@
 var dao = require('./dao.js');
-var student = require('./student.js');
 
-
+/**  login in */
 dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
+    var info = ['test', '2333', null];
+    // dao.updateuserinfo('test', info, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    dao.updateuserpwd('test', '123', 'FDB6C662D36651211F14977097250CCA',
+        function(err, doc) {
+            console.log(err);
+            console.log(doc);
+    });
     // dao.getcoursebyaccount('wenxr12', function(err, doc){
     //     console.log(err);
     //     console.log(doc);
@@ -15,7 +24,7 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     //     console.log(err);
     //     console.log(doc);
     // })
-    testadd();
+    // testadd();
     // dao.getuser('wenxr11', function(err, doc) {
     //     console.log(err)
     //     console.log(doc[0].password);
