@@ -289,7 +289,7 @@ exports.studentsign = function(course_id, sign_id, stu_id,
                                 stu_name, callback) {
     // 检查学号、姓名、课程相符
     var sql = "select cs_student_name from coz_stu "
-            + "where course_id=? and cs_student_id=?";
+            + "where cs_course_id=? and cs_student_id=?";
     var parameter = [course_id, sign_id, stu_id];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err) {
