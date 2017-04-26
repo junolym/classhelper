@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
         res.cookie('signin', params.id);
         res.redirect('/signin');
     } else {
-        res.render('signin', { title : 'signin' });
+        res.render('signin', { title : '签到' });
     }
 });
 
@@ -22,6 +22,7 @@ router.post('/', function(req, res) {
     }
     dao.studentsign(1, req.cookies.signin, req.body.form_number, req.body.form_username, function(err, result) {
         if (!err) {
+            res.clearCookie('signin');
             res.redirect('/signinresult?success=true');
         } else if (err == 1) {
             res.redirect('/signinresult?error='+'学号不在课程中');
