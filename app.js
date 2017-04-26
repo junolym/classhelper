@@ -8,6 +8,10 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
+var createsignin = require('./routes/createsignin');
+var qrcode = require('./routes/qrcode');
+var signin = require('./routes/signin');
+var signinresult = require('./routes/signinresult');
 
 var app = express();
 
@@ -26,6 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/login', login);
 app.use('/logout', logout);
+app.use('/createsignin', createsignin);
+app.use('/qrcode', qrcode);
+app.use('/signin', signin);
+app.use('/signinresult', signinresult);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
