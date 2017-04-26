@@ -1,7 +1,7 @@
 .alert {
-    margin:auto;
-    width:200px;
-    height:120px;
+    margin: auto;
+    width: 275px;
     text-align: center;
-    line-height: 60px;
+    line-height: 50px;
+    margin-top: 50px;
 }
