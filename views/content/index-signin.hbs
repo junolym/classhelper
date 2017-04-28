@@ -1,1 +1,23 @@
-<h1>{{title}}</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>签到学生</th>
+      <th>签到时间</th>
+      <th>签到学生数量</th>
+      <th>学生总人数</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each signin}}
+    <tr>
+      <th scope="row">{{@index}}</th>
+      <td>{{name}}</td>
+      <td>{{time}}</td>
+      <td>{{sign_num}}</td>
+      <td>{{stu_num}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -31,7 +31,21 @@ router.get('/index/course', function(req, res, next) {
 });
 
 router.get('/index/signin', function(req, res, next) {
-    res.render('content/index-signin', { title: '签到列表' });
+    var signin = [];
+    if (req.cookies && cm.check(req.cookies.id)) {
+        dao.getsignbyaccount(cm.getCookie(req.cookies.id), function(err, result){
+            if (err) {
+                console.log(err);
+            }
+            else if (!result) {
+                console.log("result为空");
+            }
+            else {
+            var json = JSON.parse(JSON.stringify(result));
+            res.render('content/index-signin', { title: '签到列表', signin: json });
+            }
+        })
+    }
 });
 
 router.get('/index/exam', function(req, res, next) {

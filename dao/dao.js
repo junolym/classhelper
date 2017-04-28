@@ -270,7 +270,7 @@ exports.addsign = function(account, course_id, callback) {
         if (err) {
             callback(err);
         } else if (result.length == 0) {
-            callback("非法访问，该教师无此课程！", result);
+            callback({stack: "非法访问，该教师无此课程！", status: 500}, result);
         } else {
             var sql = "insert into signup set sg_coz_id=?";
             pool.query(sql, course_id, function(err, result, fields) {

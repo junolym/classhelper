@@ -10,38 +10,17 @@ router.get('/', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
         var params = url.parse(req.url, true).query;
         courseId = params.course;
-        // TODO
-        // 检查courseId合法，并且属于这个老师
-        dao.getcoursebyaccount(cm.getCookie(req.cookies.id), function(err, result){
-            if (!err) {
-                if (courseId && result && JSON.parse(JSON.stringify(result))[0].course_id == courseId) {
-
-                        dao.addsign(courseId, function(err, result) {
-                        if (!err) {
-                            crypto.randomBytes(4, function(ex, buf) {
-                                var token = buf.toString('hex');
-                                res.redirect('/qrcode?id='+token);
-                                cm.add(token, { cid: courseId, sid: result });
-                            });
-                        } else {
-                            res.render('error', { message: 'addsign', error: err });
-                        }
-                    });
+        dao.addsign(cm.getCookie(req.cookies.id), courseId, function(err, result) {
+                if (!err) {
+                    crypto.randomBytes(4, function(ex, buf) {
+                    var token = buf.toString('hex');
+                    res.redirect('/qrcode?id='+token);
+                    cm.add(token, { cid: courseId, sid: result });
+                });
+                } else {
+                    res.render('error', { message: 'addsign', error: err });
                 }
-                else if (!courseId) {
-                    console.log("课程未定义");
-                    res.redirect('/login');
-                }
-                else {
-                    console.log("该老师不存在本课");
-                    res.redirect('/login');
-                }
-            }
-            else {
-                res.render('error', { message: 'getcoursebyaccount', error: err });
-            }
-        });
-    	
+            });	
     } else {
         res.redirect('/login');
     }
