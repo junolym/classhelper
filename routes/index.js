@@ -11,7 +11,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/index/course', function(req, res, next) {
-    res.render('content/index-course', { title: '课程列表' });
+    var courses =
+    [{
+        name: "软件测试",
+        time: "周五 7~9节",
+        id: 1
+    },{
+        name: "系统分析与设计",
+        time: "周三 3~5节",
+        id: 2
+    },{
+        name: "程序设计二",
+        time: "周四 7~8节",
+        id: 3
+    }]
+    res.render('content/index-course', { title: '课程列表', courses: courses });
 });
 
 router.get('/index/signin', function(req, res, next) {

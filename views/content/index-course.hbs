@@ -1,1 +1,20 @@
-<h1>{{title}}</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>课程名称</th>
+      <th>上课时间</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each courses}}
+    <tr>
+      <th scope="row">{{@index}}</th>
+      <td>{{name}}</td>
+      <td>{{time}}</td>
+      <td><a href="/createsignin?course={{id}}">开始签到</a></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
