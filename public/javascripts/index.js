@@ -6,7 +6,7 @@ $(document).ready(function () {
     	$('#wrapper').toggleClass('toggled');
         flag = true;
     }
-    
+
     trigger.click(function () {
       $('#wrapper').toggleClass('toggled');
     });
@@ -23,3 +23,12 @@ $(document).ready(function () {
     }
 });
 
+function loadContent(content) {
+    $.get('/index/'+content, function(data, status) {
+        if (status == 'success') {
+            $('#content').html(data);
+        } else {
+            console.log(status);
+        }
+    });
+}

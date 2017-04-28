@@ -8,7 +8,18 @@ router.get('/', function(req, res, next) {
   } else {
     res.redirect('/login');
   }
+});
 
+router.get('/index/course', function(req, res, next) {
+    res.render('content/index-course', { title: '课程列表' });
+});
+
+router.get('/index/signin', function(req, res, next) {
+    res.render('content/index-signin', { title: '签到列表' });
+});
+
+router.get('/index/exam', function(req, res, next) {
+    res.render('content/index-exam', { title: '测验列表' });
 });
 
 module.exports = router;
