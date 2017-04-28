@@ -255,20 +255,31 @@ exports.delexam = function(exam_id, callback) {
     });
 };
 
+
 /**
  * addsign
  *
+ * @param {string} account
  * @param {number} course_id
  * @param {function} callback
- * result sign_id
+ * signid
  */
-exports.addsign = function(course_id, callback) {
-    var sql = "insert into signup set sg_coz_id=?";
-    pool.query(sql, course_id, function(err, result, fields) {
-        if (err)
-            callback(err, result)
-        else
-            callback(err, result.insertId);
+exports.addsign = function(account, course_id, callback) {
+    var sql = "select * from courses where coz_account=? and course_id=?";
+    pool.query(sql, [account, course_id], function(err, result, fields) {
+        if (err) {
+            callback(err);
+        } else if (result.length == 0) {
+            callback("非法访问，该教师无此课程！", result);
+        } else {
+            var sql = "insert into signup set sg_coz_id=?";
+            pool.query(sql, course_id, function(err, result, fields) {
+            if (err)
+                callback(err, result)
+            else
+                callback(err, result.insertId);
+            });
+        }
     });
 };
 
@@ -378,9 +389,10 @@ exports.getsignbycourse = function(course_id, callback) {
  */
 exports.getsignbyid = function(sign_id, callback) {
     var sql = "select ss_stu_id as id, cs_stu_name as name, "
-            + "stu_sign_time as time from coz_stu, stu_sign, signup " 
-            + "where sign_id=? and sign_id=ss_sign_id and " 
-            + "sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id"
+            + "stu_sign_time as time " 
+            + "from coz_stu, stu_sign, signup " 
+            + "where sign_id=? and sign_id=ss_sign_id " 
+            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id"
     pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
     })
@@ -389,21 +401,28 @@ exports.getsignbyid = function(sign_id, callback) {
 /**
  * getsignbyaccount
  *
- * @param {number} course_id
+ * @param {number} account
  * @param {function} callback
  * [{name:xxx, time:xxx, sign_num:xxx, stu_num:xxx}]
  */
-exports.getsignbyaccount = function(course_id, callback) {
+exports.getsignbyaccount = function(account, callback) {
     var sql = "select course_name as name, sign_time as time, "
             + "count(ss_sign_id) as sign_num, student_num as stu_num " 
             + "from signup, stu_sign, courses "
             + "where coz_account=? and sg_coz_id = course_id "
-            + "and ss_sign_id = sign_id group by sign_id";
-    pool.query(sql, course_id, function(err, result, fields) {
+            + "and ss_sign_id = sign_id "
+            + "group by sign_id "
+            + "union " 
+            + "select course_name as name, sign_time as time, " 
+            + "0 as sign_num, student_num as stu_num " 
+            + "from signup, stu_sign, courses "
+            + "where coz_account=? and sg_coz_id = course_id "
+            + "and not exists (select * from stu_sign "
+            + "                 where ss_sign_id = sign_id) "
+            + "group by sign_id "
+            + "order by time desc";
+    pool.query(sql, [account, account], function(err, result, fields) {
         callback(err, result);
     });
 }
-
-
-
 
