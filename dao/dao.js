@@ -156,7 +156,7 @@ exports.deluser = function(account, callback) {
  * 不判断account是否存在，result可以为[]
  */
 exports.getcoursebyaccount = function(account, callback) {
-    var sql = "select course_id, course_name from courses "
+    var sql = "select course_id, course_name, course_time from courses "
             + "where coz_account=?";
     pool.query(sql, account, function(err, result, fields) {
         callback(err, result);

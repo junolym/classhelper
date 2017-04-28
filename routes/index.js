@@ -1,7 +1,7 @@
 var express = require('express');
 var cm = require('../plugins/cookie-manager.js');
 var router = express.Router();
-
+var dao = require('../dao/dao.js');
 router.get('/', function(req, res, next) {
   if (req.cookies && cm.check(req.cookies.id)) {
     res.render('index', { title: 'Classhelper', user: cm.getCookie(req.cookies.id) });
@@ -11,21 +11,23 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/index/course', function(req, res, next) {
-    var courses =
-    [{
-        name: "软件测试",
-        time: "周五 7~9节",
-        id: 1
-    },{
-        name: "系统分析与设计",
-        time: "周三 3~5节",
-        id: 2
-    },{
-        name: "程序设计二",
-        time: "周四 7~8节",
-        id: 3
-    }]
-    res.render('content/index-course', { title: '课程列表', courses: courses });
+    var courses = [];
+    if (req.cookies && cm.check(req.cookies.id)) {
+        dao.getcoursebyaccount(cm.getCookie(req.cookies.id), function(err, result){
+            if (err) {
+                console.log(err);
+            }
+            else if (!result) {
+                console.log("result为空");
+            }
+            else {
+            var json = JSON.parse(JSON.stringify(result));
+            res.render('content/index-course', { title: '课程列表', courses: json });
+            }
+        })
+    }
+    
+    
 });
 
 router.get('/index/signin', function(req, res, next) {

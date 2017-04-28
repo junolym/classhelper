@@ -11,9 +11,9 @@
     {{#each courses}}
     <tr>
       <th scope="row">{{@index}}</th>
-      <td>{{name}}</td>
-      <td>{{time}}</td>
-      <td><a href="/createsignin?course={{id}}">开始签到</a></td>
+      <td>{{course_name}}</td>
+      <td>{{course_time}}</td>
+      <td><a href="/createsignin?course={{course_id}}">开始签到</a></td>
     </tr>
     {{/each}}
   </tbody>
