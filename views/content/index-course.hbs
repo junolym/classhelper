@@ -1,19 +1,18 @@
 <table class="table">
   <thead>
     <tr>
-      <th></th>
       <th>课程名称</th>
       <th>上课时间</th>
-      <th></th>
+      <th>签到或测验</th>
     </tr>
   </thead>
   <tbody>
     {{#each courses}}
     <tr>
-      <th scope="row">{{@index}}</th>
-      <td>{{course_name}}</td>
-      <td>{{course_time}}</td>
-      <td><a href="/createsignin?course={{course_id}}">开始签到</a></td>
+      <td><a class="btn" href="/coursedetail?id={{course_id}}">{{course_name}}</td>
+      <td><a class="btn" href="/coursedetail?id={{course_id}}">{{course_time}}</td>
+      <td><a class="btn" href="/createsignin?course={{course_id}}">开始签到</a>
+      <a class="btn" href="/createexam?course={{course_id}}">开始测验</a></td>
     </tr>
     {{/each}}
   </tbody>

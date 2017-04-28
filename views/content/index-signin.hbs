@@ -1,22 +1,22 @@
 <table class="table">
   <thead>
     <tr>
-      <th></th>
-      <th>签到学生</th>
-      <th>签到时间</th>
-      <th>签到学生数量</th>
+      <th>课程名称</th>
+      <th>签到创建时间</th>
       <th>学生总人数</th>
-      <th></th>
+      <th>已签到学生</th>
+      <th>查看</th>
     </tr>
   </thead>
   <tbody>
     {{#each signin}}
     <tr>
-      <th scope="row">{{@index}}</th>
-      <td>{{name}}</td>
-      <td>{{time}}</td>
-      <td>{{sign_num}}</td>
-      <td>{{stu_num}}</td>
+      <td><a class="btn" href="/coursedetail?id={{course_id}}">{{name}}</a></td>
+      <td><a class="btn" href="/signindetail?id={{signin_id}}">{{time}}</a></td>
+      <td><a class="btn" href="/coursedetail?id={{course_id}}">{{stu_num}}</a></td>
+      <td><a class="btn" href="/signindetail?id={{signin_id}}">{{sign_num}}</a></td>
+      <td><a class="btn" href="/signindetail?id={{signin_id}}">查看详细</a>
+      <a class="btn" href="/showqrcode?id={{course_id}}">显示二维码</a></td>
     </tr>
     {{/each}}
   </tbody>
