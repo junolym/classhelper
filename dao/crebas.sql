@@ -1,10 +1,14 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/04/26 0:45:29                           */
+/* Created on:     2017/04/28 14:29:04                          */
 /*==============================================================*/
 
 
-drop trigger Trigger_delete;
+drop trigger addstudent;
+
+drop trigger delstudent;
+
+drop trigger delete_sign;
 
 drop table if exists courses;
 
@@ -32,6 +36,7 @@ create table courses
    course_name          char(20),
    course_time          text,
    course_info          text,
+   student_num          int default 0,
    primary key (course_id)
 );
 
@@ -40,9 +45,9 @@ create table courses
 /*==============================================================*/
 create table coz_stu
 (
-   cs_course_id         int,
-   cs_student_id        int,
-   cs_student_name      char(20) not null
+   cs_coz_id            int,
+   cs_stu_id            int,
+   cs_stu_name          char(40) not null
 );
 
 /*==============================================================*/
@@ -54,8 +59,8 @@ create table exams
    exam_name            char(20),
    exam_state           tinyint,
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-   ex_course_id         int,
-   exam_question        json,
+   ex_coz_id            int,
+   exam_question        text,
    primary key (exam_id)
 );
 
@@ -66,7 +71,7 @@ create table signup
 (
    sign_id              int not null auto_increment,
    sign_time            datetime default CURRENT_TIMESTAMP,
-   sg_course_id         int,
+   sg_coz_id            int,
    primary key (sign_id)
 );
 
@@ -75,9 +80,10 @@ create table signup
 /*==============================================================*/
 create table stu_sign
 (
-   student_sign_time    datetime default CURRENT_TIMESTAMP,
-   ss_student_id        int,
-   ss_sign_id           int
+   ss_sign_id           int not null,
+   ss_stu_id            int not null,
+   stu_sign_time        datetime not null default CURRENT_TIMESTAMP,
+   primary key (ss_stu_id, ss_sign_id)
 );
 
 /*==============================================================*/
@@ -94,7 +100,7 @@ create index Index_sign_id on stu_sign
 create table students
 (
    student_id           int not null,
-   student_name         char(20) not null,
+   student_name         char(40) not null,
    primary key (student_id)
 );
 
@@ -113,24 +119,35 @@ create table users
 );
 
 alter table courses add constraint FK_user_course foreign key (coz_account)
-      references users (account) on delete cascade on update restrict;
+      references users (account) on delete restrict on update restrict;
 
-alter table coz_stu add constraint FK_Reference_6 foreign key (cs_course_id)
-      references courses (course_id) on delete cascade on update restrict;
+alter table coz_stu add constraint FK_Reference_6 foreign key (cs_coz_id)
+      references courses (course_id) on delete restrict on update restrict;
 
-alter table coz_stu add constraint FK_Reference_7 foreign key (cs_student_id)
-      references students (student_id) on delete cascade on update restrict;
+alter table coz_stu add constraint FK_Reference_7 foreign key (cs_stu_id)
+      references students (student_id) on delete restrict on update restrict;
 
-alter table exams add constraint FK_course_exam foreign key (ex_course_id)
-      references courses (course_id) on delete cascade on update restrict;
+alter table exams add constraint FK_course_exam foreign key (ex_coz_id)
+      references courses (course_id) on delete restrict on update restrict;
 
-alter table signup add constraint FK_couser_sign foreign key (sg_course_id)
-      references courses (course_id) on delete cascade on update restrict;
+alter table signup add constraint FK_couser_sign foreign key (sg_coz_id)
+      references courses (course_id) on delete restrict on update restrict;
 
 
-create trigger Trigger_delete after delete
+create trigger addstudent after insert
+on coz_stu for each row
+update courses set student_num=student_num+1 where course_id=new.cs_coz_id;
+
+
+create trigger delstudent after delete
+on coz_stu for each row
+update courses set student_num=student_num-1 where coz_id=old.cs_coz_id;
+
+
+create trigger delete_sign after delete
 on signup for each row
-delete from student_sign where ss_sign_id=old.sign_id;
+delete from stu_sign where ss_sign_id=old.sign_id;
+
 insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
 insert into users set account='test', password='FDB6C662D36651211F14977097250CCA', username='test', admin=0;
 

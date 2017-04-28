@@ -71,7 +71,7 @@ exports.adduser = function(admin, n_account, n_password, n_username,
             callback(2, result);
         } else {
             sql = "insert into users(account, password, username, email, "
-                + "phone) values ?";
+                + "phone) values (?, ?, ?, ?, ?)";
             var parameter = [n_account, n_password, n_username, n_email,
                             n_phone];
             pool.query(sql, parameter,  function(err, result, fields) {
@@ -175,8 +175,8 @@ exports.getcoursebyaccount = function(account, callback) {
  */
 exports.addcourse = function(account, course_name, course_time, 
                                 course_info, callback) {
-    var sql = "insert into courses(coz_account, course_name, course_time "
-            + "course_info) values ?";
+    var sql = "insert into courses(coz_account, course_name, course_time, "
+            + "course_info) values (?, ?, ?, ?)";
     var parameter = [account, course_name, course_time, course_info];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err)
@@ -228,7 +228,7 @@ exports.getexambycourse = function(course_id, callback) {
  */
 exports.addexam = function(course_id, exam_name, exam_question, callback) {
     var sql = "insert into exams(exam_name, ex_course_id, exam_question) "
-            + "values ?";
+            + "values (?, ?, ?)";
     var parameter = [exam_name, course_id, exam_question];
     pool.query(sql, exams, function(err, result, fields) {
         if (err)
@@ -263,7 +263,7 @@ exports.delexam = function(exam_id, callback) {
  * result sign_id
  */
 exports.addsign = function(course_id, callback) {
-    var sql = "insert into signup set sg_course_id=?";
+    var sql = "insert into signup set sg_coz_id=?";
     pool.query(sql, course_id, function(err, result, fields) {
         if (err)
             callback(err, result)
@@ -271,7 +271,6 @@ exports.addsign = function(course_id, callback) {
             callback(err, result.insertId);
     });
 };
-
 
 /**
  * studentsign
@@ -288,24 +287,26 @@ exports.addsign = function(course_id, callback) {
 exports.studentsign = function(course_id, sign_id, stu_id, 
                                 stu_name, callback) {
     // 检查学号、姓名、课程相符
-    var sql = "select cs_student_name from coz_stu "
-            + "where cs_course_id=? and cs_student_id=?";
+    var sql = "select cs_stu_name from coz_stu "
+            + "where cs_coz_id=? and cs_stu_id=?";
     var parameter = [course_id, stu_id];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err) {
             callback(err);
         } else if (result.length == 0) {
             callback(1, result);
-        } else if (result[0].cs_student_name != stu_name) {
+        } else if (result[0].cs_stu_name != stu_name) {
             callback(2, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
-                    + "ss_student_id=? "
-            console.log(sign_id + " " + stu_id);
+                    + "ss_stu_id=? "
             var parameter = [sign_id, stu_id];
             pool.query(sql, parameter, function(err, result, fields) {
-                callback(err, result);
-            })
+                if (err)
+                    callback(err, result);
+                else
+                    callback(err, result.affectedRows);
+            });
         }
     });
 };
@@ -317,13 +318,17 @@ exports.studentsign = function(course_id, sign_id, stu_id,
  * [ [coz_id1, stu_id1, stu_name1],
  * [coz_id2, stu_id2, stu_name2] ]
  * @param {function} callback
- * result mysql插入结果
+ * result 插入行数
  */
 exports.addstutocourse = function(coz_stu, callback) {
-    var sql = "insert into coz_stu(cs_course_id, cs_student_id, "
-            + "cs_student_name) values ?";
+    var sql = "insert into coz_stu(cs_coz_id, cs_stu_id, "
+            + "cs_stu_name) values ?";
+    
     pool.query(sql, [coz_stu], function(err, result, fields) {
-        callback(err, result);
+        if (err)
+            callback(err, result);
+        else
+            callback(err, result.affectedRows);
     });
 };
 
@@ -335,11 +340,50 @@ exports.addstutocourse = function(coz_stu, callback) {
  * [ [id1, name1],
  * [id2, name2] ]
  * @param {function} callback
- * result mysql插入结果
+ * result 插入行数
  */
 exports.addstudent = function(student, callback) {
     var sql = "insert into students(student_id, student_name) values ?";
     pool.query(sql, [student], function(err, result, fields) {
-        callback(err, result);
+        if (err)
+            callback(err, result);
+        else
+            callback(err, result.affectedRows);
     });
 };
+
+/**
+ * getsigncourse
+ *
+ * @param {number} course_id
+ * @param {function} callback
+ * [{time:xx, sign_num:xx, stu_num:xx}]
+ */
+exports.getsignbycourse = function(course_id, callback) {
+    var sql = "select sign_time as time, count(ss_sign_id) as sign_num, "
+            + "student_num as stu_num from signup, stu_sign, courses "
+            + "where course_id = ? and sg_coz_id = course_id " 
+            + "and ss_sign_id = sign_id group by sign_id";
+    pool.query(sql, course_id, function(err, result, fields) {
+        callback(err, result);
+    });
+}
+
+/**
+ * getsignbyid
+ *
+ * @param {number} sign_id
+ * @param {function} callback
+ * [{id:xxx, name:xxx, time:xxx}]
+ */
+exports.getsignbyid = function(sign_id, callback) {
+    var sql = "select ss_stu_id as id, cs_stu_name as name, "
+            + "stu_sign_time as time from coz_stu, stu_sign, signup " 
+            + "where sign_id=? and sign_id=ss_sign_id and " 
+            + "sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id"
+    pool.query(sql, sign_id, function(err, result, fields) {
+        callback(err, result);
+    })
+}
+
+
