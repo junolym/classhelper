@@ -3,20 +3,25 @@ var dao = require('./dao.js');
 /**  login in */
 dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     // dao.addsign(1, function(err, signid) {
-    //     dao.studentsign(1, signid, '14331182', '刘忍', function(err, doc) {
-    //         console.log(err);
-    //     });
-    //     dao.studentsign(1, signid, '14331279', '温晓锐', function(err, doc) {
-    //     });
-    //     dao.studentsign(1, signid, '14331139', '李文盛', function(err, doc) {
-    //     });
+        // dao.studentsign(1, signid, '14331024', '陈俊贤', function(err, doc) {
+        //     console.log(err);
+        // });
+        // dao.studentsign(1, signid, '14331279', '温晓锐', function(err, doc) {
+        // });
+        // dao.studentsign(1, signid, '14331139', '李文盛', function(err, doc) {
+        // });
+        // dao.studentsign(1, signid, '14331040', '陈鑫', function(err, doc) {
+        // });
     // });
-    dao.getsignbycourse(1, function(err, doc) {
-        console.log(doc);
+    dao.getsignbyaccount('stsluy', function(err, doc)  {
+       console.log(doc);
     });
-    dao.getsignbyid(3, function(err, doc) {
-        console.log(doc);
-    })
+    // dao.getsignbycourse(1, function(err, doc) {
+    //     console.log(doc);
+    // });
+    // dao.getsignbyid(3, function(err, doc) {
+    //     console.log(doc);
+    // })
     // });
     // var info = ['test', '2333', null];
     // dao.updateuserinfo('test', info, function(err, doc) {

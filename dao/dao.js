@@ -386,4 +386,24 @@ exports.getsignbyid = function(sign_id, callback) {
     })
 }
 
+/**
+ * getsignbyaccount
+ *
+ * @param {number} course_id
+ * @param {function} callback
+ * [{name:xxx, time:xxx, sign_num:xxx, stu_num:xxx}]
+ */
+exports.getsignbyaccount = function(course_id, callback) {
+    var sql = "select course_name as name, sign_time as time, "
+            + "count(ss_sign_id) as sign_num, student_num as stu_num " 
+            + "from signup, stu_sign, courses "
+            + "where coz_account=? and sg_coz_id = course_id "
+            + "and ss_sign_id = sign_id group by sign_id";
+    pool.query(sql, course_id, function(err, result, fields) {
+        callback(err, result);
+    });
+}
+
+
+
 
