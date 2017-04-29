@@ -3,7 +3,8 @@ var pool  = mysql.createPool({
     host: 'tx.wenxr.com',
     user: 'root',
     password: 'sysusdcs',
-    database: 'test'
+    database: 'test',
+    charset: 'utf8mb4_unicode_ci'
 });
 
 /**
@@ -270,7 +271,8 @@ exports.addsign = function(account, course_id, callback) {
         if (err) {
             callback(err);
         } else if (result.length == 0) {
-            callback({stack: "非法访问，该教师无此课程！", status: 500}, result);
+            callback({stack: "非法访问，该教师无此课程！", status: 500},
+                        result);
         } else {
             var sql = "insert into signup set sg_coz_id=?";
             pool.query(sql, course_id, function(err, result, fields) {
@@ -407,21 +409,14 @@ exports.getsignbyid = function(sign_id, callback) {
  */
 exports.getsignbyaccount = function(account, callback) {
     var sql = "select course_name as name, sign_time as time, "
-            + "count(ss_sign_id) as sign_num, student_num as stu_num " 
-            + "from signup, stu_sign, courses "
-            + "where coz_account=? and sg_coz_id = course_id "
-            + "and ss_sign_id = sign_id "
-            + "group by sign_id "
-            + "union " 
-            + "select course_name as name, sign_time as time, " 
-            + "0 as sign_num, student_num as stu_num " 
-            + "from signup, stu_sign, courses "
-            + "where coz_account=? and sg_coz_id = course_id "
-            + "and not exists (select * from stu_sign "
-            + "                 where ss_sign_id = sign_id) "
+            + "count(ss_sign_id) as sign_num, student_num as stu_num "
+            + "from signup "
+            + "inner join courses on sg_coz_id=course_id "
+            + "left join stu_sign on sign_id=ss_sign_id "
+            + "where coz_account=? "
             + "group by sign_id "
             + "order by time desc";
-    pool.query(sql, [account, account], function(err, result, fields) {
+    pool.query(sql, account, function(err, result, fields) {
         callback(err, result);
     });
 }
