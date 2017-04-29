@@ -12,11 +12,11 @@
     {{#each signin}}
     <tr>
       <td><a class="btn" href="/coursedetail?id={{course_id}}">{{name}}</a></td>
-      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{signin_id}}">{{time}}</a></td>
+      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{sign_id}}">{{time}}</a></td>
       <td><a class="btn" href="/coursedetail?id={{course_id}}">{{stu_num}}</a></td>
-      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{signin_id}}">{{sign_num}}</a></td>
-      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{signin_id}}">查看详细</a>
-      <a class="btn" href="/showqrcode?cid={{course_id}}&sid={{signin_id}}">显示二维码</a></td>
+      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{sign_id}}">{{sign_num}}</a></td>
+      <td><a class="btn" href="/signindetail?cid={{course_id}}&sid={{sign_id}}">查看详细</a>
+      <a class="btn" href="/showqrcode?cid={{course_id}}&sid={{sign_id}}">显示二维码</a></td>
     </tr>
     {{/each}}
   </tbody>
