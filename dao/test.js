@@ -13,13 +13,16 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
         // dao.studentsign(1, signid, '14331040', '陈鑫', function(err, doc) {
         // });
     // });
-    dao.getsignbyaccount('stsluy', function(err, doc)  {
-       console.log(doc);
+    dao.checksign('stsluy', 1, 40, function(err) {
+        console.log(err);
     });
+    // dao.getsignbyaccount('stsluy', function(err, doc)  {
+    //    console.log(doc);
+    // });
     // dao.getsignbycourse(1, function(err, doc) {
     //     console.log(doc);
     // });
-    // dao.getsignbyid(3, function(err, doc) {
+    // dao.getsignbyid('stsluy', 47, function(err, doc) {
     //     console.log(doc);
     // })
     // });

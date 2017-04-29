@@ -190,17 +190,19 @@ exports.addcourse = function(account, course_name, course_time,
 /**
  * delcourse
  *
+ * @param {string} account
  * @param {number} course_id
  * @param {function} callback
  * result  删除行数
  */
-exports.delcourse = function(course_id, callback) {
-    var sql = "delete from courses where course_id=?";
-    pool.query(sql, course_id, function(err, result, fields) {
+exports.delcourse = function(account, course_id, callback) {
+    var sql = "delete from courses where course_id=? and coz_account=?";
+    pool.query(sql, [course_id, account], function(err, result, fields) {
         if (err)
             callback(err, result)
-        else
-            callback(err, result.affectedRows);
+        else if (result.affectedRows == 0)
+            callback({stack: "该课程不存在！", status: 500}, null);
+        callback(err, result.affectedRows);
     });
 };
 
@@ -370,11 +372,13 @@ exports.addstudent = function(student, callback) {
  *
  * @param {number} course_id
  * @param {function} callback
- * [{time:xx, sign_num:xx, stu_num:xx}]
+ * [{sign_id, time, sign_num, stu_num}]
  */
 exports.getsignbycourse = function(course_id, callback) {
-    var sql = "select sign_time as time, count(ss_sign_id) as sign_num, "
-            + "student_num as stu_num from signup, stu_sign, courses "
+    var sql = "select sign_id, course_id, sign_time as time, "
+            + "count(ss_sign_id) as sign_num, "
+            + "student_num as stu_num "
+            + "from signup, stu_sign, courses "
             + "where course_id = ? and sg_coz_id = course_id " 
             + "and ss_sign_id = sign_id group by sign_id";
     pool.query(sql, course_id, function(err, result, fields) {
@@ -385,19 +389,24 @@ exports.getsignbycourse = function(course_id, callback) {
 /**
  * getsignbyid
  *
+ * @param {string} account
  * @param {number} sign_id
  * @param {function} callback
- * [{id:xxx, name:xxx, time:xxx}]
+ * [{course_id, id, name, time}]
  */
-exports.getsignbyid = function(sign_id, callback) {
-    var sql = "select ss_stu_id as id, cs_stu_name as name, "
+exports.getsignbyid = function(account, sign_id, callback) {
+    var sql = "select course_id, ss_stu_id as stu_id, cs_stu_name as name, "
             + "stu_sign_time as time " 
-            + "from coz_stu, stu_sign, signup " 
+            + "from coz_stu, stu_sign, signup, courses " 
             + "where sign_id=? and sign_id=ss_sign_id " 
-            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id"
-    pool.query(sql, sign_id, function(err, result, fields) {
+            + "and sg_coz_id=cs_coz_id and cs_coz_id=course_id  "
+            + "and cs_stu_id=ss_stu_id and coz_account=?"
+    pool.query(sql, [sign_id, account], function(err, result, fields) {
+        if (!err && result.length == 0)
+            callback({stack: "签到ID错误或非法访问！", status: 500},
+                        result);
         callback(err, result);
-    })
+    });
 }
 
 /**
@@ -405,10 +414,11 @@ exports.getsignbyid = function(sign_id, callback) {
  *
  * @param {number} account
  * @param {function} callback
- * [{name:xxx, time:xxx, sign_num:xxx, stu_num:xxx}]
+ * [{sign_id, course_id, name, time, sign_num, stu_num}]
  */
 exports.getsignbyaccount = function(account, callback) {
-    var sql = "select course_name as name, sign_time as time, "
+    var sql = "select sign_id, course_id, course_name as name, "
+            + "sign_time as time, "
             + "count(ss_sign_id) as sign_num, student_num as stu_num "
             + "from signup "
             + "inner join courses on sg_coz_id=course_id "
@@ -418,6 +428,19 @@ exports.getsignbyaccount = function(account, callback) {
             + "order by time desc";
     pool.query(sql, account, function(err, result, fields) {
         callback(err, result);
+    });
+}
+
+exports.checksign = function(account, course_id, sign_id, callback) {
+    var sql = "select sign_id "
+            + "from courses, signup "
+            + "where coz_account=? and course_id=? "
+            + "and sg_coz_id=course_id and sign_id=?";
+    pool.query(sql, [account, course_id, sign_id], 
+                    function(err, result, fields) {
+        if (!err && result.length == 0)
+            err = {stack: "sign_id校验失败", status: 500};
+        callback(err);
     });
 }
 
