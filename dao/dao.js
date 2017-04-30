@@ -67,15 +67,14 @@ exports.adduser = function(admin, n_account, n_password, n_username,
         if (err) {
             callback(err, result)
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack: '此用户不存在', status: 500});
         } else if (result[0].admin == 0) {
-            callback(2, result);
+            callback({stack: '没有添加用户的权限', status: 500,});
         } else {
-            sql = "insert into users(account, password, username, email, "
-                + "phone) values (?, ?, ?, ?, ?)";
-            var parameter = [n_account, n_password, n_username, n_email,
-                            n_phone];
-            pool.query(sql, parameter,  function(err, result, fields) {
+            sql = "insert into users(account, password, username, "
+                + "email, phone) values (?, ?, ?, ?, ?)";
+            pool.query(sql, [n_account, n_password, n_username, n_email,
+                            n_phone],  function(err, result, fields) {
                 if (err)
                     callback(err, result)
                 else
@@ -103,7 +102,7 @@ exports.updateuserinfo = function(account, userinfo, callback) {
         if (err) {
             callback(err)
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack:'账号不存在', status:500}, result);
         } else {
             callback(err, result.affectedRows);
         }
@@ -120,9 +119,10 @@ exports.updateuserinfo = function(account, userinfo, callback) {
  * result  修改行数
  */
 exports.updateuserpwd = function(account, oldpwd, newpwd, callback) {
-    var sql = "update users set password=? where account=? and password=?";
-    var parameter = [newpwd, account, oldpwd];
-    pool.query(sql, parameter, function(err, result, fields) {
+    var sql = "update users set password=? "
+            + "where account=? and password=?";
+    pool.query(sql, [newpwd, account, oldpwd], 
+        function(err, result, fields) {
         if (err) {
             callback(err);
         } else {
@@ -176,8 +176,8 @@ exports.getcoursebyaccount = function(account, callback) {
  */
 exports.addcourse = function(account, course_name, course_time, 
                                 course_info, callback) {
-    var sql = "insert into courses(coz_account, course_name, course_time, "
-            + "course_info) values (?, ?, ?, ?)";
+    var sql = "insert into courses(coz_account, course_name, "
+            + "course_time, course_info) values (?, ?, ?, ?)";
     var parameter = [account, course_name, course_time, course_info];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err)
@@ -262,28 +262,17 @@ exports.delexam = function(exam_id, callback) {
 /**
  * addsign
  *
- * @param {string} account
  * @param {number} course_id
  * @param {function} callback
  * signid
  */
-exports.addsign = function(account, course_id, callback) {
-    var sql = "select * from courses where coz_account=? and course_id=?";
-    pool.query(sql, [account, course_id], function(err, result, fields) {
-        if (err) {
-            callback(err);
-        } else if (result.length == 0) {
-            callback({stack: "非法访问，该教师无此课程！", status: 500},
-                        result);
-        } else {
-            var sql = "insert into signup set sg_coz_id=?";
-            pool.query(sql, course_id, function(err, result, fields) {
-            if (err)
-                callback(err, result)
-            else
-                callback(err, result.insertId);
-            });
-        }
+exports.addsign = function(course_id, callback) {
+    var sql = "insert into signup set sg_coz_id=?";
+    pool.query(sql, course_id, function(err, result, fields) {
+        if (err)
+            callback(err, result)
+        else
+            callback(err, result.insertId);
     });
 };
 
@@ -309,9 +298,9 @@ exports.studentsign = function(course_id, sign_id, stu_id,
         if (err) {
             callback(err);
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack:'学号不在此课程内!', status:500}, result);
         } else if (result[0].cs_stu_name != stu_name) {
-            callback(2, result);
+            callback({stack:'学号姓名不符!', status:500}, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
                     + "ss_stu_id=? "
@@ -394,17 +383,13 @@ exports.getsignbycourse = function(course_id, callback) {
  * @param {function} callback
  * [{course_id, id, name, time}]
  */
-exports.getsignbyid = function(account, sign_id, callback) {
-    var sql = "select course_id, ss_stu_id as stu_id, cs_stu_name as name, "
-            + "stu_sign_time as time " 
-            + "from coz_stu, stu_sign, signup, courses " 
+exports.getsignbyid = function(sign_id, callback) {
+    var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
+            + "cs_stu_name as name, stu_sign_time as time "
+            + "from coz_stu, stu_sign, signup " 
             + "where sign_id=? and sign_id=ss_sign_id " 
-            + "and sg_coz_id=cs_coz_id and cs_coz_id=course_id  "
-            + "and cs_stu_id=ss_stu_id and coz_account=?"
-    pool.query(sql, [sign_id, account], function(err, result, fields) {
-        if (!err && result.length == 0)
-            callback({stack: "签到ID错误或非法访问！", status: 500},
-                        result);
+            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id";
+    pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
     });
 }
@@ -431,6 +416,14 @@ exports.getsignbyaccount = function(account, callback) {
     });
 }
 
+/**
+ * checksign
+ *
+ * @param {string} account
+ * @param {number} course_id
+ * @param {number} sign_id
+ * @param {function} callback
+ */
 exports.checksign = function(account, course_id, sign_id, callback) {
     var sql = "select sign_id "
             + "from courses, signup "
@@ -441,6 +434,46 @@ exports.checksign = function(account, course_id, sign_id, callback) {
         if (!err && result.length == 0)
             err = {stack: "sign_id校验失败", status: 500};
         callback(err);
+    });
+}
+
+/**
+ * getstubycourse
+ *
+ * @param {number} course_id
+ * @param {function} callback
+ * [id, name]
+ */
+exports.getstubycourse = function(course_id, callback) {
+    var sql = "select cs_stu_id as id, cs_stu_name as name "
+            + "from courses, coz_stu "
+            + "where course_id=? "
+            + "and cs_coz_id=course_id";
+    pool.query(sql, course_id, function(err, result, fields) {
+        callback(err, result);
+    });
+}
+
+/**
+ * checkcourse
+ *
+ * @param {string} account
+ * @param {number} course_id
+ * @param {function} callback err
+ */
+exports.checkcourse = function(account, course_id, callback) {
+    var sql = "select coz_account from courses "
+            + "where course_id=? ";
+    pool.query(sql, course_id, function(err, result, fields) {
+        if (err) {
+            callback(err);
+        } else if (result.length == 0) {
+            callback({stack:'此课程不存在', status:500});
+        } else if (result[0].coz_account != account) {
+            callback({stack:'非法访问!该教师无此课程!', status:500});
+        } else {
+            callback(err);
+        }
     });
 }
 
