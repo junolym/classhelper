@@ -25,7 +25,9 @@ $(document).ready(function () {
 
 function loadContent(content) {
     contentstack = window.contentstack || [];
-    if (content == '..') {
+    if (content == '.') {
+        content = contentstack[contentstack.length-1];
+    } else if (content == '..') {
         contentstack.pop();
         content = contentstack[contentstack.length-1];
     } else if (content != contentstack[contentstack.length-1]) {

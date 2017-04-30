@@ -1,0 +1,22 @@
+<div class="btn-group" role="group" aria-label="...">
+  <button class="btn btn-large btn-default backbtn" type="button" onclick="loadContent('..')">返回</button>
+  <button class="btn btn-large btn-default addCoursebtn" type="button" onclick="loadContent('.')">刷新</button>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>学号</th>
+      <th>姓名</th>
+      <th>签到时间</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each signindetail}}
+    <tr>
+      <td>{{id}}</td>
+      <td>{{name}}</td>
+      <td>{{time}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
