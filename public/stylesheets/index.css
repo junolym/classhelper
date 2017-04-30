@@ -313,7 +313,11 @@ table {
   position: relative;
   float: right;
 }
-
+.addcoursebtn {
+  font-size: 30pt;
+  font-weight: 100;
+  line-height: 56px;
+}
 
 /*-------------------------------*/
 /*          Dark Overlay         */
