@@ -32,7 +32,8 @@ router.get('/index/signin', function(req, res, next) {
             if (!err) {
                 var signin = JSON.parse(JSON.stringify(result));
                 signin.forEach(function(s) {
-                    s.time = (new Date(s.time)).toLocaleString();
+                    s.time = (new Date(s.time)).toLocaleString('zh-CN', { hour12 : false })
+                        .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
                 });
                 res.render('content/index-signin', { title: '签到列表', signin: signin });
             } else {
