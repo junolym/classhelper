@@ -1,14 +1,20 @@
 $(document).ready(function () {
     var trigger = $('.hamburger');
-    var flag = false;
+    flag = false;
+
+
 
     if (document.body.clientWidth >= 767) {
     	$('#wrapper').toggleClass('toggled');
         flag = true;
     }
 
+    $('#rightpage')[0].style.width = document.body.clientWidth - (flag ? 220 : 0) + 'px';
+
     trigger.click(function () {
       $('#wrapper').toggleClass('toggled');
+      flag = !flag;
+      $('#rightpage')[0].style.width = document.body.clientWidth - (flag ? 220 : 0) + 'px';
     });
 
     window.onresize = function(){
@@ -20,6 +26,7 @@ $(document).ready(function () {
             $('#wrapper').toggleClass('toggled');
             flag = false;
         }
+        $('#rightpage')[0].style.width = document.body.clientWidth - (flag ? 220 : 0) + 'px';
     }
 });
 

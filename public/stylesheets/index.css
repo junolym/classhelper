@@ -265,7 +265,8 @@ html {
 
 .navbar {
   margin-bottom: 0px;
-  height: 20px
+  height: 20px;
+  border:none;
 }
 
 /*-------------------------------*/
@@ -279,6 +280,7 @@ html {
 .row {
   margin-left: 0px;
   margin-right: 0px;
+  width: 100%;
 }
 table {
   font-size: 16px;
