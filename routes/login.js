@@ -21,10 +21,8 @@ router.post('/', function(req, res) {
                 res.redirect('/');
                 cm.add(token, req.body.form_username);
             });
-        } else if(err == 2) {
-            res.render('login', { error : '密码错误' });
         } else {
-            res.render('login', { error : '用户不存在' });
+            res.render('login', { error : err.stack });
         }
     });
 });

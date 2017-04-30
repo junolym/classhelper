@@ -13,14 +13,12 @@ var pool  = mysql.createPool({
  * @param {string} account
  * @param {string} password 32位大写的MD5值
  * @param {function} callback
- * err=1  用户不存在  
- * err=2  密码错误    
  * result account数据 
  * */
 exports.login = function(account, password, callback) {
     this.getuser(account, function(err, result) {
         if (!err && result[0].password != password) {
-            err = 2;
+            err = {stack: '密码错误', status: 500};
         }
         callback(err, result);
     });
@@ -31,14 +29,13 @@ exports.login = function(account, password, callback) {
  *
  * @param {string} account
  * @param {function} callback
- * err=1  用户不存在  
  * result account数据 
  */
 exports.getuser = function getuser(account, callback) {
     var sql = "select * from users where account=?"
     pool.query(sql, account, function(err, result, fields) {
         if (!err && result.length == 0) {
-            err = 1;
+            err = {stack: '用户不存在', status: 500};
         }
         callback(err, result);
     });
@@ -55,8 +52,6 @@ exports.getuser = function getuser(account, callback) {
  * @param {string} n_phone
  * @param {function} callback
  * admin   管理账户
- * err=1   账户不存在  
- * err=2   权限不足    
  * result  新用户id
  */
 exports.adduser = function(admin, n_account, n_password, n_username, 
@@ -90,7 +85,6 @@ exports.adduser = function(admin, n_account, n_password, n_username,
  * @param {string} account
  * @param {array} userinfo [username, email, phone]
  * @param {function} callback
- * err=1   账户不存在
  * result  修改行数
  */
 exports.updateuserinfo = function(account, userinfo, callback) {
@@ -378,7 +372,6 @@ exports.getsignbycourse = function(course_id, callback) {
 /**
  * getsignbyid
  *
- * @param {string} account
  * @param {number} sign_id
  * @param {function} callback
  * [{course_id, id, name, time}]

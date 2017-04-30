@@ -31,7 +31,8 @@ var pool  = mysql.createPool({
     host: 'tx.wenxr.com',
     user: 'root',
     password: 'sysusdcs',
-    database: 'test'
+    database: 'test',
+    charset: 'utf8mb4_unicode_ci'
 });
 
 /**
@@ -40,14 +41,12 @@ var pool  = mysql.createPool({
  * @param {string} account
  * @param {string} password 32位大写的MD5值
  * @param {function} callback
- * err=1  用户不存在  
- * err=2  密码错误    
  * result account数据 
  * */
 exports.login = function(account, password, callback) {
     this.getuser(account, function(err, result) {
         if (!err &amp;&amp; result[0].password != password) {
-            err = 2;
+            err = {stack: '密码错误', status: 500};
         }
         callback(err, result);
     });
@@ -58,14 +57,13 @@ exports.login = function(account, password, callback) {
  *
  * @param {string} account
  * @param {function} callback
- * err=1  用户不存在  
  * result account数据 
  */
 exports.getuser = function getuser(account, callback) {
     var sql = "select * from users where account=?"
     pool.query(sql, account, function(err, result, fields) {
         if (!err &amp;&amp; result.length == 0) {
-            err = 1;
+            err = {stack: '用户不存在', status: 500};
         }
         callback(err, result);
     });
@@ -82,8 +80,6 @@ exports.getuser = function getuser(account, callback) {
  * @param {string} n_phone
  * @param {function} callback
  * admin   管理账户
- * err=1   账户不存在  
- * err=2   权限不足    
  * result  新用户id
  */
 exports.adduser = function(admin, n_account, n_password, n_username, 
@@ -94,15 +90,14 @@ exports.adduser = function(admin, n_account, n_password, n_username,
         if (err) {
             callback(err, result)
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack: '此用户不存在', status: 500});
         } else if (result[0].admin == 0) {
-            callback(2, result);
+            callback({stack: '没有添加用户的权限', status: 500,});
         } else {
-            sql = "insert into users(account, password, username, email, "
-                + "phone) values (?, ?, ?, ?, ?)";
-            var parameter = [n_account, n_password, n_username, n_email,
-                            n_phone];
-            pool.query(sql, parameter,  function(err, result, fields) {
+            sql = "insert into users(account, password, username, "
+                + "email, phone) values (?, ?, ?, ?, ?)";
+            pool.query(sql, [n_account, n_password, n_username, n_email,
+                            n_phone],  function(err, result, fields) {
                 if (err)
                     callback(err, result)
                 else
@@ -118,7 +113,6 @@ exports.adduser = function(admin, n_account, n_password, n_username,
  * @param {string} account
  * @param {array} userinfo [username, email, phone]
  * @param {function} callback
- * err=1   账户不存在
  * result  修改行数
  */
 exports.updateuserinfo = function(account, userinfo, callback) {
@@ -130,7 +124,7 @@ exports.updateuserinfo = function(account, userinfo, callback) {
         if (err) {
             callback(err)
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack:'账号不存在', status:500}, result);
         } else {
             callback(err, result.affectedRows);
         }
@@ -147,9 +141,10 @@ exports.updateuserinfo = function(account, userinfo, callback) {
  * result  修改行数
  */
 exports.updateuserpwd = function(account, oldpwd, newpwd, callback) {
-    var sql = "update users set password=? where account=? and password=?";
-    var parameter = [newpwd, account, oldpwd];
-    pool.query(sql, parameter, function(err, result, fields) {
+    var sql = "update users set password=? "
+            + "where account=? and password=?";
+    pool.query(sql, [newpwd, account, oldpwd], 
+        function(err, result, fields) {
         if (err) {
             callback(err);
         } else {
@@ -203,8 +198,8 @@ exports.getcoursebyaccount = function(account, callback) {
  */
 exports.addcourse = function(account, course_name, course_time, 
                                 course_info, callback) {
-    var sql = "insert into courses(coz_account, course_name, course_time, "
-            + "course_info) values (?, ?, ?, ?)";
+    var sql = "insert into courses(coz_account, course_name, "
+            + "course_time, course_info) values (?, ?, ?, ?)";
     var parameter = [account, course_name, course_time, course_info];
     pool.query(sql, parameter, function(err, result, fields) {
         if (err)
@@ -217,17 +212,19 @@ exports.addcourse = function(account, course_name, course_time,
 /**
  * delcourse
  *
+ * @param {string} account
  * @param {number} course_id
  * @param {function} callback
  * result  删除行数
  */
-exports.delcourse = function(course_id, callback) {
-    var sql = "delete from courses where course_id=?";
-    pool.query(sql, course_id, function(err, result, fields) {
+exports.delcourse = function(account, course_id, callback) {
+    var sql = "delete from courses where course_id=? and coz_account=?";
+    pool.query(sql, [course_id, account], function(err, result, fields) {
         if (err)
             callback(err, result)
-        else
-            callback(err, result.affectedRows);
+        else if (result.affectedRows == 0)
+            callback({stack: "该课程不存在！", status: 500}, null);
+        callback(err, result.affectedRows);
     });
 };
 
@@ -287,27 +284,17 @@ exports.delexam = function(exam_id, callback) {
 /**
  * addsign
  *
- * @param {string} account
  * @param {number} course_id
  * @param {function} callback
  * signid
  */
-exports.addsign = function(account, course_id, callback) {
-    var sql = "select * from courses where coz_account=? and course_id=?";
-    pool.query(sql, [account, course_id], function(err, result, fields) {
-        if (err) {
-            callback(err);
-        } else if (result.length == 0) {
-            callback("非法访问，该教师无此课程！", result);
-        } else {
-            var sql = "insert into signup set sg_coz_id=?";
-            pool.query(sql, course_id, function(err, result, fields) {
-            if (err)
-                callback(err, result)
-            else
-                callback(err, result.insertId);
-            });
-        }
+exports.addsign = function(course_id, callback) {
+    var sql = "insert into signup set sg_coz_id=?";
+    pool.query(sql, course_id, function(err, result, fields) {
+        if (err)
+            callback(err, result)
+        else
+            callback(err, result.insertId);
     });
 };
 
@@ -333,9 +320,9 @@ exports.studentsign = function(course_id, sign_id, stu_id,
         if (err) {
             callback(err);
         } else if (result.length == 0) {
-            callback(1, result);
+            callback({stack:'学号不在此课程内!', status:500}, result);
         } else if (result[0].cs_stu_name != stu_name) {
-            callback(2, result);
+            callback({stack:'学号姓名不符!', status:500}, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
                     + "ss_stu_id=? "
@@ -396,11 +383,13 @@ exports.addstudent = function(student, callback) {
  *
  * @param {number} course_id
  * @param {function} callback
- * [{time:xx, sign_num:xx, stu_num:xx}]
+ * [{sign_id, time, sign_num, stu_num}]
  */
 exports.getsignbycourse = function(course_id, callback) {
-    var sql = "select sign_time as time, count(ss_sign_id) as sign_num, "
-            + "student_num as stu_num from signup, stu_sign, courses "
+    var sql = "select sign_id, course_id, sign_time as time, "
+            + "count(ss_sign_id) as sign_num, "
+            + "student_num as stu_num "
+            + "from signup, stu_sign, courses "
             + "where course_id = ? and sg_coz_id = course_id " 
             + "and ss_sign_id = sign_id group by sign_id";
     pool.query(sql, course_id, function(err, result, fields) {
@@ -413,17 +402,17 @@ exports.getsignbycourse = function(course_id, callback) {
  *
  * @param {number} sign_id
  * @param {function} callback
- * [{id:xxx, name:xxx, time:xxx}]
+ * [{course_id, id, name, time}]
  */
 exports.getsignbyid = function(sign_id, callback) {
-    var sql = "select ss_stu_id as id, cs_stu_name as name, "
-            + "stu_sign_time as time " 
+    var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
+            + "cs_stu_name as name, stu_sign_time as time "
             + "from coz_stu, stu_sign, signup " 
             + "where sign_id=? and sign_id=ss_sign_id " 
-            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id"
+            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id";
     pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
-    })
+    });
 }
 
 /**
@@ -431,26 +420,81 @@ exports.getsignbyid = function(sign_id, callback) {
  *
  * @param {number} account
  * @param {function} callback
- * [{name:xxx, time:xxx, sign_num:xxx, stu_num:xxx}]
+ * [{sign_id, course_id, name, time, sign_num, stu_num}]
  */
 exports.getsignbyaccount = function(account, callback) {
-    var sql = "select course_name as name, sign_time as time, "
-            + "count(ss_sign_id) as sign_num, student_num as stu_num " 
-            + "from signup, stu_sign, courses "
-            + "where coz_account=? and sg_coz_id = course_id "
-            + "and ss_sign_id = sign_id "
-            + "group by sign_id "
-            + "union " 
-            + "select course_name as name, sign_time as time, " 
-            + "0 as sign_num, student_num as stu_num " 
-            + "from signup, stu_sign, courses "
-            + "where coz_account=? and sg_coz_id = course_id "
-            + "and not exists (select * from stu_sign "
-            + "                 where ss_sign_id = sign_id) "
+    var sql = "select sign_id, course_id, course_name as name, "
+            + "sign_time as time, "
+            + "count(ss_sign_id) as sign_num, student_num as stu_num "
+            + "from signup "
+            + "inner join courses on sg_coz_id=course_id "
+            + "left join stu_sign on sign_id=ss_sign_id "
+            + "where coz_account=? "
             + "group by sign_id "
             + "order by time desc";
-    pool.query(sql, [account, account], function(err, result, fields) {
+    pool.query(sql, account, function(err, result, fields) {
         callback(err, result);
+    });
+}
+
+/**
+ * checksign
+ *
+ * @param {string} account
+ * @param {number} course_id
+ * @param {number} sign_id
+ * @param {function} callback
+ */
+exports.checksign = function(account, course_id, sign_id, callback) {
+    var sql = "select sign_id "
+            + "from courses, signup "
+            + "where coz_account=? and course_id=? "
+            + "and sg_coz_id=course_id and sign_id=?";
+    pool.query(sql, [account, course_id, sign_id], 
+                    function(err, result, fields) {
+        if (!err &amp;&amp; result.length == 0)
+            err = {stack: "sign_id校验失败", status: 500};
+        callback(err);
+    });
+}
+
+/**
+ * getstubycourse
+ *
+ * @param {number} course_id
+ * @param {function} callback
+ * [id, name]
+ */
+exports.getstubycourse = function(course_id, callback) {
+    var sql = "select cs_stu_id as id, cs_stu_name as name "
+            + "from courses, coz_stu "
+            + "where course_id=? "
+            + "and cs_coz_id=course_id";
+    pool.query(sql, course_id, function(err, result, fields) {
+        callback(err, result);
+    });
+}
+
+/**
+ * checkcourse
+ *
+ * @param {string} account
+ * @param {number} course_id
+ * @param {function} callback err
+ */
+exports.checkcourse = function(account, course_id, callback) {
+    var sql = "select coz_account from courses "
+            + "where course_id=? ";
+    pool.query(sql, course_id, function(err, result, fields) {
+        if (err) {
+            callback(err);
+        } else if (result.length == 0) {
+            callback({stack:'此课程不存在', status:500});
+        } else if (result[0].coz_account != account) {
+            callback({stack:'非法访问!该教师无此课程!', status:500});
+        } else {
+            callback(err);
+        }
     });
 }
 
@@ -464,13 +508,13 @@ exports.getsignbyaccount = function(account, callback) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Apr 28 2017 23:04:52 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Apr 30 2017 15:57:27 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

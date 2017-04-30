@@ -293,7 +293,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line176">line 176</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -493,7 +493,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line229">line 229</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line226">line 226</a>
     </li></ul></dd>
     
 
@@ -524,7 +524,7 @@
 
     
 
-    <h4 class="name" id="addsign"><span class="type-signature"></span>addsign<span class="signature">(account, course_id, callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addsign"><span class="type-signature"></span>addsign<span class="signature">(course_id, callback)</span><span class="type-signature"></span></h4>
 
     
 
@@ -563,29 +563,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>account</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
     
 
         <tr>
@@ -670,7 +647,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line267">line 267</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -824,7 +801,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line356">line 356</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line343">line 343</a>
     </li></ul></dd>
     
 
@@ -978,7 +955,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line334">line 334</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line321">line 321</a>
     </li></ul></dd>
     
 
@@ -1206,7 +1183,7 @@
 
             
 
-            <td class="description last">admin   管理账户err=1   账户不存在  err=2   权限不足    result  新用户id</td>
+            <td class="description last">admin   管理账户result  新用户id</td>
         </tr>
 
     
@@ -1247,7 +1224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line61">line 61</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -1278,7 +1255,384 @@
 
     
 
-    <h4 class="name" id="delcourse"><span class="type-signature"></span>delcourse<span class="signature">(course_id, callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="checkcourse"><span class="type-signature"></span>checkcourse<span class="signature">(account, course_id, callback)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    checkcourse
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>account</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>course_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">err</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line457">line 457</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="checksign"><span class="type-signature"></span>checksign<span class="signature">(account, course_id, sign_id, callback)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    checksign
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>account</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>course_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sign_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line420">line 420</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="delcourse"><span class="type-signature"></span>delcourse<span class="signature">(account, course_id, callback)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1317,6 +1671,29 @@
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>account</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
 
         <tr>
@@ -1401,7 +1778,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line196">line 196</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -1555,7 +1932,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line248">line 248</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -1709,7 +2086,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line140">line 140</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line135">line 135</a>
     </li></ul></dd>
     
 
@@ -1863,7 +2240,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line158">line 158</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -2017,7 +2394,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line213">line 213</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line210">line 210</a>
     </li></ul></dd>
     
 
@@ -2130,7 +2507,7 @@
 
             
 
-            <td class="description last">[{name:xxx, time:xxx, sign_num:xxx, stu_num:xxx}]</td>
+            <td class="description last">[{sign_id, course_id, name, time, sign_num, stu_num}]</td>
         </tr>
 
     
@@ -2171,7 +2548,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line408">line 408</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line397">line 397</a>
     </li></ul></dd>
     
 
@@ -2284,7 +2661,7 @@
 
             
 
-            <td class="description last">[{time:xx, sign_num:xx, stu_num:xx}]</td>
+            <td class="description last">[{sign_id, time, sign_num, stu_num}]</td>
         </tr>
 
     
@@ -2325,7 +2702,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line373">line 373</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line360">line 360</a>
     </li></ul></dd>
     
 
@@ -2438,7 +2815,7 @@
 
             
 
-            <td class="description last">[{id:xxx, name:xxx, time:xxx}]</td>
+            <td class="description last">[{course_id, id, name, time}]</td>
         </tr>
 
     
@@ -2479,7 +2856,161 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line390">line 390</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line379">line 379</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getstubycourse"><span class="type-signature"></span>getstubycourse<span class="signature">(course_id, callback)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    getstubycourse
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>course_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[id, name]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line440">line 440</a>
     </li></ul></dd>
     
 
@@ -2592,7 +3123,7 @@
 
             
 
-            <td class="description last">err=1  用户不存在  result account数据</td>
+            <td class="description last">result account数据</td>
         </tr>
 
     
@@ -2633,7 +3164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line36">line 36</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -2769,7 +3300,7 @@
 
             
 
-            <td class="description last">err=1  用户不存在  err=2  密码错误    result account数据</td>
+            <td class="description last">result account数据</td>
         </tr>
 
     
@@ -2810,7 +3341,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line19">line 19</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -3033,7 +3564,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line298">line 298</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line285">line 285</a>
     </li></ul></dd>
     
 
@@ -3169,7 +3700,7 @@
 
             
 
-            <td class="description last">err=1   账户不存在result  修改行数</td>
+            <td class="description last">result  修改行数</td>
         </tr>
 
     
@@ -3210,7 +3741,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line96">line 96</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -3410,7 +3941,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line121">line 121</a>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -3452,13 +3983,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Apr 28 2017 23:04:52 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Apr 30 2017 15:57:27 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
