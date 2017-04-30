@@ -1,0 +1,35 @@
+<div class="addcourse">
+		<div class="col-sm-6 form-box">
+        	<div class="form-top">
+        		<div class="form-top-left">
+        			<h3 class="addtitle">新建课程</h3>
+        		</div>
+            </div>
+            <div class="form-bottom">
+            	<div class="form-group">
+            		<label class="sr-only" for="form-coursename">课程名称</label>
+                	<input type="textarea" name="form_coursename" placeholder="课程名称" class="form-coursename form-control" id="form-coursename" required>
+                </div>
+
+                <div class="form-group">
+                	<label class="sr-only" for="form-courseinfo">课程信息</label>
+                	<input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" required>
+                </div>
+                    
+                <div class="form-group">
+                	<label class="sr-only" for="form-coursetime">上课时间</label>
+                	<input type="text" name="form_coursetime" placeholder="上课时间" class="form-coursetime form-control" id="form-coursetime" required>
+                </div>
+
+                <div class="form-group">
+                	<label class="sr-only" for="form-coursenum">学生人数</label>
+                	<input type="text" name="form_coursenum" placeholder="学生人数" class="form-coursenum form-control" id="form-coursenum" required>
+                </div>
+                <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
+                </form>
+            </div>
+            {{#if error}}
+                <div class="alert alert-danger" role="alert">{{error}}</div>
+            {{/if}}
+        </div>
+	</div>

@@ -287,10 +287,23 @@ table {
 /*-------------------------------*/
 /*          course               */
 /*-------------------------------*/
-.addCourse {
-  /*position:relative;*/
-  /*float:right;*/
+.addCoursebtn {
   font-size:12px;
+}
+
+.addcourse {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+.addtitle {
+  text-align: center;
+}
+
+.addbtn {
+  position: relative;
+  float: right;
 }
 
 

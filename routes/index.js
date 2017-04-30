@@ -52,4 +52,12 @@ router.get('/index/exam', function(req, res, next) {
     }
 });
 
+router.get('/index/addcourse', function(req, res, next) {
+    if (req.cookies && cm.check(req.cookies.id)) {
+        res.render('content/index-addcourse', { title: '添加课程' });
+    } else {
+        res.redirect('/login');
+    }
+});
+
 module.exports = router;
