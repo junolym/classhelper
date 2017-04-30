@@ -1,5 +1,8 @@
 # classhelper (Developing)
 
+## 在线版本（自动更新代码）
+https://classhelper.ml (用户名/密码 stsluy/luyong)
+
 ## 小纸条
 ### 【重要】使用npm安装第三方包
 项目中使用到的包，应该使用以下方式安装（使用--save将自动把这个包添加到package.json的依赖库。
