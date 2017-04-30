@@ -53,7 +53,7 @@ html {
   display: none;
 }
 #page-content-wrapper {
-  padding-top: 70px;
+  padding-top: 50px;
   width: 100%;
 }
 /*-------------------------------*/
@@ -287,10 +287,16 @@ table {
 /*-------------------------------*/
 /*          course               */
 /*-------------------------------*/
-.addCoursebtn {
-  font-size:12px;
+.btn-group {
+  margin: 10px 0 10px 0;
 }
-
+.btn-group .btn {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.backbtn {
+  border-radius: 25px 5px 5px 25px;
+}
 .addcourse {
   margin-left: auto;
   margin-right: auto;

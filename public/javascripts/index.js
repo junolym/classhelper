@@ -24,6 +24,13 @@ $(document).ready(function () {
 });
 
 function loadContent(content) {
+    contentstack = window.contentstack || [];
+    if (content == '..') {
+        contentstack.pop();
+        content = contentstack[contentstack.length-1];
+    } else if (content != contentstack[contentstack.length-1]) {
+        contentstack.push(content);
+    }
     $.get('/index/'+content, function(data, status) {
         if (status == 'success') {
             $('#content').html(data);
