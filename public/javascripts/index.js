@@ -2,8 +2,6 @@ $(document).ready(function () {
     var trigger = $('.hamburger');
     flag = false;
 
-
-
     if (document.body.clientWidth >= 767) {
     	$('#wrapper').toggleClass('toggled');
         flag = true;
@@ -30,7 +28,7 @@ $(document).ready(function () {
     }
 });
 
-function loadContent(content) {
+lc = function loadContent(content) {
     contentstack = window.contentstack || [];
     if (content == '.') {
         content = contentstack[contentstack.length-1];
@@ -40,11 +38,7 @@ function loadContent(content) {
     } else if (content != contentstack[contentstack.length-1]) {
         contentstack.push(content);
     }
-    $.get('/index/'+content, function(data, status) {
-        if (status == 'success') {
-            $('#content').html(data);
-        } else {
-            console.log(status);
-        }
+    $.get('/index/'+content).complete(function(res) {
+        $('#content').html(res.responseText);
     });
 }
