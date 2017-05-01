@@ -50,7 +50,7 @@ lc = function loadContent(content) {
     } else if (content != contentstack[contentstack.length-1]) {
         contentstack.push(content);
     }
-    $.get('/index/'+content).complete(function(res) {
+    $.get('/home/'+content).complete(function(res) {
         $('#content').html(res.responseText);
     });
 }
