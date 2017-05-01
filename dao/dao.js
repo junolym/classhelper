@@ -470,3 +470,21 @@ exports.checkcourse = function(account, course_id, callback) {
     });
 }
 
+/**
+ * getcoursebyid
+ *
+ * @param {number} course_id
+ * @param {function} callback
+ * [course_name, course_time, course_info, student_num]
+ */
+exports.getcoursebyid = function(course_id, callback) {
+    var sql = "select course_name, course_time, course_info, student_num "
+            + "from courses where course_id=?"
+    pool.query(sql, course_id, function(err, result, fields) {
+        if (!err && result.length == 0) {
+            err = {stack: '改课程不存在', status: 500};
+        }
+        callback(err, result);
+    });
+}
+

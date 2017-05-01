@@ -2,6 +2,14 @@ var dao = require('./dao.js');
 
 /**  login in */
 dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
+    // dao.getcoursebyid(1, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    dao.getstubycourse(1, function(err, doc) {
+        console.log(err);
+        console.log(doc);
+    });
     // dao.checkcourse('stsluy1', 1, function(err) {
     //     console.log(err);
     // });
@@ -27,6 +35,7 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     //     console.log(doc);
     // });
     // dao.getsignbyid(47, function(err, doc) {
+    //     console.log(err);
     //     console.log(doc);
     // })
     // });
