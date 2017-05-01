@@ -312,17 +312,21 @@ exports.studentsign = function(course_id, sign_id, stu_id,
 /**
  * addstutocourse
  *
+ * @param {number} course_id
  * @param {array} coz_stu
- * [ [coz_id1, stu_id1, stu_name1],
- * [coz_id2, stu_id2, stu_name2] ]
+ * [ [stu_id1, stu_name1],
+ * [stu_id2, stu_name2] ]
  * @param {function} callback
  * result 插入行数
  */
-exports.addstutocourse = function(coz_stu, callback) {
+exports.addstutocourse = function(course_id, coz_stu, callback) {
+    var parameter = [];
+    for (var i in coz_stu) {
+        parameter.push([course_id, coz_stu[i][0], coz_stu[i][1]]);
+    }
     var sql = "insert into coz_stu(cs_coz_id, cs_stu_id, "
             + "cs_stu_name) values ?";
-
-    pool.query(sql, [coz_stu], function(err, result, fields) {
+    pool.query(sql, [parameter], function(err, result, fields) {
         if (err)
             callback(err, result);
         else
