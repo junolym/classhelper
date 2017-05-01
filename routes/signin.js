@@ -22,8 +22,6 @@ router.post('/', function(req, res) {
     }
     var cookie = cm.getCookie(req.cookies.signin);
     dao.studentsign(cookie.cid, cookie.sid, req.body.form_number, req.body.form_username, function(err, result) {
-        console.log(err);
-        console.log(result);
         if (!err) {
             res.clearCookie('signin');
             res.redirect('/signinresult?success=true');

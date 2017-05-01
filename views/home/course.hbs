@@ -9,8 +9,8 @@
   <tbody>
     {{#each courses}}
     <tr>
-      <td><a class="btn" href="javascript:lc('../coursedetail?id={{course_id}}')">{{course_name}}</td>
-      <td><a class="btn" href="javascript:lc('../coursedetail?id={{course_id}}')">{{course_time}}</td>
+      <td><a class="btn" href="javascript:lc('coursedetail?id={{course_id}}')">{{course_name}}</td>
+      <td><a class="btn" href="javascript:lc('coursedetail?id={{course_id}}')">{{course_time}}</td>
       <td><a class="btn btn-default" href="javascript:window.open('../createsignin?course={{course_id}}');lc('signin')">开始签到</a>
       <a class="btn btn-default" href="javascript:lc('../createexam?course={{course_id}}')">开始测验</a></td>
     </tr>

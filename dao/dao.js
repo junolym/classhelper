@@ -13,7 +13,7 @@ var pool  = mysql.createPool({
  * @param {string} account
  * @param {string} password 32位大写的MD5值
  * @param {function} callback
- * result account数据 
+ * result account数据
  * */
 exports.login = function(account, password, callback) {
     this.getuser(account, function(err, result) {
@@ -29,7 +29,7 @@ exports.login = function(account, password, callback) {
  *
  * @param {string} account
  * @param {function} callback
- * result account数据 
+ * result account数据
  */
 exports.getuser = function getuser(account, callback) {
     var sql = "select * from users where account=?"
@@ -54,7 +54,7 @@ exports.getuser = function getuser(account, callback) {
  * admin   管理账户
  * result  新用户id
  */
-exports.adduser = function(admin, n_account, n_password, n_username, 
+exports.adduser = function(admin, n_account, n_password, n_username,
                             n_email, n_phone, callback) {
     // 权限
     var sql = "select admin from users where account=?";
@@ -115,7 +115,7 @@ exports.updateuserinfo = function(account, userinfo, callback) {
 exports.updateuserpwd = function(account, oldpwd, newpwd, callback) {
     var sql = "update users set password=? "
             + "where account=? and password=?";
-    pool.query(sql, [newpwd, account, oldpwd], 
+    pool.query(sql, [newpwd, account, oldpwd],
         function(err, result, fields) {
         if (err) {
             callback(err);
@@ -168,7 +168,7 @@ exports.getcoursebyaccount = function(account, callback) {
  * @param {function} callback
  * result  course_id
  */
-exports.addcourse = function(account, course_name, course_time, 
+exports.addcourse = function(account, course_name, course_time,
                                 course_info, callback) {
     var sql = "insert into courses(coz_account, course_name, "
             + "course_time, course_info) values (?, ?, ?, ?)";
@@ -230,7 +230,7 @@ exports.addexam = function(course_id, exam_name, exam_question, callback) {
     pool.query(sql, exams, function(err, result, fields) {
         if (err)
             callback(err, result)
-        else 
+        else
             callback(err, result.insertId);
     });
 };
@@ -282,7 +282,7 @@ exports.addsign = function(course_id, callback) {
  * err=2 学号名字不符;
  * result 插入行数}
  */
-exports.studentsign = function(course_id, sign_id, stu_id, 
+exports.studentsign = function(course_id, sign_id, stu_id,
                                 stu_name, callback) {
     // 检查学号、姓名、课程相符
     var sql = "select cs_stu_name from coz_stu "
@@ -312,7 +312,7 @@ exports.studentsign = function(course_id, sign_id, stu_id,
 /**
  * addstutocourse
  *
- * @param {array} coz_stu 
+ * @param {array} coz_stu
  * [ [coz_id1, stu_id1, stu_name1],
  * [coz_id2, stu_id2, stu_name2] ]
  * @param {function} callback
@@ -321,7 +321,7 @@ exports.studentsign = function(course_id, sign_id, stu_id,
 exports.addstutocourse = function(coz_stu, callback) {
     var sql = "insert into coz_stu(cs_coz_id, cs_stu_id, "
             + "cs_stu_name) values ?";
-    
+
     pool.query(sql, [coz_stu], function(err, result, fields) {
         if (err)
             callback(err, result);
@@ -333,7 +333,7 @@ exports.addstutocourse = function(coz_stu, callback) {
 /**
  * addstudent
  *
- * @param {array} student 
+ * @param {array} student
  *
  * [ [id1, name1],
  * [id2, name2] ]
@@ -362,7 +362,7 @@ exports.getsignbycourse = function(course_id, callback) {
             + "count(ss_sign_id) as sign_num, "
             + "student_num as stu_num "
             + "from signup, stu_sign, courses "
-            + "where course_id = ? and sg_coz_id = course_id " 
+            + "where course_id = ? and sg_coz_id = course_id "
             + "and ss_sign_id = sign_id group by sign_id";
     pool.query(sql, course_id, function(err, result, fields) {
         callback(err, result);
@@ -379,8 +379,8 @@ exports.getsignbycourse = function(course_id, callback) {
 exports.getsignbyid = function(sign_id, callback) {
     var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
             + "cs_stu_name as name, stu_sign_time as time "
-            + "from coz_stu, stu_sign, signup " 
-            + "where sign_id=? and sign_id=ss_sign_id " 
+            + "from coz_stu, stu_sign, signup "
+            + "where sign_id=? and sign_id=ss_sign_id "
             + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id";
     pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
@@ -422,7 +422,7 @@ exports.checksign = function(account, course_id, sign_id, callback) {
             + "from courses, signup "
             + "where coz_account=? and course_id=? "
             + "and sg_coz_id=course_id and sign_id=?";
-    pool.query(sql, [account, course_id, sign_id], 
+    pool.query(sql, [account, course_id, sign_id],
                     function(err, result, fields) {
         if (!err && result.length == 0)
             err = {stack: "sign_id校验失败", status: 500};
