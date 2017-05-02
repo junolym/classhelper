@@ -300,10 +300,16 @@ exports.studentsign = function(course_id, sign_id, stu_id,
                     + "ss_stu_id=? "
             var parameter = [sign_id, stu_id];
             pool.query(sql, parameter, function(err, result, fields) {
-                if (err)
-                    callback(err, result);
-                else
+                if (err) {
+                    var reg = /PRIMARY/;
+                    if (reg.test(err)) {
+                        callback({stack:'请勿重复签到', status:500});
+                    } else {
+                        callback(err, result);
+                    }
+                } else {
                     callback(err, result.affectedRows);
+                }
             });
         }
     });

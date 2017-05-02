@@ -6,18 +6,21 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     //     console.log(err);
     //     console.log(doc);
     // });
-    dao.getstubycourse(1, function(err, doc) {
-        console.log(err);
-        console.log(doc);
-    });
+    // dao.getstubycourse(1, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
     // dao.checkcourse('stsluy1', 1, function(err) {
     //     console.log(err);
     // });
     // dao.addsign(1, function(err, signid) {
     //     console.log(signid);
-        // dao.studentsign(1, signid, '14331024', '陈俊贤', function(err, doc) {
-        //     console.log(err);
-        // });
+        dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
+            console.log(err);
+        });
+        dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
+            console.log(err);
+        });
         // dao.studentsign(1, signid, '14331279', '温晓锐', function(err, doc) {
         // });
         // dao.studentsign(1, signid, '14331139', '李文盛', function(err, doc) {
