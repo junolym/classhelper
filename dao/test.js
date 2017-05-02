@@ -2,6 +2,10 @@ var dao = require('./dao.js');
 
 /**  login in */
 dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
+    dao.updatecourse(31, '你们够了', '1-20周 周一-周六 1-15节', 
+        '就是这么任性，哼', function(err, doc) {
+            console.log(err, doc);
+    });
     // dao.getcoursebyid(1, function(err, doc) {
     //     console.log(err);
     //     console.log(doc);
@@ -15,12 +19,12 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     // });
     // dao.addsign(1, function(err, signid) {
     //     console.log(signid);
-        dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
-            console.log(err);
-        });
-        dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
-            console.log(err);
-        });
+        // dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
+        //     console.log(err);
+        // });
+        // dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
+        //     console.log(err);
+        // });
         // dao.studentsign(1, signid, '14331279', '温晓锐', function(err, doc) {
         // });
         // dao.studentsign(1, signid, '14331139', '李文盛', function(err, doc) {

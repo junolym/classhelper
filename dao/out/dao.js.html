@@ -223,7 +223,7 @@ exports.delcourse = function(account, course_id, callback) {
         if (err)
             callback(err, result)
         else if (result.affectedRows == 0)
-            callback({stack: "该课程不存在！", status: 500}, null);
+            callback({stack: "此课程不存在！", status: 500}, null);
         callback(err, result.affectedRows);
     });
 };
@@ -328,10 +328,16 @@ exports.studentsign = function(course_id, sign_id, stu_id,
                     + "ss_stu_id=? "
             var parameter = [sign_id, stu_id];
             pool.query(sql, parameter, function(err, result, fields) {
-                if (err)
-                    callback(err, result);
-                else
+                if (err) {
+                    var reg = /PRIMARY/;
+                    if (reg.test(err)) {
+                        callback({stack:'请勿重复签到', status:500});
+                    } else {
+                        callback(err, result);
+                    }
+                } else {
                     callback(err, result.affectedRows);
+                }
             });
         }
     });
@@ -514,12 +520,32 @@ exports.getcoursebyid = function(course_id, callback) {
             + "from courses where course_id=?"
     pool.query(sql, course_id, function(err, result, fields) {
         if (!err &amp;&amp; result.length == 0) {
-            err = {stack: '改课程不存在', status: 500};
+            err = {stack: '此课程不存在', status: 500};
         }
         callback(err, result);
     });
 }
 
+/**
+ * updatecourse
+ *
+ * @param {number} course_id
+ * @param {string} n_course_name
+ * @param {string} n_course_time
+ * @param {string} n_course_info
+ * @param {function} callback
+ */
+exports.updatecourse = function(course_id, n_course_name, n_course_time, n_course_info, callback) {
+    var sql = "update courses set course_name=?, course_time=?, "
+            + "course_info=? where course_id=?"
+    var parameter=[n_course_name, n_course_time, n_course_info, course_id];
+    pool.query(sql, parameter, function(err, result, fields) {
+        if (!err &amp;&amp; result.affectedRows == 0) {
+            err = {stack: '此课程不存在', status:500};
+        } 
+        callback(err, result.affectedRows);
+    });
+}
 </code></pre>
         </article>
     </section>
@@ -530,13 +556,13 @@ exports.getcoursebyid = function(course_id, callback) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue May 02 2017 00:31:50 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue May 02 2017 23:39:18 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

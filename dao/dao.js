@@ -195,7 +195,7 @@ exports.delcourse = function(account, course_id, callback) {
         if (err)
             callback(err, result)
         else if (result.affectedRows == 0)
-            callback({stack: "该课程不存在！", status: 500}, null);
+            callback({stack: "此课程不存在！", status: 500}, null);
         callback(err, result.affectedRows);
     });
 };
@@ -492,9 +492,29 @@ exports.getcoursebyid = function(course_id, callback) {
             + "from courses where course_id=?"
     pool.query(sql, course_id, function(err, result, fields) {
         if (!err && result.length == 0) {
-            err = {stack: '改课程不存在', status: 500};
+            err = {stack: '此课程不存在', status: 500};
         }
         callback(err, result);
     });
 }
 
+/**
+ * updatecourse
+ *
+ * @param {number} course_id
+ * @param {string} n_course_name
+ * @param {string} n_course_time
+ * @param {string} n_course_info
+ * @param {function} callback
+ */
+exports.updatecourse = function(course_id, n_course_name, n_course_time, n_course_info, callback) {
+    var sql = "update courses set course_name=?, course_time=?, "
+            + "course_info=? where course_id=?"
+    var parameter=[n_course_name, n_course_time, n_course_info, course_id];
+    pool.query(sql, parameter, function(err, result, fields) {
+        if (!err && result.affectedRows == 0) {
+            err = {stack: '此课程不存在', status:500};
+        } 
+        callback(err, result.affectedRows);
+    });
+}
