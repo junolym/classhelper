@@ -54,3 +54,12 @@ lc = function loadContent(content) {
         $('#content').html(res.responseText);
     });
 }
+
+
+function formSubmit() {
+    $.post($("#contentForm")[0].action, $("#contentForm").serialize())
+    .complete(function(res) {
+        $('#content').html(res.responseText);
+    });
+    return false;
+};

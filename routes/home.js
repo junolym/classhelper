@@ -49,7 +49,7 @@ router.get('/exam', function(req, res, next) {
 
 router.get('/addcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-        res.render('home/addcourse', { title: '添加课程' });
+        res.render('home/coursedetail', { title: '添加课程' });
     } else {
         res.render('home/redirect', { location : '/login' });
     }
@@ -59,9 +59,8 @@ router.post('/addcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
         dao.addcourse(cm.getCookie(req.cookies.id), req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result){
             if (!err) {
-                res.render('home/redirect', { location : '/' });
-            }
-            else {
+                res.render('home/reload', { location : 'course' });
+            } else {
                 res.render('error', { error : err });
             }
         });
@@ -97,10 +96,12 @@ router.get('/signindetail', function(req, res, next) {
     }
 });
 
+
 router.post('/editcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-                //TODO editcourse
+        //TODO editcourse
 
+        res.render('home/reload', { location : 'course' });
     } else {
         res.render('home/redirect', { location : '/login' });
     }
@@ -114,15 +115,12 @@ router.get('/deletecourse', function(req, res, next) {
             if (!err) {
                 dao.delcourse(cm.getCookie(req.cookies.id), courseId, function(err, result){
                     if (!err) {
-                        res.render('home/redirect', { location : '/' });
-
-                    }
-                    else {
+                        res.render('home/reload', { location : 'course' });
+                    } else {
                         res.render('error', { error : err });
                     }
                 });
-            }
-            else {
+            } else {
                 res.render('error', { error : err });
             }
         });
@@ -133,19 +131,22 @@ router.get('/deletecourse', function(req, res, next) {
 
 router.get('/coursedetail', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-        dao.getcoursebyid(req.id, function(err, result){
+        var params = url.parse(req.url, true).query;
+        dao.checkcourse(cm.getCookie(req.cookies.id), params.id, function(err, result) {
             if (!err) {
-                var coursedetail = JSON.parse(JSON.stringify(result));
-                coursedetail.forEach(function(s) {
-                            s.time = (new Date(s.time)).toLocaleString('zh-CN', { hour12 : false })
-                                .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
-                        });
-                //res.render('home/coursedetail', { title: '课程详细列表', signin: signin });
+                dao.getcoursebyid(params.id, function(err, result){
+                    if (!err) {
+                        var coursedetail = JSON.parse(JSON.stringify(result))[0];
+                        coursedetail.course_id = params.id;
+                        res.render('home/coursedetail', coursedetail );
+                    } else {
+                        res.render('error', { error : err });
+                    }
+                })
+            } else {
+                res.render('home/redirect', { location : '/login' });
             }
-            else {
-                res.render('error', { error : err });
-            }
-        })
+        });
     } else {
         res.render('home/redirect', { location : '/login' });
     }
