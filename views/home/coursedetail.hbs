@@ -1,44 +1,68 @@
 <div class="btn-group" role="group" aria-label="...">
   <button class="btn btn-large btn-default backbtn" type="button" onclick="lc('..')">返回</button>
 </div>
-<div class="addcourse">
-		<div class="col-sm-6 form-box">
-        	<div class="form-top">
-        		<div class="form-top-left">
-        			<h3 class="addtitle">{{title}}</h3>
-        		</div>
-            </div>
-            <div class="form-bottom">
-            {{#if course_id}}
-            <form role="form" id="contentForm" action="/home/editcourse?id={{course_id}}" method="post" onsubmit="return formSubmit()" class="addcourse-form">
-            {{else}}
-            <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="return formSubmit()" class="addcourse-form">
-            {{/if}}
-            	<div class="form-group">
-            		<label class="sr-only" for="form-coursename">课程名称</label>
-                	<input type="textarea" name="form_coursename" placeholder="课程名称" class="form-coursename form-control" id="form-coursename" value="{{course_name}}" required>
-                </div>
-
-                <div class="form-group">
-                	<label class="sr-only" for="form-courseinfo">课程信息</label>
-                	<input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
-                </div>
-
-                <div class="form-group">
-                	<label class="sr-only" for="form-coursetime">上课时间</label>
-                	<input type="text" name="form_coursetime" placeholder="上课时间" class="form-coursetime form-control" id="form-coursetime" value="{{course_time}}" required>
-                </div>
-
-                {{#if course_id}}
-                <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">修改</button>
-                <button class="btn btn-default" onclick="lc('deletecourse?id={{course_id}}')">删除课程</button>
-                {{else}}
-                <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
-                {{/if}}
-            </form>
-            </div>
-            {{#if error}}
-                <div class="alert alert-danger" role="alert">{{error}}</div>
-            {{/if}}
+<div class="addcourse container">
+	<div class="col-sm-6 form-box" style="">
+    	<div class="form-top">
+    		<div class="form-top-left">
+    			<h3 class="addtitle">{{title}}</h3>
+    		</div>
         </div>
-	</div>
+        <div class="form-bottom">
+        {{#if course_id}}
+        <form role="form" id="contentForm" action="/home/editcourse?id={{course_id}}" method="post" onsubmit="return formSubmit()" class="addcourse-form">
+        {{else}}
+        <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="return formSubmit()" class="addcourse-form">
+        {{/if}}
+        	<div class="form-group">
+        		<label class="sr-only" for="form-coursename">课程名称</label>
+            	<input type="textarea" name="form_coursename" placeholder="课程名称" class="form-coursename form-control" id="form-coursename" value="{{course_name}}" required>
+            </div>
+
+            <div class="form-group">
+            	<label class="sr-only" for="form-courseinfo">课程信息</label>
+            	<input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
+            </div>
+
+            <div class="form-group">
+            	<label class="sr-only" for="form-coursetime">上课时间</label>
+            	<input type="text" name="form_coursetime" placeholder="上课时间" class="form-coursetime form-control" id="form-coursetime" value="{{course_time}}" required>
+            </div>
+
+            {{#if course_id}}
+            <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">修改</button>
+            <button class="btn btn-default" onclick="deleteCourse()">删除课程</button>
+            {{else}}
+            <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
+            {{/if}}
+        </form>
+        </div>
+        {{#if error}}
+            <div class="alert alert-danger" role="alert">{{error}}</div>
+        {{/if}}
+    </div>
+</div>
+
+<div class="container stulist">
+    <h2>学生名单</h2>
+    <table width="600" cellpadding="0" cellspacing="0" id="stutable">    
+{{!--         {{#each students}} --}}
+        <tr>    
+          <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>    
+          <td id="stuName" width="150" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>  
+        </tr>    
+        
+        <tr>    
+          <td bgcolor="#FFFFFF" contentEditable= "true">14331024</td>    
+          <td bgcolor="#FFFFFF" contentEditable= "true">cjx</td>       
+        </tr>    
+        <tr>     
+          <td bgcolor="#FFFFFF" contentEditable= "true">14331040</td>    
+          <td bgcolor="#FFFFFF" contentEditable= "true">cx</td>      
+        </tr>    
+    </table> 
+
+    <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" id="getstu" style="font-size:18px">导入名单</button>
+
+</div>
+

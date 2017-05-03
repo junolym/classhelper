@@ -321,6 +321,28 @@ table {
 }
 
 /*-------------------------------*/
+/*          table                */
+/*-------------------------------*/
+.stulist {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+#stutable {
+  border:1px solid #CCCCCC;
+}
+
+#stuID, #stuName {
+  font-size: 20px;
+}
+
+#getstu {
+  margin-top: 10px;
+}
+
+/*-------------------------------*/
 /*          Dark Overlay         */
 /*-------------------------------*/
 .overlay {
