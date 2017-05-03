@@ -172,13 +172,13 @@ router.get('/deletesignin', function(req, res, next) {
         var params = url.parse(req.url, true).query;
         dao.checksign(cm.getCookie(req.cookies.id), params.cid, params.sid, function(err, result) {
             if (!err) {
-                // dao.delsign(params.sid, function(err) {
+                dao.delsign(params.sid, function(err) {
                     if (!err) {
                         res.render('home/reload', { location : 'signin' });
                     } else {
                         res.render('error', { error : err });
                     }
-                // });
+                });
             } else {
                 res.render('error', { error : err });
             }
