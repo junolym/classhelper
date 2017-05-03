@@ -144,7 +144,16 @@ router.get('/coursedetail', function(req, res, next) {
                     if (!err) {
                         var coursedetail = JSON.parse(JSON.stringify(result))[0];
                         coursedetail.course_id = params.id;
-                        res.render('home/coursedetail', coursedetail );
+                        dao.getstubycourse(params.id, function(err, studentresult){
+                            if (!err) {
+                                var student = JSON.parse(JSON.stringify(studentresult));
+                                coursedetail.students = student;
+                                res.render('home/coursedetail', coursedetail);
+                            }
+                            else {
+                                res.render('error', { error : err });
+                            }
+                        })
                     } else {
                         res.render('error', { error : err });
                     }
