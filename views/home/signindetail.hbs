@@ -1,6 +1,7 @@
 <div class="btn-group" role="group" aria-label="...">
   <button class="btn btn-large btn-default backbtn" type="button" onclick="lc('..')">返回</button>
   <button class="btn btn-large btn-default addCoursebtn" type="button" onclick="lc('.')">刷新</button>
+  <button class="btn btn-large btn-default addCoursebtn" type="button" onclick="confirm('确定删除本次签到？本操作不可恢复')&&lc('deletesignin?cid={{course_id}}&sid={{signin_id}}')">删除本次签到</button>
 </div>
 <table class="table">
   <thead>

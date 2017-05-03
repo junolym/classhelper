@@ -31,7 +31,7 @@
 
                 {{#if course_id}}
                 <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">修改</button>
-                <button class="btn btn-default" onclick="lc('../home/deletecourse?id={{course_id}}')">删除课程</button>
+                <button class="btn btn-default" onclick="lc('deletecourse?id={{course_id}}')">删除课程</button>
                 {{else}}
                 <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
                 {{/if}}

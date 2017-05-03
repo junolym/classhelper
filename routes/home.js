@@ -57,7 +57,7 @@ router.get('/addcourse', function(req, res, next) {
 
 router.post('/addcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-        dao.addcourse(cm.getCookie(req.cookies.id), req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result){
+        dao.addcourse(cm.getCookie(req.cookies.id), req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result) {
             if (!err) {
                 res.render('home/reload', { location : 'course' });
             } else {
@@ -82,7 +82,7 @@ router.get('/signindetail', function(req, res, next) {
                             s.time = (new Date(s.time)).toLocaleString('zh-CN', { hour12 : false })
                                 .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
                         });
-                        res.render('home/signindetail', { signindetail: signindetail });
+                        res.render('home/signindetail', { course_id : params.cid, signin_id : params.sid, signindetail: signindetail });
                     } else {
                         res.render('error', { error : err });
                     }
@@ -99,7 +99,7 @@ router.get('/signindetail', function(req, res, next) {
 
 router.post('/editcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-        var params = url.parse(req.url, true).query;      
+        var params = url.parse(req.url, true).query;
         dao.updatecourse(req.query.id, req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result){
             if (!err) {
                 res.render('home/reload', { location : 'course' });
@@ -117,9 +117,9 @@ router.get('/deletecourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
         var params = url.parse(req.url, true).query;
         courseId = params.id;
-        dao.checkcourse(cm.getCookie(req.cookies.id), courseId, function(err, result) {
+        dao.checkcourse(cm.getCookie(req.cookies.id), courseId, function(err) {
             if (!err) {
-                dao.delcourse(cm.getCookie(req.cookies.id), courseId, function(err, result){
+                dao.delcourse(cm.getCookie(req.cookies.id), courseId, function(err){
                     if (!err) {
                         res.render('home/reload', { location : 'course' });
                     } else {
@@ -151,6 +151,27 @@ router.get('/coursedetail', function(req, res, next) {
                 })
             } else {
                 res.render('home/redirect', { location : '/login' });
+            }
+        });
+    } else {
+        res.render('home/redirect', { location : '/login' });
+    }
+});
+
+router.get('/deletesignin', function(req, res, next) {
+    if (req.cookies && cm.check(req.cookies.id)) {
+        var params = url.parse(req.url, true).query;
+        dao.checksign(cm.getCookie(req.cookies.id), params.cid, params.sid, function(err, result) {
+            if (!err) {
+                // dao.delsign(params.sid, function(err) {
+                    if (!err) {
+                        res.render('home/reload', { location : 'signin' });
+                    } else {
+                        res.render('error', { error : err });
+                    }
+                // });
+            } else {
+                res.render('error', { error : err });
             }
         });
     } else {
