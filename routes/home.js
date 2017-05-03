@@ -99,9 +99,15 @@ router.get('/signindetail', function(req, res, next) {
 
 router.post('/editcourse', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
-        //TODO editcourse
+        var params = url.parse(req.url, true).query;      
+        dao.updatecourse(req.query.id, req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result){
+            if (!err) {
+                res.render('home/reload', { location : 'course' });
+            } else {
+                res.render('error', { error : err });
+            }
+        });
 
-        res.render('home/reload', { location : 'course' });
     } else {
         res.render('home/redirect', { location : '/login' });
     }
