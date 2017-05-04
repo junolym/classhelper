@@ -63,6 +63,7 @@ function formSubmit() {
     .complete(function(res) {
         $('#content').html(res.responseText);
     });
+
     return false;
 };
 
@@ -89,12 +90,11 @@ function setEditable() {
 function getstudents() {
     var list = [];
     var trs = $('#stutable')[0].getElementsByTagName("tr");
-    var trLength = trs.length;
-    for (var i = 1; i < trLength; i++) {
+
+    for (var i = 1; i < trs.length; i++) {
         var td = trs[i].getElementsByTagName("td");
-        var id = td[0].innerText;
-        var name = td[1].innerText;
-        list.push([id,name]);
+        list.push([td[0].innerText,td[1].innerText]);
     }
-    JSON.stringify(list);
+
+    document.getElementById("stulistinput").value = JSON.stringify(list);
 }
