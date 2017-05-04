@@ -323,12 +323,6 @@ table {
 /*-------------------------------*/
 /*          table                */
 /*-------------------------------*/
-
-#getstuForm {
-  display: none;
-  visibility: hidden;
-}
-
 .stulist {
   margin-top: 20px;
   margin-left: auto;

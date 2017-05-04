@@ -87,14 +87,18 @@ function setEditable() {
 }
 
 function getstudents() {
-    var list = [];
+    //从表格读入学生名单
+    var list = "[";
     var trs = $('#stutable')[0].getElementsByTagName("tr");
     var trLength = trs.length;
     for (var i = 1; i < trLength; i++) {
         var td = trs[i].getElementsByTagName("td");
         var id = td[0].innerText;
         var name = td[1].innerText;
-        list.push([id,name]);
+        list += "[" + id + "," + name + "]";
+        if (i != trLength - 1)
+            list += ",";
     }
-    JSON.stringify(list);
+    list += "]";
+    return list;
 }

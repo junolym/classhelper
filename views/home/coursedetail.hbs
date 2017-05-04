@@ -48,6 +48,10 @@
         <h2>学生名单</h2>
         <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
     </div>
+
+    <form role="form" id="getstuForm"  method="post" onsubmit="getstudents();return formSubmit()">
+        <input type="text" name="students">
+    </form>
     
     <table width="600" cellpadding="0" cellspacing="0" id="stutable">    
 
