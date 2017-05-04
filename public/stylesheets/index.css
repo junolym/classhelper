@@ -134,13 +134,13 @@ html {
 }
 
 .sidebar-nav > .item, .sidebar-nav > .bottomItem {
-	font-size: 19px;
+  font-size: 19px;
 }
 
 .bottomnav {
-	bottom: 0px;
-	position:relative;
-	height: 20%;
+  bottom: 0px;
+  position:relative;
+  height: 20%;
 }
 /*-------------------------------*/
 /*       Hamburger-Cross         */
@@ -342,7 +342,7 @@ table {
   font-size: 20px;
 }
 
-#getstu, #editstubtn {
+#getstu, #savestu {
   margin-top: 10px;
 }
 
@@ -351,11 +351,24 @@ table {
 }
 
 #editstubtn {
-  margin-right:10px;
+  float: right;
+  margin-right:25px;
+  font-size:10px;
+  width:80px;
+  height:40px;
+}
+
+#tablenav > h2 {
+  float:left;
+  font-size:25px;
 }
 
 #getstu {
   margin-right:15px;
+}
+
+#tablebtn {
+  margin-right:20px;
 }
 
 

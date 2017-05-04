@@ -44,7 +44,11 @@
 </div>
 
 <div class="container stulist">
-    <h2>学生名单</h2>
+    <div id="tablenav">
+        <h2>学生名单</h2>
+        <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
+    </div>
+    
     <table width="600" cellpadding="0" cellspacing="0" id="stutable">    
 
         <tr>    
@@ -60,8 +64,8 @@
     </table>
 
     <div id="tablebtn">
-        <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
         <button type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">导入名单</button>
+        <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px">保存名单</button>
     </div> 
 </div>
 
