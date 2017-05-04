@@ -53,13 +53,15 @@
         </tr>    
         {{#each students}}
         <tr>    
-          <td bgcolor="#FFFFFF" contentEditable= "true">{{id}}</td>    
-          <td bgcolor="#FFFFFF" contentEditable= "true">{{name}}</td>         
+          <td>{{id}}</td>    
+          <td>{{name}}</td>         
         </tr>
         {{/each}}
-    </table> 
+    </table>
 
-    <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" id="getstu" style="font-size:18px">导入名单</button>
-
+    <div id="tablebtn">
+        <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
+        <button type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">导入名单</button>
+    </div> 
 </div>
 

@@ -82,5 +82,6 @@ function setEditable() {
     for (var i = 1; i < trLength; i ++) {
         var td = trs[i].getElementsByTagName("td");
         td[0].setAttribute("contentEditable", "true");
+        td[1].setAttribute("contentEditable", "true");
     }
 }

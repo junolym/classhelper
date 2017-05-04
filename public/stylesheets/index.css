@@ -334,13 +334,30 @@ table {
   border:1px solid #CCCCCC;
 }
 
+#stutable > td {
+  background: "#FFFFFF";
+}
+
 #stuID, #stuName {
   font-size: 20px;
 }
 
-#getstu {
+#getstu, #editstubtn {
   margin-top: 10px;
 }
+
+#tablebtn {
+  float:right;
+}
+
+#editstubtn {
+  margin-right:10px;
+}
+
+#getstu {
+  margin-right:15px;
+}
+
 
 /*-------------------------------*/
 /*          Dark Overlay         */
