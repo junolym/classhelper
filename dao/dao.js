@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var pool  = mysql.createPool({
-    host: 'tx.wenxr.com',
+    host: 'classhelper.ml',
     user: 'root',
     password: 'sysusdcs',
     database: 'test',
@@ -297,8 +297,8 @@ exports.studentsign = function(course_id, sign_id, stu_id,
             callback({stack:'学号姓名不符!', status:500}, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
-                    + "ss_stu_id=? "
-            var parameter = [sign_id, stu_id];
+                    + "ss_stu_id=? ss_stu_name=?"
+            var parameter = [sign_id, stu_id, stu_name];
             pool.query(sql, parameter, function(err, result, fields) {
                 if (err) {
                     var reg = /PRIMARY/;
@@ -388,10 +388,9 @@ exports.getsignbycourse = function(course_id, callback) {
  */
 exports.getsignbyid = function(sign_id, callback) {
     var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
-            + "cs_stu_name as name, stu_sign_time as time "
-            + "from coz_stu, stu_sign, signup "
-            + "where sign_id=? and sign_id=ss_sign_id "
-            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id";
+            + "ss_stu_name as name, stu_sign_time as time "
+            + "from stu_sign, signup "
+            + "where sign_id=? and sign_id=ss_sign_id";
     pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
     });
@@ -555,5 +554,4 @@ exports.delstuofcourse = function(course_id, callback) {
             callback(err, result.affectedRows);
     });
 }
-
 
