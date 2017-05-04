@@ -34,11 +34,13 @@
 
             {{#if course_id}}
             <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">修改</button>
-            <button class="btn btn-default" onclick="deleteCourse()">删除课程</button>
             {{else}}
             <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
             {{/if}}
         </form>
+        {{#if course_id}}
+        <button class="btn btn-default" onclick="confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&lc('deletecourse?id={{course_id}}')">删除课程</button>
+        {{/if}}
         </div>
         {{#if error}}
             <div class="alert alert-danger" role="alert">{{error}}</div>
@@ -51,17 +53,17 @@
         <h2>学生名单</h2>
         <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
     </div>
-    
-    <table width="600" cellpadding="0" cellspacing="0" id="stutable">    
 
-        <tr>    
-          <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>    
-          <td id="stuName" width="150" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>  
-        </tr>    
+    <table width="600" cellpadding="0" cellspacing="0" id="stutable">
+
+        <tr>
+          <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>
+          <td id="stuName" width="150" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>
+        </tr>
         {{#each students}}
-        <tr>    
-          <td>{{id}}</td>    
-          <td>{{name}}</td>         
+        <tr>
+          <td>{{id}}</td>
+          <td>{{name}}</td>
         </tr>
         {{/each}}
     </table>
@@ -69,6 +71,6 @@
     <div id="tablebtn">
         <button type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">导入名单</button>
         <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px">保存名单</button>
-    </div> 
+    </div>
 </div>
 

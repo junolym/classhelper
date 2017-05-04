@@ -67,15 +67,6 @@ function formSubmit() {
     return false;
 };
 
-function deleteCourse() {
-    if (confirm("确认删除？")) {
-        lc('deletecourse?id={{course_id}}');
-    }
-    else {
-        return;
-    }
-}
-
 function setEditable() {
         //设置表格可编辑
     var trs = $('#stutable')[0].getElementsByTagName("tr");
