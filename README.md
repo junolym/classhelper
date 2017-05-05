@@ -1,7 +1,7 @@
 # classhelper (Developing)
 
 ## 在线版本（自动更新代码）
-https://classhelper.ml (用户名/密码 stsluy/luyong)
+https://classhelper.ml (用户名&密码 test)
 
 ## 小纸条
 ### 【重要】使用npm安装第三方包

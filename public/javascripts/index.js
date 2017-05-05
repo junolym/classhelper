@@ -27,7 +27,7 @@ $(document).ready(function () {
         contentResize();
     }
 
-    $('#content').click(function() {
+    $('#rightpage').click(function() {
         if (document.body.clientWidth < 768 && sidebar) {
             $('#wrapper').toggleClass('toggled');
             sidebar = false;
