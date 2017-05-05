@@ -1,7 +1,18 @@
 var dao = require('./dao.js');
+var data = require('./data.js');
 
-/**  login in */
-dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
+// dao.addcourse('test', '综合实训-(全国大学生计算机设计大赛)', 
+//     '周六、日 1-15', null, function(err, doc) {
+//     dao.addstutocourse(doc, data.coz_stu, function(err, doc) {
+//     });
+// });
+// dao.addcourse('test', '程序设计II', '1-18	周一1-2',
+//     null, function(err, doc) {
+//     dao.addstutocourse(doc, data.student_2, function(err, doc) {
+//     });
+// });
+
+dao.login("rot", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
     dao.updatecourse(31, '你们够了', '1-20周 周一-周六 1-15节', 
         '就是这么任性，哼', function(err, doc) {
             console.log(err, doc);

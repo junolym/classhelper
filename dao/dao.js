@@ -297,7 +297,7 @@ exports.studentsign = function(course_id, sign_id, stu_id,
             callback({stack:'学号姓名不符!', status:500}, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
-                    + "ss_stu_id=? ss_stu_name=?"
+                    + "ss_stu_id=?, ss_stu_name=?"
             var parameter = [sign_id, stu_id, stu_name];
             pool.query(sql, parameter, function(err, result, fields) {
                 if (err) {
@@ -387,7 +387,7 @@ exports.getsignbycourse = function(course_id, callback) {
  * [{course_id, id, name, time}]
  */
 exports.getsignbyid = function(sign_id, callback) {
-    var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
+    var sql = "select sg_coz_id as course_id, ss_stu_id as stu_id, "
             + "ss_stu_name as name, stu_sign_time as time "
             + "from stu_sign, signup "
             + "where sign_id=? and sign_id=ss_sign_id";
