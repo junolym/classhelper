@@ -51,10 +51,10 @@
 <div class="container stulist">
     <div id="tablenav">
         <h2>学生名单</h2>
-        <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button>
+        {{!-- <button class="btn btn-default" id="editstubtn" onclick="setEditable()">编辑名单</button> --}}
     </div>
 
-    <table width="600" cellpadding="0" cellspacing="0" id="stutable">
+    <table width="600" cellpadding="0" cellspacing="0" id="stutable" onclick="setEditable()">
 
         <tr>
           <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>
