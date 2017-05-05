@@ -61,16 +61,22 @@ router.post('/addcourse', function(req, res, next) {
         var params = url.parse(req.url, true).query;
         dao.addcourse(cm.getCookie(req.cookies.id), req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result) {
             if (!err) {
-                
-                dao.addstutocourse(result, JSON.tryParse(req.body.students), function(err, result){
-                    if (!err) {
-                        res.render('home/reload', { location : 'course' });
+                var students = JSON.tryParse(req.body.students);
+                var addstudents = [];
+                if (!students.stack && typeof(students) == 'object') {
+                    for (var i in students) {
+                        if (typeof(i) == 'number') {
+                            addstudents.push([i, students[i]]);
+                        }
                     }
-                    else {
-                        res.render('error', { error : err });
-                    }
-                });
-
+                } else {
+                    res.render('error', { error : { stack: '用户学号格式错误', status: 500  });
+                    return;
+                }
+                if(addstudents) {
+                    dao.addstutocourse(req.query.id, JSON.tryParse(req.body.students), function() {});
+                }
+                res.render('home/reload', { location : 'course' });
             } else {
                 res.render('error', { error : err });
             }
@@ -114,33 +120,27 @@ router.post('/editcourse', function(req, res, next) {
         dao.updatecourse(req.query.id, req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo, function(err, result){
             if (!err) {
                 var students = JSON.tryParse(req.body.students);
-                var isnan = true;
-                for (var i = 0; i < students.length; i++) {
-                    if(isNaN(students[i][0])) {
-                        isnan = false;
-                        break;
+                var addstudents = [];
+                if (!students.stack && typeof(students) == 'object') {
+                    for (var i in students) {
+                        if (typeof(i) == 'number') {
+                            addstudents.push([i, students[i]]);
+                        }
                     }
+                } else {
+                    res.render('error', { error : { stack: '用户学号格式错误', status: 500 }});
+                    return;
                 }
-                if(isnan) {
-                    dao.delstuofcourse(req.query.id, function(err, result){
-                        if (!err) {
-                            dao.addstutocourse(req.query.id, JSON.tryParse(req.body.students), function(err, result){
-                                if (!err) {
-                                    res.render('home/reload', { location : 'course' });
-                                }
-                                else {
-                                    res.render('error', { error : err });
-                                }
-                            });
+                dao.delstuofcourse(req.query.id, function(err, result) {
+                    if (!err) {
+                        if(addstudents) {
+                            dao.addstutocourse(req.query.id, JSON.tryParse(req.body.students), function() {});
                         }
-                        else {
-                            res.render('error', { error : err });
-                        }
-                    });
-                }
-                else {
-                    res.render('error', { error : {stack: '用户学号格式错误', status: 500} });
-                }
+                        res.render('home/reload', { location : 'course' });
+                    } else {
+                        res.render('error', { error : err });
+                    }
+                });
             } else {
                 res.render('error', { error : err });
             }
