@@ -89,3 +89,15 @@ function getstudents() {
 
     document.getElementById("stulistinput").value = JSON.stringify(list);
 }
+
+function addstudent() {
+    var table = $('#stutable')[0];
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
+
+    var tr = table.insertRow(trs.Length);
+    var td0 = tr.insertCell(0);
+    var td1 = tr.insertCell(1);
+
+    td0.innerText = "请输入姓名。。";
+    td1.innerText = "请输入学号。。";
+}

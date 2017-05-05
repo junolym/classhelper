@@ -34,8 +34,10 @@
 
             {{#if course_id}}
             <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">修改</button>
+
             {{else}}
             <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">新建</button>
+
             {{/if}}
         </form>
         {{#if course_id}}
@@ -71,6 +73,9 @@
     <div id="tablebtn">
         <button type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">导入名单</button>
         <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px">保存名单</button>
+        {{#if course_id}}
+        <button class="addbtn btn btn-large btn-primary" id="addtd" style="font-size:18px" onclick="addstudent()">添加学生</button> 
+        {{/if}}
     </div>
 </div>
 
