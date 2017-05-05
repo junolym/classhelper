@@ -66,9 +66,9 @@ router.post('/addcourse', function(req, res, next) {
                 var studentsArray = [];
                 if (!students.stack && typeof(students) == 'object') {
                     for (var i = 0; i < students.length; i++) {
-                        students[i][0] = parseInt(students[i][0])
+                        students[i][0] = parseInt(students[i][0]);
                         if (!isNaN(students[i][0])
-                            && students[i][0].toString().length <= 18
+                            && students[i][0].toString().length <= 15
                             && students[i][1].length <= 40) {
                             studentsMap[students[i][0]] = students[i][1];
                         }
@@ -133,9 +133,9 @@ router.post('/editcourse', function(req, res, next) {
                 var studentsArray = [];
                 if (!students.stack && typeof(students) == 'object') {
                     for (var i = 0; i < students.length; i++) {
-                        students[i][0] = parseInt(students[i][0])
+                        students[i][0] = parseInt(students[i][0]);
                         if (!isNaN(students[i][0])
-                            && students[i][0].toString().length <= 18
+                            && students[i][0].toString().length <= 15
                             && students[i][1].length <= 40) {
                             studentsMap[students[i][0]] = students[i][1];
                         }
