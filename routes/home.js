@@ -64,13 +64,13 @@ router.post('/addcourse', function(req, res, next) {
                 var students = JSON.tryParse(req.body.students);
                 var addstudents = [];
                 if (!students.stack && typeof(students) == 'object') {
-                    for (var i in students) {
-                        if (typeof(i) == 'number') {
-                            addstudents.push([i, students[i]]);
+                    for (var i = 0; i < students.length; i++) {
+                        if (typeof(students[i][0]) == 'number') {
+                            addstudents.push([students[i][0], students[i][1]]);
                         }
                     }
                 } else {
-                    res.render('error', { error : { stack: '用户学号格式错误', status: 500  });
+                    res.render('error', { error : {stack: '用户学号格式错误', status: 500 }});
                     return;
                 }
                 if(addstudents) {
@@ -122,13 +122,13 @@ router.post('/editcourse', function(req, res, next) {
                 var students = JSON.tryParse(req.body.students);
                 var addstudents = [];
                 if (!students.stack && typeof(students) == 'object') {
-                    for (var i in students) {
-                        if (typeof(i) == 'number') {
-                            addstudents.push([i, students[i]]);
+                    for (var i = 0; i < students.length; i++) {
+                        if (typeof(students[i][0]) == 'number') {
+                            addstudents.push([students[i][0], students[i][1]]);
                         }
                     }
                 } else {
-                    res.render('error', { error : { stack: '用户学号格式错误', status: 500 }});
+                    res.render('error', { error : { stack: '用户学号格式错误', status: 500} });
                     return;
                 }
                 dao.delstuofcourse(req.query.id, function(err, result) {
