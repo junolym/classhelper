@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>var mysql = require('mysql');
 var pool  = mysql.createPool({
-    host: 'tx.wenxr.com',
+    host: 'classhelper.ml',
     user: 'root',
     password: 'sysusdcs',
     database: 'test',
@@ -236,7 +236,7 @@ exports.delcourse = function(account, course_id, callback) {
  * result course数据
  */
 exports.getexambycourse = function(course_id, callback) {
-    var sql = "select * from exams where ex_course_id= ?";
+    var sql = "select * from exams where ex_coz_id= ?";
     pool.query(sql, course_id, function(err, result, fields) {
         callback(err, result);
     });
@@ -252,10 +252,10 @@ exports.getexambycourse = function(course_id, callback) {
  * result exam_id
  */
 exports.addexam = function(course_id, exam_name, exam_question, callback) {
-    var sql = "insert into exams(exam_name, ex_course_id, exam_question) "
+    var sql = "insert into exams(exam_name, ex_coz_id, exam_question) "
             + "values (?, ?, ?)";
     var parameter = [exam_name, course_id, exam_question];
-    pool.query(sql, exams, function(err, result, fields) {
+    pool.query(sql, parameter, function(err, result, fields) {
         if (err)
             callback(err, result)
         else
@@ -280,6 +280,55 @@ exports.delexam = function(exam_id, callback) {
     });
 };
 
+/**
+ * updateexam
+ *
+ * @param {number} exam_id
+ * @param {number} course_id
+ * @param {string} exam_name
+ * @param {object} exam_question json格式,详见文档
+ * @param {function} callback
+ */
+exports.updateexam = function(exam_id, exam_name, exam_question, callback) {
+    var sql = "update exams set exam_name=?, exam_question=? "
+            + "where exam_id=?";
+    var parameter = [exam_name, exam_question, exam_id];
+    pool.query(sql, parameter, function(err, result, fields) {
+        if (err)
+            callback(err, result);
+        else if (result.affectedRows == 0)
+            callback({stack:'该测试不存在', status:500});
+        else
+            callback(err, result.affectedRows);
+    });
+};
+
+// exports.checkexam = function(account, exam_id, callback) {
+//     var sql = "select coz_account from courses, exams"
+//             + "where exam_id=? and ex_coz_id=course_id";
+//     pool.query(sql, exam_id, function(err, result, fields) {
+        
+//     });
+
+// }
+
+/**
+ * getexambyid
+ *
+ * @param {number} exam_id
+ * @param {function} callback
+ */
+exports.getexambyid = function(exam_id, callback) {
+    var sql = "select * from exams where exam_id=?";
+    pool.query(sql, exam_id, function(err, result, fields) {
+        if (err)
+            callback(err, result);
+        else if (result.length == 0)
+            callback({stack:'该试卷不存在', status:500});
+        else
+            callback(err, result);
+    });
+}
 
 /**
  * addsign
@@ -325,8 +374,8 @@ exports.studentsign = function(course_id, sign_id, stu_id,
             callback({stack:'学号姓名不符!', status:500}, result);
         } else {
             var sql = "insert into stu_sign set ss_sign_id=?, "
-                    + "ss_stu_id=? "
-            var parameter = [sign_id, stu_id];
+                    + "ss_stu_id=?, ss_stu_name=?"
+            var parameter = [sign_id, stu_id, stu_name];
             pool.query(sql, parameter, function(err, result, fields) {
                 if (err) {
                     var reg = /PRIMARY/;
@@ -415,11 +464,10 @@ exports.getsignbycourse = function(course_id, callback) {
  * [{course_id, id, name, time}]
  */
 exports.getsignbyid = function(sign_id, callback) {
-    var sql = "select cs_coz_id as course_id, ss_stu_id as stu_id, "
-            + "cs_stu_name as name, stu_sign_time as time "
-            + "from coz_stu, stu_sign, signup "
-            + "where sign_id=? and sign_id=ss_sign_id "
-            + "and sg_coz_id=cs_coz_id and cs_stu_id=ss_stu_id";
+    var sql = "select sg_coz_id as course_id, ss_stu_id as stu_id, "
+            + "ss_stu_name as name, stu_sign_time as time "
+            + "from stu_sign, signup "
+            + "where sign_id=? and sign_id=ss_sign_id";
     pool.query(sql, sign_id, function(err, result, fields) {
         callback(err, result);
     });
@@ -584,7 +632,6 @@ exports.delstuofcourse = function(course_id, callback) {
     });
 }
 
-
 </code></pre>
         </article>
     </section>
@@ -595,13 +642,13 @@ exports.delstuofcourse = function(course_id, callback) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getexambyid">getexambyid</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateexam">updateexam</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu May 04 2017 00:06:48 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat May 06 2017 21:23:18 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

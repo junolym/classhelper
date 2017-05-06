@@ -208,7 +208,7 @@ exports.delcourse = function(account, course_id, callback) {
  * result course数据
  */
 exports.getexambycourse = function(course_id, callback) {
-    var sql = "select * from exams where ex_course_id= ?";
+    var sql = "select * from exams where ex_coz_id= ?";
     pool.query(sql, course_id, function(err, result, fields) {
         callback(err, result);
     });
@@ -224,10 +224,10 @@ exports.getexambycourse = function(course_id, callback) {
  * result exam_id
  */
 exports.addexam = function(course_id, exam_name, exam_question, callback) {
-    var sql = "insert into exams(exam_name, ex_course_id, exam_question) "
+    var sql = "insert into exams(exam_name, ex_coz_id, exam_question) "
             + "values (?, ?, ?)";
     var parameter = [exam_name, course_id, exam_question];
-    pool.query(sql, exams, function(err, result, fields) {
+    pool.query(sql, parameter, function(err, result, fields) {
         if (err)
             callback(err, result)
         else
@@ -252,6 +252,55 @@ exports.delexam = function(exam_id, callback) {
     });
 };
 
+/**
+ * updateexam
+ *
+ * @param {number} exam_id
+ * @param {number} course_id
+ * @param {string} exam_name
+ * @param {object} exam_question json格式,详见文档
+ * @param {function} callback
+ */
+exports.updateexam = function(exam_id, exam_name, exam_question, callback) {
+    var sql = "update exams set exam_name=?, exam_question=? "
+            + "where exam_id=?";
+    var parameter = [exam_name, exam_question, exam_id];
+    pool.query(sql, parameter, function(err, result, fields) {
+        if (err)
+            callback(err, result);
+        else if (result.affectedRows == 0)
+            callback({stack:'该测试不存在', status:500});
+        else
+            callback(err, result.affectedRows);
+    });
+};
+
+// exports.checkexam = function(account, exam_id, callback) {
+//     var sql = "select coz_account from courses, exams"
+//             + "where exam_id=? and ex_coz_id=course_id";
+//     pool.query(sql, exam_id, function(err, result, fields) {
+        
+//     });
+
+// }
+
+/**
+ * getexambyid
+ *
+ * @param {number} exam_id
+ * @param {function} callback
+ */
+exports.getexambyid = function(exam_id, callback) {
+    var sql = "select * from exams where exam_id=?";
+    pool.query(sql, exam_id, function(err, result, fields) {
+        if (err)
+            callback(err, result);
+        else if (result.length == 0)
+            callback({stack:'该试卷不存在', status:500});
+        else
+            callback(err, result);
+    });
+}
 
 /**
  * addsign

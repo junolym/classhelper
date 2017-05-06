@@ -12,11 +12,31 @@ var data = require('./data.js');
 //     });
 // });
 
-dao.login("rot", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
-    dao.updatecourse(31, '你们够了', '1-20周 周一-周六 1-15节', 
-        '就是这么任性，哼', function(err, doc) {
-            console.log(err, doc);
+dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
+    dao.updateexam(2, 'update', 'que', function(err, doc) {
+        console.log(err);
+        console.log(doc);
     });
+    // dao.delexam(1, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    // dao.getexambyid(1, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    // dao.getexambycourse(6, function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    // dao.addexam(6, 'exam', "{'num': 0}", function(err, doc) {
+    //     console.log(err);
+    //     console.log(doc);
+    // });
+    // dao.updatecourse(31, '你们够了', '1-20周 周一-周六 1-15节', 
+    //     '就是这么任性，哼', function(err, doc) {
+    //         console.log(err, doc);
+    // });
     // dao.getcoursebyid(1, function(err, doc) {
     //     console.log(err);
     //     console.log(doc);
