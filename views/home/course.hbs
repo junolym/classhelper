@@ -1,23 +1,25 @@
 <table class="table">
   <thead>
     <tr>
-      <th style="width:%">课程名称</th>
-      <th style="width:25%">上课时间</th>
-      <th style="width:25%">签到或测验</th>
+      <th>课程名称</th>
+      <th>上课时间</th>
+      <th>学生人数</th>
+      <th>签到或测验</th>
     </tr>
   </thead>
   <tbody>
     {{#each courses}}
     <tr>
-      <td><a class="btn" href="javascript:lc('coursedetail?id={{course_id}}')">{{course_name}}</td>
-      <td><a class="btn" href="javascript:lc('coursedetail?id={{course_id}}')">{{course_time}}</td>
-      <td><a class="btn btn-default" href="javascript:window.open('../createsignin?course={{course_id}}');lc('signin')">开始签到</a>
-      <a class="btn btn-default" href="javascript:lc('../createexam?course={{course_id}}')">开始测验</a></td>
+      <td><a class="btn" onclick="lc('coursedetail?id={{course_id}}')">{{course_name}}</td>
+      <td><a class="btn" onclick="lc('coursedetail?id={{course_id}}')">{{course_time}}</td>
+      <td><a class="btn" onclick="lc('coursedetail?id={{course_id}}')">{{student_num}}</td>
+      <td><a class="btn btn-default" target="_blank" href="../createsignin?course={{course_id}}">开始签到</a>
+      <a class="btn btn-default" onclick="lc('../createexam?course={{course_id}}')">开始测验</a></td>
     </tr>
     {{/each}}
     <tr>
         <td></td>
-        <td><a class="btn addcoursebtn" href="javascript:lc('addcourse')">+</a></td>
+        <td><a class="btn addcoursebtn" onclick="lc('addcourse')">+</a></td>
         <td></td>
     </tr>
   </tbody>

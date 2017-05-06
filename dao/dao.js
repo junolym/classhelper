@@ -147,11 +147,11 @@ exports.deluser = function(account, callback) {
  *
  * @param {string} account
  * @param {function} callback
- * result  [course_id, course_name]
+ * result  [course_id, course_name, student_num]
  * 不判断account是否存在，result可以为[]
  */
 exports.getcoursebyaccount = function(account, callback) {
-    var sql = "select course_id, course_name, course_time from courses "
+    var sql = "select course_id, course_name, course_time, student_num from courses "
             + "where coz_account=?";
     pool.query(sql, account, function(err, result, fields) {
         callback(err, result);
@@ -560,9 +560,9 @@ exports.updatecourse = function(course_id, n_course_name, n_course_time, n_cours
             + "course_info=? where course_id=?"
     var parameter=[n_course_name, n_course_time, n_course_info, course_id];
     pool.query(sql, parameter, function(err, result, fields) {
-        if (err) 
+        if (err)
             callback(err);
-        else if (result.affectedRows == 0) 
+        else if (result.affectedRows == 0)
             callback({stack: '此课程不存在', status:500});
         else
             callback(err, result.affectedRows);
@@ -578,11 +578,11 @@ exports.updatecourse = function(course_id, n_course_name, n_course_time, n_cours
 exports.delsign = function(sign_id, callback) {
     var sql = 'delete from signup where sign_id=?';
     pool.query(sql, sign_id, function(err, result) {
-        if (err) 
+        if (err)
             callback(err);
-        else if (result.affectedRows == 0) 
+        else if (result.affectedRows == 0)
             callback({stack:'此签到不存在', status:500});
-        else 
+        else
             callback(err, result.affectedRows);
     });
 }
@@ -597,9 +597,9 @@ exports.delsign = function(sign_id, callback) {
 exports.delstuofcourse = function(course_id, callback) {
     var sql = 'delete from coz_stu where cs_coz_id=?';
     pool.query(sql, course_id, function(err, result) {
-        if (err) 
+        if (err)
             callback(err);
-        else 
+        else
             callback(err, result.affectedRows);
     });
 }
