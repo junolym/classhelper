@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/05/04 21:58:24                          */
+/* Created on:     2017/05/05 22:00:41                          */
 /*==============================================================*/
 
 
@@ -21,8 +21,6 @@ drop table if exists signup;
 drop index Index_sign_id on stu_sign;
 
 drop table if exists stu_sign;
-
-drop table if exists students;
 
 drop table if exists users;
 
@@ -45,9 +43,10 @@ create table courses
 /*==============================================================*/
 create table coz_stu
 (
-   cs_coz_id            int,
-   cs_stu_id            int,
-   cs_stu_name          char(40) not null
+   cs_coz_id            int not null,
+   cs_stu_id            int not null,
+   cs_stu_name          char(40) not null,
+   primary key (cs_coz_id, cs_stu_id)
 );
 
 /*==============================================================*/
@@ -56,11 +55,11 @@ create table coz_stu
 create table exams
 (
    exam_id              int not null auto_increment,
+   ex_coz_id            int,
    exam_name            char(20),
    exam_state           tinyint,
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-   ex_coz_id            int,
-   exam_question        json,
+   exam_question        text,
    primary key (exam_id)
 );
 
@@ -96,16 +95,6 @@ create index Index_sign_id on stu_sign
 );
 
 /*==============================================================*/
-/* Table: students                                              */
-/*==============================================================*/
-create table students
-(
-   student_id           int not null,
-   student_name         char(40) not null,
-   primary key (student_id)
-);
-
-/*==============================================================*/
 /* Table: users                                                 */
 /*==============================================================*/
 create table users
@@ -124,9 +113,6 @@ alter table courses add constraint FK_user_course foreign key (coz_account)
 
 alter table coz_stu add constraint FK_Reference_6 foreign key (cs_coz_id)
       references courses (course_id) on delete cascade on update restrict;
-
-alter table coz_stu add constraint FK_Reference_7 foreign key (cs_stu_id)
-      references students (student_id) on delete cascade on update restrict;
 
 alter table exams add constraint FK_course_exam foreign key (ex_coz_id)
       references courses (course_id) on delete cascade on update restrict;
@@ -150,6 +136,4 @@ on signup for each row
 delete from stu_sign where ss_sign_id=old.sign_id;
 
 insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
-insert into users set account='test', password='FDB6C662D36651211F14977097250CCA', username='test', admin=0;
-
 
