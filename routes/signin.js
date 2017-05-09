@@ -21,11 +21,12 @@ router.post('/', function(req, res) {
         return;
     }
     var cookie = cm.getCookie(req.cookies.signin);
-    dao.studentsign(cookie.cid, cookie.sid, req.body.form_number, req.body.form_username, function(err, result) {
-        if (!err) {
-            res.clearCookie('signin');
-            res.redirect('/signinresult?success=true');
-        } else if (err.status == 500) {
+    dao.studentsign(cookie.cid, cookie.sid, req.body.form_number, req.body.form_username)
+    .then(function(result) {
+        res.clearCookie('signin');
+        res.redirect('/signinresult?success=true');
+    }).catch(function(err) {
+        if (err.status == 500) {
             res.redirect('/signinresult?error='+err.stack);
         } else {
             res.render('error', { message: 'studentsign', error: err });

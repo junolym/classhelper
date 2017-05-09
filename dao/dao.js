@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+var mysql = require('promise-mysql');
 var pool  = mysql.createPool({
     host: 'classhelper.ml',
     user: 'root',
@@ -12,15 +12,16 @@ var pool  = mysql.createPool({
  *
  * @param {string} account
  * @param {string} password 32位大写的MD5值
- * @param {function} callback
+ * @returns {Object} Promise
  * result account数据
  * */
-exports.login = function(account, password, callback) {
-    this.getuser(account, function(err, result) {
-        if (!err && result[0].password != password) {
-            err = {stack: '密码错误', status: 500};
+exports.login = function(account, password) {
+    return getuser(account).then(function(result) {
+        if (result[0].password != password) {
+            return Promise.reject({stack: '密码错误', status: 500});
+        } else {
+            return Promise.resolve(result);
         }
-        callback(err, result);
     });
 };
 
@@ -28,18 +29,23 @@ exports.login = function(account, password, callback) {
  * getuser
  *
  * @param {string} account
- * @param {function} callback
+ * @returns {Object} Promise
  * result account数据
  */
-exports.getuser = function getuser(account, callback) {
+var getuser = function getuser(account) {
     var sql = "select * from users where account=?"
-    pool.query(sql, account, function(err, result, fields) {
-        if (!err && result.length == 0) {
-            err = {stack: '用户不存在', status: 500};
+    return pool.query(sql, account).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack: '用户不存在', status: 500});
+        } else {
+            return Promise.resolve(result);
         }
-        callback(err, result);
     });
 };
+
+exports.getuser;
+
+
 
 /**
  * adduser
@@ -50,32 +56,25 @@ exports.getuser = function getuser(account, callback) {
  * @param {string} n_username
  * @param {string} n_email
  * @param {string} n_phone
- * @param {function} callback
- * admin   管理账户
- * result  新用户id
+ * @returns {Object} Promise
  */
 exports.adduser = function(admin, n_account, n_password, n_username,
-                            n_email, n_phone, callback) {
+                            n_email, n_phone) {
     // 权限
     var sql = "select admin from users where account=?";
-    pool.query(sql, admin, function(err, result, fields) {
-        if (err) {
-            callback(err, result)
-        } else if (result.length == 0) {
-            callback({stack: '此用户不存在', status: 500});
+    return pool.query(sql, admin).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack: '此用户不存在', status: 500});
         } else if (result[0].admin == 0) {
-            callback({stack: '没有添加用户的权限', status: 500,});
+            return Promise.reject({stack: '没有添加用户的权限', status: 500,});
         } else {
-            sql = "insert into users(account, password, username, "
-                + "email, phone) values (?, ?, ?, ?, ?)";
-            pool.query(sql, [n_account, n_password, n_username, n_email,
-                            n_phone],  function(err, result, fields) {
-                if (err)
-                    callback(err, result)
-                else
-                    callback(err, result.insertId);
-            });
+            return Promise.resolve();
         }
+    }).then(function() {
+        sql = "insert into users(account, password, username, "
+            + "email, phone) values (?, ?, ?, ?, ?)";
+        return pool.query(sql, [n_account, n_password, n_username, n_email,
+                        n_phone]);
     });
 };
 
@@ -84,21 +83,18 @@ exports.adduser = function(admin, n_account, n_password, n_username,
  *
  * @param {string} account
  * @param {array} userinfo [username, email, phone]
- * @param {function} callback
- * result  修改行数
+ * @returns {Object} Promise
  */
-exports.updateuserinfo = function(account, userinfo, callback) {
+exports.updateuserinfo = function(account, userinfo) {
     var sql = "update users set username=?, email=?, phone=? "
             + "where account=?";
     var parameter = userinfo;
     parameter.push(account);
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err) {
-            callback(err)
-        } else if (result.length == 0) {
-            callback({stack:'账号不存在', status:500}, result);
+    return pool.query(sql, parameter).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'账号不存在', status:500}, result);
         } else {
-            callback(err, result.affectedRows);
+            return Promise.resolve();
         }
     });
 };
@@ -109,18 +105,15 @@ exports.updateuserinfo = function(account, userinfo, callback) {
  * @param {string} account
  * @param {string} oldpwd
  * @param {string} newpwd
- * @param {function} callback
- * result  修改行数
  */
-exports.updateuserpwd = function(account, oldpwd, newpwd, callback) {
+exports.updateuserpwd = function(account, oldpwd, newpwd) {
     var sql = "update users set password=? "
             + "where account=? and password=?";
-    pool.query(sql, [newpwd, account, oldpwd],
-        function(err, result, fields) {
-        if (err) {
-            callback(err);
+    return pool.query(sql, [newpwd,account,oldpwd]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'密码验证失败', status:500});
         } else {
-            callback(err, result.affectedRows);
+            return Promise.resolve();
         }
     });
 };
@@ -129,16 +122,16 @@ exports.updateuserpwd = function(account, oldpwd, newpwd, callback) {
  * deluser
  *
  * @param {string} account
- * @param {function} callback
- * result  删除行数
+ * @returns {Object} Promise
  */
-exports.deluser = function(account, callback) {
+exports.deluser = function(account) {
     var sql = "delete from users where account=?";
-    pool.query(sql, account, function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else
-            callback(err, result.affectedRows);
+    return pool.query(sql, account).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'用户不存在！', status:500});
+        } else {
+            return Promise.resolve();
+        }
     });
 };
 
@@ -146,16 +139,15 @@ exports.deluser = function(account, callback) {
  * getcoursebyaccount
  *
  * @param {string} account
- * @param {function} callback
+ * @returns {Object} Promise
  * result  [course_id, course_name, student_num]
  * 不判断account是否存在，result可以为[]
  */
-exports.getcoursebyaccount = function(account, callback) {
-    var sql = "select course_id, course_name, course_time, student_num from courses "
+exports.getcoursebyaccount = function(account) {
+    var sql = "select course_id, course_name, course_time, student_num "
+            + "from courses "
             + "where coz_account=?";
-    pool.query(sql, account, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, account);
 };
 
 /**
@@ -165,19 +157,15 @@ exports.getcoursebyaccount = function(account, callback) {
  * @param {string} course_name
  * @param {string} course_time
  * @param {string} course_info
- * @param {function} callback
+ * @returns {Object} Promise
  * result  course_id
  */
-exports.addcourse = function(account, course_name, course_time,
-                                course_info, callback) {
+exports.addcourse=function(account, course_name, course_time, course_info){
     var sql = "insert into courses(coz_account, course_name, "
             + "course_time, course_info) values (?, ?, ?, ?)";
     var parameter = [account, course_name, course_time, course_info];
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else
-            callback(err, result.insertId);
+    return pool.query(sql, parameter).then(function(result) {
+        return Promise.resolve(result.insertId);
     });
 };
 
@@ -186,17 +174,15 @@ exports.addcourse = function(account, course_name, course_time,
  *
  * @param {string} account
  * @param {number} course_id
- * @param {function} callback
- * result  删除行数
  */
-exports.delcourse = function(account, course_id, callback) {
+exports.delcourse = function(account, course_id) {
     var sql = "delete from courses where course_id=? and coz_account=?";
-    pool.query(sql, [course_id, account], function(err, result, fields) {
-        if (err)
-            callback(err, result)
-        else if (result.affectedRows == 0)
-            callback({stack: "此课程不存在！", status: 500}, null);
-        callback(err, result.affectedRows);
+    return pool.query(sql, [course_id, account]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack: "此课程不存在！", status: 500});
+        } else {
+            return Promise.resolve();
+        }
     });
 };
 
@@ -204,14 +190,12 @@ exports.delcourse = function(account, course_id, callback) {
  * getexambycourse
  *
  * @param {number} course_id
- * @param {function} callback
+ * @returns {Object} Promise
  * result course数据
  */
-exports.getexambycourse = function(course_id, callback) {
+exports.getexambycourse = function(course_id) {
     var sql = "select * from exams where ex_coz_id= ?";
-    pool.query(sql, course_id, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, course_id)
 };
 
 /**
@@ -220,18 +204,15 @@ exports.getexambycourse = function(course_id, callback) {
  * @param {number} course_id
  * @param {string} exam_name
  * @param {object} exam_question json格式,详见文档
- * @param {function} callback
+ * @returns {Object} Promise
  * result exam_id
  */
-exports.addexam = function(course_id, exam_name, exam_question, callback) {
+exports.addexam = function(course_id, exam_name, exam_question) {
     var sql = "insert into exams(exam_name, ex_coz_id, exam_question) "
             + "values (?, ?, ?)";
     var parameter = [exam_name, course_id, exam_question];
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err)
-            callback(err, result)
-        else
-            callback(err, result.insertId);
+    return pool.query(sql, parameter).then(function(result) {
+        return Promise.resolve(result.insertId);
     });
 };
 
@@ -239,16 +220,16 @@ exports.addexam = function(course_id, exam_name, exam_question, callback) {
  * delexam
  *
  * @param {number} exam_id
- * @param {function} callback
- * result 删除行数
+ * @returns {Object} Promise
  */
-exports.delexam = function(exam_id, callback) {
+exports.delexam = function(exam_id) {
     var sql = "delete from exams where exam_id=?";
-    pool.query(sql, exam_id, function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else
-            callback(err, result.affectedRows);
+    return pool.query(sql, exam_id).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'测试不存在', status:500});
+        } else {
+            return Promise.resolve();
+        }
     });
 };
 
@@ -259,23 +240,22 @@ exports.delexam = function(exam_id, callback) {
  * @param {number} course_id
  * @param {string} exam_name
  * @param {object} exam_question json格式,详见文档
- * @param {function} callback
+ * @returns {Object} Promise
  */
-exports.updateexam = function(exam_id, exam_name, exam_question, callback) {
+exports.updateexam = function(exam_id, exam_name, exam_question) {
     var sql = "update exams set exam_name=?, exam_question=? "
             + "where exam_id=?";
     var parameter = [exam_name, exam_question, exam_id];
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else if (result.affectedRows == 0)
-            callback({stack:'该测试不存在', status:500});
-        else
-            callback(err, result.affectedRows);
+    return pool.query(sql, parameter).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'该测试不存在', status:500});
+        } else {
+            return Promise.resolve();
+        }
     });
 };
 
-// exports.checkexam = function(account, exam_id, callback) {
+// exports.checkexam = function(account, exam_id) {
 //     var sql = "select coz_account from courses, exams"
 //             + "where exam_id=? and ex_coz_id=course_id";
 //     pool.query(sql, exam_id, function(err, result, fields) {
@@ -288,17 +268,16 @@ exports.updateexam = function(exam_id, exam_name, exam_question, callback) {
  * getexambyid
  *
  * @param {number} exam_id
- * @param {function} callback
+ * @returns {Object} Promise
  */
-exports.getexambyid = function(exam_id, callback) {
+exports.getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
-    pool.query(sql, exam_id, function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else if (result.length == 0)
-            callback({stack:'该试卷不存在', status:500});
-        else
-            callback(err, result);
+    return pool.query(sql, exam_id, function(err, result, fields) {
+        if (result.length == 0) {
+            return Promise.reject({stack:'该试卷不存在', status:500});
+        } else {
+            return Promise.resolve(result);
+        }
     });
 }
 
@@ -306,16 +285,13 @@ exports.getexambyid = function(exam_id, callback) {
  * addsign
  *
  * @param {number} course_id
- * @param {function} callback
+ * @returns {Object} Promise
  * signid
  */
-exports.addsign = function(course_id, callback) {
+exports.addsign = function(course_id) {
     var sql = "insert into signup set sg_coz_id=?";
-    pool.query(sql, course_id, function(err, result, fields) {
-        if (err)
-            callback(err, result)
-        else
-            callback(err, result.insertId);
+    return pool.query(sql, course_id).then(function(result) {
+        return Promise.resolve(result.insertId);
     });
 };
 
@@ -326,41 +302,33 @@ exports.addsign = function(course_id, callback) {
  * @param {number} sign_id
  * @param {number} stu_id
  * @param {string} stu_name
- * @param {function} callback
- * err=1 stu_id不在此课程内;
- * err=2 学号名字不符;
- * result 插入行数}
+ * @returns {Object} Promise
  */
 exports.studentsign = function(course_id, sign_id, stu_id,
-                                stu_name, callback) {
+                                stu_name) {
     // 检查学号、姓名、课程相符
     var sql = "select cs_stu_name from coz_stu "
             + "where cs_coz_id=? and cs_stu_id=?";
     var parameter = [course_id, stu_id];
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err) {
-            callback(err);
-        } else if (result.length == 0) {
-            callback({stack:'学号不在此课程内!', status:500}, result);
+    return pool.query(sql, parameter).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack:'学号不在此课程内!', status:500});
         } else if (result[0].cs_stu_name != stu_name) {
-            callback({stack:'学号姓名不符!', status:500}, result);
+            return Promise.reject({stack:'学号姓名不符!', status:500});
         } else {
-            var sql = "insert into stu_sign set ss_sign_id=?, "
-                    + "ss_stu_id=?, ss_stu_name=?"
-            var parameter = [sign_id, stu_id, stu_name];
-            pool.query(sql, parameter, function(err, result, fields) {
-                if (err) {
-                    var reg = /PRIMARY/;
-                    if (reg.test(err)) {
-                        callback({stack:'请勿重复签到', status:500});
-                    } else {
-                        callback(err, result);
-                    }
-                } else {
-                    callback(err, result.affectedRows);
-                }
-            });
+            return Promise.resolve();
         }
+    }).then(function(result) {
+        var sql = "insert into stu_sign set ss_sign_id=?, "
+                + "ss_stu_id=?, ss_stu_name=?"
+        var parameter = [sign_id, stu_id, stu_name];
+        return pool.query(sql, parameter);
+    }).catch(function(err) {
+        var reg = /PRIMARY/;
+        if (reg.test(err)) {
+            err = {stack:'请勿重复签到', status:500};
+        }
+        return Promise.reject(err);
     });
 };
 
@@ -371,88 +339,71 @@ exports.studentsign = function(course_id, sign_id, stu_id,
  * @param {array} coz_stu
  * [ [stu_id1, stu_name1],
  * [stu_id2, stu_name2] ]
- * @param {function} callback
- * result 插入行数
+ * @returns {Object} Promise
  */
-exports.addstutocourse = function(course_id, coz_stu, callback) {
+exports.addstutocourse = function(course_id, coz_stu) {
     var parameter = [];
     for (var i in coz_stu) {
         parameter.push([course_id, coz_stu[i][0], coz_stu[i][1]]);
     }
     var sql = "insert into coz_stu(cs_coz_id, cs_stu_id, "
             + "cs_stu_name) values ?";
-    pool.query(sql, [parameter], function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else
-            callback(err, result.affectedRows);
-    });
+    return pool.query(sql, [parameter]);
 };
 
 /**
  * addstudent
  *
  * @param {array} student
- *
  * [ [id1, name1],
  * [id2, name2] ]
- * @param {function} callback
- * result 插入行数
+ * @returns {Object} Promise
  */
-exports.addstudent = function(student, callback) {
+exports.addstudent = function(student) {
     var sql = "insert into students(student_id, student_name) values ?";
-    pool.query(sql, [student], function(err, result, fields) {
-        if (err)
-            callback(err, result);
-        else
-            callback(err, result.affectedRows);
-    });
+    return pool.query(sql, [student]);
 };
 
 /**
  * getsigncourse
  *
  * @param {number} course_id
- * @param {function} callback
+ * @returns {Object} Promise
  * [{sign_id, time, sign_num, stu_num}]
  */
-exports.getsignbycourse = function(course_id, callback) {
+exports.getsignbycourse = function(course_id) {
     var sql = "select sign_id, course_id, sign_time as time, "
             + "count(ss_sign_id) as sign_num, "
             + "student_num as stu_num "
             + "from signup, stu_sign, courses "
             + "where course_id = ? and sg_coz_id = course_id "
             + "and ss_sign_id = sign_id group by sign_id";
-    pool.query(sql, course_id, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, course_id);
 }
 
 /**
  * getsignbyid
  *
  * @param {number} sign_id
- * @param {function} callback
+ * @returns {Object} Promise
  * [{course_id, id, name, time}]
  */
-exports.getsignbyid = function(sign_id, callback) {
+exports.getsignbyid = function(sign_id) {
     var sql = "select sg_coz_id as course_id, ss_stu_id as stu_id, "
             + "ss_stu_name as name, stu_sign_time as time "
             + "from stu_sign, signup "
             + "where sign_id=? and sign_id=ss_sign_id";
-    pool.query(sql, sign_id, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, sign_id);
 }
 
 /**
  * getsignbyaccount
  *
  * @param {number} account
- * @param {function} callback
+ * @returns {Object} Promise
  * [{sign_id, course_id, name, time, sign_num, stu_num}]
  */
-exports.getsignbyaccount = function(account, callback) {
+exports.getsignbyaccount = function(account) {
     var sql = "select sign_id, course_id, course_name as name, "
             + "sign_time as time, "
             + "count(ss_sign_id) as sign_num, student_num as stu_num "
@@ -462,9 +413,7 @@ exports.getsignbyaccount = function(account, callback) {
             + "where coz_account=? "
             + "group by sign_id "
             + "order by time desc";
-    pool.query(sql, account, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, account);
 }
 
 /**
@@ -473,18 +422,20 @@ exports.getsignbyaccount = function(account, callback) {
  * @param {string} account
  * @param {number} course_id
  * @param {number} sign_id
- * @param {function} callback
+ * @returns {Object} Promise
  */
-exports.checksign = function(account, course_id, sign_id, callback) {
+exports.checksign = function(account, course_id, sign_id) {
     var sql = "select sign_id "
             + "from courses, signup "
             + "where coz_account=? and course_id=? "
             + "and sg_coz_id=course_id and sign_id=?";
-    pool.query(sql, [account, course_id, sign_id],
-                    function(err, result, fields) {
-        if (!err && result.length == 0)
-            err = {stack: "sign_id校验失败", status: 500};
-        callback(err);
+    return pool.query(sql, [account, course_id, sign_id])
+    .then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack: "sign_id校验失败", status: 500});
+        } else {
+            return Promise.resolve();
+        }
     });
 }
 
@@ -492,17 +443,15 @@ exports.checksign = function(account, course_id, sign_id, callback) {
  * getstubycourse
  *
  * @param {number} course_id
- * @param {function} callback
+ * @returns {Object} Promise
  * [id, name]
  */
-exports.getstubycourse = function(course_id, callback) {
+exports.getstubycourse = function(course_id) {
     var sql = "select cs_stu_id as id, cs_stu_name as name "
             + "from courses, coz_stu "
             + "where course_id=? "
             + "and cs_coz_id=course_id";
-    pool.query(sql, course_id, function(err, result, fields) {
-        callback(err, result);
-    });
+    return pool.query(sql, course_id);
 }
 
 /**
@@ -510,20 +459,19 @@ exports.getstubycourse = function(course_id, callback) {
  *
  * @param {string} account
  * @param {number} course_id
- * @param {function} callback err
+ * @returns {Object} Promise err
  */
-exports.checkcourse = function(account, course_id, callback) {
+exports.checkcourse = function(account, course_id) {
     var sql = "select coz_account from courses "
             + "where course_id=? ";
-    pool.query(sql, course_id, function(err, result, fields) {
-        if (err) {
-            callback(err);
-        } else if (result.length == 0) {
-            callback({stack:'此课程不存在', status:500});
+    return pool.query(sql, course_id).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack:'此课程不存在', status:500});
         } else if (result[0].coz_account != account) {
-            callback({stack:'非法访问!该教师无此课程!', status:500});
+            return Promise.reject(
+                {stack:'非法访问!该教师无此课程!', status:500});
         } else {
-            callback(err);
+            return Promise.resolve();
         }
     });
 }
@@ -532,17 +480,18 @@ exports.checkcourse = function(account, course_id, callback) {
  * getcoursebyid
  *
  * @param {number} course_id
- * @param {function} callback
+ * @returns {Object} Promise
  * [course_name, course_time, course_info, student_num]
  */
-exports.getcoursebyid = function(course_id, callback) {
+exports.getcoursebyid = function(course_id) {
     var sql = "select course_name, course_time, course_info, student_num "
             + "from courses where course_id=?"
-    pool.query(sql, course_id, function(err, result, fields) {
-        if (!err && result.length == 0) {
-            err = {stack: '此课程不存在', status: 500};
+    return pool.query(sql, course_id).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject({stack: '此课程不存在', status: 500});
+        } else {
+            return Promise.resolve(result);
         }
-        callback(err, result);
     });
 }
 
@@ -553,19 +502,19 @@ exports.getcoursebyid = function(course_id, callback) {
  * @param {string} n_course_name
  * @param {string} n_course_time
  * @param {string} n_course_info
- * @param {function} callback
+ * @returns {Object} Promise
  */
-exports.updatecourse = function(course_id, n_course_name, n_course_time, n_course_info, callback) {
+exports.updatecourse = function(course_id, n_course_name, n_course_time, 
+                                n_course_info) {
     var sql = "update courses set course_name=?, course_time=?, "
             + "course_info=? where course_id=?"
     var parameter=[n_course_name, n_course_time, n_course_info, course_id];
-    pool.query(sql, parameter, function(err, result, fields) {
-        if (err)
-            callback(err);
-        else if (result.affectedRows == 0)
-            callback({stack: '此课程不存在', status:500});
-        else
-            callback(err, result.affectedRows);
+    return pool.query(sql, parameter).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack: '此课程不存在', status:500});
+        } else {
+            return Promise.resolve();
+        }
     });
 }
 
@@ -573,17 +522,16 @@ exports.updatecourse = function(course_id, n_course_name, n_course_time, n_cours
  * delsign
  *
  * @param {number} sign_id
- * @param {function} callback
+ * @returns {Object} Promise
  */
-exports.delsign = function(sign_id, callback) {
+exports.delsign = function(sign_id) {
     var sql = 'delete from signup where sign_id=?';
-    pool.query(sql, sign_id, function(err, result) {
-        if (err)
-            callback(err);
-        else if (result.affectedRows == 0)
-            callback({stack:'此签到不存在', status:500});
-        else
-            callback(err, result.affectedRows);
+    return pool.query(sql, sign_id).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject({stack:'此签到不存在', status:500});
+        } else {
+            return Promise.resolve();
+        }
     });
 }
 
@@ -591,16 +539,10 @@ exports.delsign = function(sign_id, callback) {
  * delstuofcoz
  *
  * @param {number} course_id
- * @param {function} callback
- * 返回删除学生行数。可能存在删除0行或者课程非法
+ * @returns {Object} Promise
  */
-exports.delstuofcourse = function(course_id, callback) {
+exports.delstuofcourse = function(course_id) {
     var sql = 'delete from coz_stu where cs_coz_id=?';
-    pool.query(sql, course_id, function(err, result) {
-        if (err)
-            callback(err);
-        else
-            callback(err, result.affectedRows);
-    });
+    return pool.query(sql, course_id);
 }
 

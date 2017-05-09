@@ -1,58 +1,109 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
 
-// dao.addcourse('test', '综合实训-(全国大学生计算机设计大赛)', 
-//     '周六、日 1-15', null, function(err, doc) {
-//     dao.addstutocourse(doc, data.coz_stu, function(err, doc) {
+// dao.addcourse('test2', '综合实训-(全国大学生计算机设计大赛)', 
+//     '周六、日 1-15', null)
+//     .then(function(doc) {
+//         console.log(doc);
+//     }).catch(function(err) {
+//         console.log(err);
 //     });
-// });
+
+    // dao.addstutocourse(29, data.student_2)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
 // dao.addcourse('test', '程序设计II', '1-18	周一1-2',
 //     null, function(err, doc) {
 //     dao.addstutocourse(doc, data.student_2, function(err, doc) {
 //     });
 // });
 
-dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
-    dao.updateexam(2, 'update', 'que', function(err, doc) {
-        console.log(err);
-        console.log(doc);
-    });
-    // dao.delexam(1, function(err, doc) {
-    //     console.log(err);
+// dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157")
+//     .then(function(doc) {
+//         console.log(doc); 
+//     }, function(err) {
+//         console.log(err);
+//     });
+// dao.adduser('root', 'test2', '4F3CC6E16818F2E5F728D5E75D93D157', 't', 
+//         null, null).then(function(doc) {
+//             console.log(doc);
+//         }).catch(function(err) {
+//             console.log(err);
+//         })
+
+    // dao.updateexam(1, 'update', 'que')
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.getexambyid(1, function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+    // dao.delexam(4)
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.getexambycourse(6, function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+    // dao.getexambyid(1)
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.addexam(6, 'exam', "{'num': 0}", function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+    // dao.getexambycourse(6)
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.updatecourse(31, '你们够了', '1-20周 周一-周六 1-15节', 
-    //     '就是这么任性，哼', function(err, doc) {
-    //         console.log(err, doc);
-    // });
-    // dao.getcoursebyid(1, function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+    // dao.addexam(8, 'exam', "{'num': 0}")
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.getstubycourse(1, function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+
+    // dao.updatecourse(34, '你们够了', '1-20周 周一-周六 1-15节', 
+    //         '就是这么任性，哼')
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.checkcourse('stsluy1', 1, function(err) {
+    // }).catch(function(err) {
     //     console.log(err);
     // });
-    // dao.addsign(1, function(err, signid) {
+    // dao.getcoursebyid(100)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    // dao.getstubycourse(1)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    //
+    // dao.checkcourse('stsluy', 300)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    // dao.addsign(1)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
     //     console.log(signid);
-        // dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
-        //     console.log(err);
-        // });
+    // dao.studentsign(1, 45, '14331024', '陈俊贤')
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
         // dao.studentsign(1, 45, '14331024', '陈俊贤', function(err, doc){
         //     console.log(err);
         // });
@@ -63,65 +114,77 @@ dao.login("root", "4F3CC6E16818F2E5F728D5E75D93D157", function(err, doc) {
         // dao.studentsign(1, signid, '14331040', '陈鑫', function(err, doc) {
         // });
     // });
-    // dao.checksign('stsluy', 1, 40, function(err) {
+    // dao.checksign('stsluy', 1, 8)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
     //     console.log(err);
     // });
-    // dao.getsignbyaccount('stsluy', function(err, doc)  {
-    //    console.log(doc);
-    // });
-    // dao.getsignbycourse(1, function(err, doc) {
+    // dao.getsignbyaccount('stsluy')
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.getsignbyid(47, function(err, doc) {
+    // }).catch(function(err) {
     //     console.log(err);
-    //     console.log(doc);
-    // })
     // });
-    // var info = ['test', '2333', null];
-    // dao.updateuserinfo('test', info, function(err, doc) {
+    // dao.getsignbycourse(1)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
     //     console.log(err);
+    // });
+    // dao.getsignbyid(5)
+    // .then(function(doc) {
     //     console.log(doc);
-    // });
-    // dao.updateuserpwd('test', '123', 'FDB6C662D36651211F14977097250CCA',
-    //     function(err, doc) {
-    //         console.log(err);
-    //         console.log(doc);
-    // });
-    // dao.getcoursebyaccount('wenxr12', function(err, doc){
+    // }).catch(function(err) {
     //     console.log(err);
-    //     console.log(doc);
     // });
-    // dao.delcourse(1, function(err, doc) {
-    //     console.log(err);
+
+    var info = ['test', '2333', null];
+    dao.updateuserinfo('test2', info).then(function(doc) {
+        console.log(doc);
+    }).catch(function(err) {
+        console.log(err);
+    });
+    // dao.updateuserpwd('test1', '4F3CC6E16818F2E5F728D5E75D93D157', 'FDB6C662D36651211F14977097250CCA')
+    // .then(function(doc) {
     //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
     // });
-    // dao.addstudent(student, function(err, doc) {
-    //     console.log(err);
+    // dao.getcoursebyaccount('stsluy')
+    // .then(function(doc) {
     //     console.log(doc);
-    // })
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    // dao.delcourse('test2', 30)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    // dao.addstudent(student)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+
     // testadd();
     // dao.getuser('wenxr11', function(err, doc) {
     //     console.log(err)
     //     console.log(doc[0].password);
     // })
-    // dao.deluser('wenxr11', function(err, doc) {
-    //     console.log(err);
+    // dao.deluser('test10')
+    // .then(function(doc) {
     //     console.log(doc);
-    // })
-});
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
 
-var testadd = function() {
-    dao.adduser("root", user, function(err, doc) {
-        dao.addcourse(course, function(err, doc) {
-            var arr = [];
-            for (var i in coz_stu) {
-                arr.push([doc, coz_stu[i][0], coz_stu[i][1]]);
-            }
-            dao.addstutocourse(arr, function(err, doc){
-                console.log(err);
-                console.log(doc);
-            });
-        })
-    });
-}
-
+    // dao.delsign(7)
+    // .then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });

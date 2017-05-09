@@ -13,18 +13,17 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res) {
-    dao.login(req.body.form_username, req.body.form_password, function(err, doc) {
-        if (!err) {
-            crypto.randomBytes(16, function(ex, buf) {
-                var token = buf.toString('hex');
-                res.cookie('id', token);
-                res.redirect('/');
-                cm.add(token, req.body.form_username);
-            });
-        } else {
-            res.render('login', { error : err.stack });
-        }
-    });
+    dao.login(req.body.form_username, req.body.form_password)
+    .then(function(doc) {
+        crypto.randomBytes(16, function(ex, buf) {
+            var token = buf.toString('hex');
+            res.cookie('id', token);
+            res.redirect('/');
+            cm.add(token, req.body.form_username);
+        });
+    }).catch(function(err) {
+        res.render('login', { error : err.stack });
+    })
 });
 
 module.exports = router;
