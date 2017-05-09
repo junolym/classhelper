@@ -15,7 +15,7 @@ var pool  = mysql.createPool({
  * @returns {Object} Promise
  * result account数据
  * */
-exports.login = function(account) {
+exports.login = function(account, password) {
     return getuser(account).then(function(result) {
         if (result[0].password != password) {
             return Promise.reject({stack: '密码错误', status: 500});
