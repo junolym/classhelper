@@ -9,16 +9,15 @@ router.get('/', function(req, res, next) {
     if (req.cookies && cm.check(req.cookies.id)) {
         var params = url.parse(req.url, true).query;
         courseId = params.course;
-        dao.checksign(cm.getCookie(req.cookies.id), params.cid, params.sid, function(err) {
-            if (!err) {
-                crypto.randomBytes(4, function(ex, buf) {
-                    var token = buf.toString('hex');
-                    res.redirect('/qrcode?id='+token);
-                    cm.add(token, { cid: params.cid, sid: params.sid });
-                });
-            } else {
-                res.render('error', { error : err });
-            }
+        dao.checksign(cm.getCookie(req.cookies.id), params.cid, params.sid)
+        .then(function(result) {
+            crypto.randomBytes(4, function(ex, buf) {
+                var token = buf.toString('hex');
+                res.redirect('/qrcode?id='+token);
+                cm.add(token, { cid: params.cid, sid: params.sid });
+            });
+        }).catch(function(err) {
+            res.render('error', { error : err });
         });
     } else {
         res.redirect('/login');
