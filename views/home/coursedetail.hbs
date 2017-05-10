@@ -10,7 +10,7 @@
         </div>
         <div class="form-bottom">
         {{#if course_id}}
-        <form role="form" id="contentForm" action="/home/editcourse?id={{course_id}}" method="post" onsubmit="getstudents();return formSubmit()" class="addcourse-form">
+        <form role="form" id="contentForm" action="/home/editcourse?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit()" class="addcourse-form">
         {{else}}
         <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="getstudents();return formSubmit()" class="addcourse-form">
         {{/if}}
@@ -38,7 +38,7 @@
 
         </form>
         {{#if course_id}}
-        <button class="btn btn-default" onclick="confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&lc('deletecourse?id={{course_id}}')">删除课程</button>
+        <button class="btn btn-default" onclick="confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&lc('deletecourse?cid={{course_id}}')">删除课程</button>
         {{/if}}
         </div>
         {{#if error}}

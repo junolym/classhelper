@@ -65,14 +65,14 @@ router.get('/signindetail', (req, res, next) => {
 
 router.post('/editcourse', (req, res, next) => {
     helper.checkCookie(req, res).then((user) => {
-        return dao.checkcourse(user, req.query.id);
+        return dao.checkcourse(user, req.query.cid);
     }).then(() => {
-        return dao.updatecourse(req.query.id, req.body.form_coursename,
+        return dao.updatecourse(req.query.cid, req.body.form_coursename,
             req.body.form_coursetime, req.body.form_courseinfo);
     }).then(() => {
-        return dao.delstuofcourse(req.query.id);
+        return dao.delstuofcourse(req.query.cid);
     }).then(() => {
-        return helper.parseStu(req.query.id, req.body.students);
+        return helper.parseStu(req.query.cid, req.body.students);
     }).then((result) => {
         if (result.stuArray.length) {
             return dao.addstutocourse(result.cid, result.stuArray);
@@ -84,9 +84,9 @@ router.post('/editcourse', (req, res, next) => {
 
 router.get('/deletecourse', (req, res, next) => {
     helper.checkCookie(req, res).then((user) => {
-        return dao.checkcourse(user, req.query.id);
+        return dao.checkcourse(user, req.query.cid);
     }).then(() => {
-        return dao.delcourse(req.query.id);
+        return dao.delcourse(req.query.cid);
     }).then(() => {
         res.render('home/reload', { location : 'course' });
     }).catch(helper.catchError(res));
@@ -95,13 +95,13 @@ router.get('/deletecourse', (req, res, next) => {
 router.get('/coursedetail', (req, res, next) => {
     var coursedetail = {};
     helper.checkCookie(req, res).then((user) => {
-        return dao.checkcourse(user, req.query.id);
+        return dao.checkcourse(user, req.query.cid);
     }).then(() => {
-        return dao.getcoursebyid(req.query.id);
+        return dao.getcoursebyid(req.query.cid);
     }).then((result) => {
         coursedetail = JSON.parse(JSON.stringify(result))[0];
-        coursedetail.course_id = req.query.id;
-        return dao.getstubycourse(req.query.id);
+        coursedetail.course_id = req.query.cid;
+        return dao.getstubycourse(req.query.cid);
     }).then((result) => {
         coursedetail.students = JSON.parse(JSON.stringify(result));
         res.render('home/coursedetail', coursedetail);
