@@ -6,7 +6,7 @@ var cm = require('../plugins/cookie-manager.js');
 var router = express.Router();
 
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     if (req.cookies && cm.check(req.cookies.id)) {
         res.render('qrcode', { title: '签到二维码' });
     } else {

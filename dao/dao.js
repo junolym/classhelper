@@ -7,6 +7,13 @@ var pool  = mysql.createPool({
     charset: 'utf8mb4_unicode_ci'
 });
 
+function UserError (message) {
+    this.message = message || 'UserError';
+    this.userError = true;
+};
+UserError.prototype = new Error();
+UserError.prototype.constructor = UserError;
+
 /**
  * login
  *
@@ -18,7 +25,7 @@ var pool  = mysql.createPool({
 exports.login = function(account, password) {
     return getuser(account).then(function(result) {
         if (result[0].password != password) {
-            return Promise.reject({stack: '密码错误', status: 500});
+            return Promise.reject(new UserError('密码错误'));
         } else {
             return Promise.resolve(result);
         }
@@ -36,7 +43,7 @@ var getuser = function getuser(account) {
     var sql = "select * from users where account=?"
     return pool.query(sql, account).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack: '用户不存在', status: 500});
+            return Promise.reject(new UserError('用户不存在'));
         } else {
             return Promise.resolve(result);
         }
@@ -64,9 +71,9 @@ exports.adduser = function(admin, n_account, n_password, n_username,
     var sql = "select admin from users where account=?";
     return pool.query(sql, admin).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack: '此用户不存在', status: 500});
+            return Promise.reject(new UserError('用户不存在'));
         } else if (result[0].admin == 0) {
-            return Promise.reject({stack: '没有添加用户的权限', status: 500,});
+            return Promise.reject(new UserError('没有添加用户的权限'));
         } else {
             return Promise.resolve();
         }
@@ -92,7 +99,7 @@ exports.updateuserinfo = function(account, userinfo) {
     parameter.push(account);
     return pool.query(sql, parameter).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'账号不存在', status:500}, result);
+            return Promise.reject(new UserError('账号不存在'));
         } else {
             return Promise.resolve();
         }
@@ -111,7 +118,7 @@ exports.updateuserpwd = function(account, oldpwd, newpwd) {
             + "where account=? and password=?";
     return pool.query(sql, [newpwd,account,oldpwd]).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'密码验证失败', status:500});
+            return Promise.reject(new UserError('密码验证失败'));
         } else {
             return Promise.resolve();
         }
@@ -128,7 +135,7 @@ exports.deluser = function(account) {
     var sql = "delete from users where account=?";
     return pool.query(sql, account).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'用户不存在！', status:500});
+            return Promise.reject(new UserError('用户不存在！'));
         } else {
             return Promise.resolve();
         }
@@ -172,14 +179,13 @@ exports.addcourse=function(account, course_name, course_time, course_info){
 /**
  * delcourse
  *
- * @param {string} account
  * @param {number} course_id
  */
-exports.delcourse = function(account, course_id) {
-    var sql = "delete from courses where course_id=? and coz_account=?";
-    return pool.query(sql, [course_id, account]).then(function(result) {
+exports.delcourse = function(course_id) {
+    var sql = "delete from courses where course_id=?";
+    return pool.query(sql, course_id).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack: "此课程不存在！", status: 500});
+            return Promise.reject(new UserError('此课程不存在！'));
         } else {
             return Promise.resolve();
         }
@@ -226,7 +232,7 @@ exports.delexam = function(exam_id) {
     var sql = "delete from exams where exam_id=?";
     return pool.query(sql, exam_id).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'测试不存在', status:500});
+            return Promise.reject(new UserError('测试不存在'));
         } else {
             return Promise.resolve();
         }
@@ -248,7 +254,7 @@ exports.updateexam = function(exam_id, exam_name, exam_question) {
     var parameter = [exam_name, exam_question, exam_id];
     return pool.query(sql, parameter).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'该测试不存在', status:500});
+            return Promise.reject(new UserError('测试不存在'));
         } else {
             return Promise.resolve();
         }
@@ -259,7 +265,7 @@ exports.updateexam = function(exam_id, exam_name, exam_question) {
 //     var sql = "select coz_account from courses, exams"
 //             + "where exam_id=? and ex_coz_id=course_id";
 //     pool.query(sql, exam_id, function(err, result, fields) {
-        
+
 //     });
 
 // }
@@ -274,7 +280,7 @@ exports.getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
     return pool.query(sql, exam_id, function(err, result, fields) {
         if (result.length == 0) {
-            return Promise.reject({stack:'该试卷不存在', status:500});
+            return Promise.reject(new UserError('该试卷不存在'));
         } else {
             return Promise.resolve(result);
         }
@@ -312,9 +318,9 @@ exports.studentsign = function(course_id, sign_id, stu_id,
     var parameter = [course_id, stu_id];
     return pool.query(sql, parameter).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack:'学号不在此课程内!', status:500});
+            return Promise.reject(new UserError('学号不在此课程内'));
         } else if (result[0].cs_stu_name != stu_name) {
-            return Promise.reject({stack:'学号姓名不符!', status:500});
+            return Promise.reject(new UserError('学号姓名不符'));
         } else {
             return Promise.resolve();
         }
@@ -324,9 +330,8 @@ exports.studentsign = function(course_id, sign_id, stu_id,
         var parameter = [sign_id, stu_id, stu_name];
         return pool.query(sql, parameter);
     }).catch(function(err) {
-        var reg = /PRIMARY/;
-        if (reg.test(err)) {
-            err = {stack:'请勿重复签到', status:500};
+        if (/PRIMARY/.test(err)) {
+            return Promise.reject(new UserError('请勿重复签到'));
         }
         return Promise.reject(err);
     });
@@ -432,7 +437,7 @@ exports.checksign = function(account, course_id, sign_id) {
     return pool.query(sql, [account, course_id, sign_id])
     .then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack: "sign_id校验失败", status: 500});
+            return Promise.reject(new UserError('签到id校验失败'));
         } else {
             return Promise.resolve();
         }
@@ -466,10 +471,9 @@ exports.checkcourse = function(account, course_id) {
             + "where course_id=? ";
     return pool.query(sql, course_id).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack:'此课程不存在', status:500});
+            return Promise.reject(new UserError('此课程不存在'));
         } else if (result[0].coz_account != account) {
-            return Promise.reject(
-                {stack:'非法访问!该教师无此课程!', status:500});
+            return Promise.reject(new UserError('课程不属于该老师'));
         } else {
             return Promise.resolve();
         }
@@ -488,7 +492,7 @@ exports.getcoursebyid = function(course_id) {
             + "from courses where course_id=?"
     return pool.query(sql, course_id).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject({stack: '此课程不存在', status: 500});
+            return Promise.reject(new UserError('此课程不存在'));
         } else {
             return Promise.resolve(result);
         }
@@ -504,14 +508,14 @@ exports.getcoursebyid = function(course_id) {
  * @param {string} n_course_info
  * @returns {Object} Promise
  */
-exports.updatecourse = function(course_id, n_course_name, n_course_time, 
+exports.updatecourse = function(course_id, n_course_name, n_course_time,
                                 n_course_info) {
     var sql = "update courses set course_name=?, course_time=?, "
             + "course_info=? where course_id=?"
     var parameter=[n_course_name, n_course_time, n_course_info, course_id];
     return pool.query(sql, parameter).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack: '此课程不存在', status:500});
+            return Promise.reject(new UserError('此课程不存在'));
         } else {
             return Promise.resolve();
         }
@@ -528,7 +532,7 @@ exports.delsign = function(sign_id) {
     var sql = 'delete from signup where sign_id=?';
     return pool.query(sql, sign_id).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject({stack:'此签到不存在', status:500});
+            return Promise.reject(new UserError('此签到不存在'));
         } else {
             return Promise.resolve();
         }

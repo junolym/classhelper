@@ -4,7 +4,7 @@ var dao = require('./../dao/dao.js');
 var cm = require('../plugins/cookie-manager.js');
 var crypto = require('crypto');
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     if (req.cookies && cm.check(req.cookies.id)) {
         res.redirect('/');
     } else {
@@ -12,17 +12,21 @@ router.get('/', function(req, res, next) {
     }
 });
 
-router.post('/', function(req, res) {
+router.post('/', (req, res) => {
     dao.login(req.body.form_username, req.body.form_password)
-    .then(function(doc) {
-        crypto.randomBytes(16, function(ex, buf) {
+    .then(() => {
+        crypto.randomBytes(16, (ex, buf) => {
             var token = buf.toString('hex');
             res.cookie('id', token);
             res.redirect('/');
             cm.add(token, req.body.form_username);
         });
-    }).catch(function(err) {
-        res.render('login', { error : err.stack });
+    }).catch((err) => {
+        if (err.userError) {
+            res.render('login', { error : err.message });
+        } else {
+            res.render('error', { error : err });
+        }
     })
 });
 
