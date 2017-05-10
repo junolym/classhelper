@@ -8,20 +8,24 @@ module.exports = {
 };
 
 function checkCookie(req, res) {
-    return (new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         if(req.cookies && cm.check(req.cookies.id)) {
             resolve(cm.getCookie(req.cookies.id));
         } else {
-            reject();
+            var err = new Error('请先登录再操作');
+            err.needLogin = true;
+            reject(err);
         }
-    })).catch(() => {
-        res.render('home/redirect', { location : '/login' });
     });
 }
 
-function catchError(res) {
+function catchError(res, next) {
     return function(err) {
-        res.render('error', { error: err });
+        if (err.needLogin) {
+            res.render('home/redirect', { location : '/login' });
+        } else {
+            next(err);
+        }
     }
 }
 

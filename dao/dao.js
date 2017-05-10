@@ -10,6 +10,7 @@ var pool  = mysql.createPool({
 function UserError (message) {
     this.message = message || 'UserError';
     this.userError = true;
+    this.status = 403;
 };
 UserError.prototype = new Error();
 UserError.prototype.constructor = UserError;
