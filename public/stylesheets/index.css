@@ -391,6 +391,27 @@ table {
   height: 150px;
 }
 
+#addquestion {
+  float: left;
+}
+
+#jieda {
+  margin-left: 10px;
+}
+
+#exambtn {
+  float: left;
+}
+
+#saveexam {
+  margin-left: 5px;
+}
+
+#saveandstart {
+  margin-left: 5px;
+  /*float: left;*/
+}
+
 
 /*-------------------------------*/
 /*          Dark Overlay         */

@@ -109,3 +109,21 @@ function addstudent() {
     var td0 = tr.insertCell(0);
     var td1 = tr.insertCell(1);
 }
+
+
+function addquestion() {
+    var table = $('#questiontable')[0];
+    var questions = $('#questiontable')[0].getElementsByTagName("tr");
+    var quesNum = questions.length;
+
+    var newques = table.insertRow(quesNum);
+    var id = newques.insertCell(0);
+    var description = newques.insertCell(1);
+    var answer = newques.insertCell(2);
+
+    id.innerText = quesNum;
+    description.setAttribute("contentEditable", "true");
+
+    answer.innerHTML +=
+    ""
+}
