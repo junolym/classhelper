@@ -1,1 +1,51 @@
-<h1>post表单地址是: /home/createexam?cid={{course_id}}</h1>
+{{!-- <h1>post表单地址是: /home/createexam?cid={{course_id}}</h1> --}}
+
+
+
+<div class="container">
+	<div class="col-sm-6 form-box" style="">
+    	<div class="form-top">
+    		<div class="form-top-left">
+    			<h3 class="addtitle">{{title}}</h3>
+    		</div>
+        </div>
+        <div class="form-bottom">
+	        <form role="form" id="contentForm" action="/home/createexam?cid={{course_id}}" method="post"  class="addcourse-form">
+        	<div class="btn-group" role="group" aria-label="...">
+  				<button class="btn btn-large btn-default backbtn" type="button" onclick="lc('..')">返回</button>
+			</div>
+        	<div class="form-group">
+        		<label class="sr-only" for="form-examname">测试名称</label>
+            	<input type="textarea" name="form_coursename" placeholder="测试名称" class="form-coursename form-control" id="form-coursename" value="{{exam_name}}" required>
+            </div>
+	    </form>
+    </div>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>题目编号</th>
+      <th>题目类型</th>
+      <th>题目描述</th>
+      <th>题目答案</th>
+      <th>编辑或删除</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{{#each question}}
+    <tr>
+      <td><a class="btn">{{question_id}}</td>
+      <td><a class="btn">{{queation_type}}</td>
+      <td><a class="btn">{{question_detail}}</td>
+      <td><a class="btn">{{question_answer}}</td>
+      <td><a class="btn btn-default" target="_blank" href="">编辑题目</a>
+      <a class="btn btn-default" onclick="">删除题目</a></td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td></td>
+        <td><a class="btn addcoursebtn" onclick="">+</a></td>
+        <td></td>
+    </tr>
+  </tbody>
+</table>
