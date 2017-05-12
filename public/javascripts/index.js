@@ -120,10 +120,20 @@ function addquestion() {
     var id = newques.insertCell(0);
     var description = newques.insertCell(1);
     var answer = newques.insertCell(2);
+    var operation = newques.insertCell(3);
+
+    operation.innerHTML =
+    "<a class='btn btn-default' target='_blank'>编辑题目</a>\
+    <a class='btn btn-default' style='margin-left:5px'>删除题目</a>"
 
     id.innerText = quesNum;
     description.setAttribute("contentEditable", "true");
 
+
     answer.innerHTML +=
-    ""
+    "<div><textarea  cols=40 rows=4>选项A</textarea></div>\
+    <div><textarea  cols=40 rows=4>选项B</textarea></div>\
+    <div><textarea  cols=40 rows=4>选项C</textarea></div>\
+    <div><textarea  cols=40 rows=4>选项D</textarea></div>\
+    "
 }
