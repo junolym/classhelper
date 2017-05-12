@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var url = require('url');
 
 router.get('/', (req, res, next) => {
     if (req.query.success) {

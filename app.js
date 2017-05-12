@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -27,12 +28,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: '_CLASS_HELPER_',
+  cookie: { maxAge: 1000*60*60*6 },
+  key: 'sessionid'
+}));
+
 app.use('/', index);
 app.use('/home', home);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/qrcode', qrcode);
 app.use('/signin', signin);
+app.use('/s', signin);
 app.use('/signinresult', signinresult);
 
 // catch 404 and forward to error handler

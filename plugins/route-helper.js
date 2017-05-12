@@ -1,16 +1,14 @@
-var cm = require('./cookie-manager');
-
 module.exports = {
-    checkCookie : checkCookie,
+    checkLogin : checkLogin,
     catchError : catchError,
     dateConverter : dateConverter,
     parseStu : parseStu
 };
 
-function checkCookie(req, res) {
+function checkLogin(req, res) {
     return new Promise((resolve, reject) => {
-        if(req.cookies && cm.check(req.cookies.id)) {
-            resolve(cm.getCookie(req.cookies.id));
+        if (req.session.user) {
+            resolve(req.session.user);
         } else {
             var err = new Error('请先登录再操作');
             err.needLogin = true;

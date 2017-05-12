@@ -10,6 +10,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "express-session": "^1.15.2",
     "hbs": "~4.0.1",
     "json-tryparse": "^1.0.5",
     "morgan": "~1.8.1",
