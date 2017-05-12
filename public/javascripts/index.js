@@ -35,7 +35,11 @@ $(document).ready(function () {
         }
     });
 
-
+    var loc = document.location;
+    var si = loc.href.indexOf('#') + 1;
+    if (si > 0 && si < loc.href.length) {
+        lc(loc.href.slice(si));
+    }
 });
 
 function contentResize() {
@@ -52,6 +56,7 @@ lc = function loadContent(content) {
     } else if (content != contentstack[contentstack.length-1]) {
         contentstack.push(content);
     }
+    document.location.href = "#" + content;
     $.get('/home/'+content).complete(function(res) {
         $('#content').html(res.responseText);
     });
