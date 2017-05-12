@@ -22,7 +22,7 @@ function checkCookie(req, res) {
 function catchError(res, next) {
     return function(err) {
         if (err.needLogin) {
-            res.render('home/redirect', { location : '/login' });
+            res.status(302).send('/login');
         } else {
             next(err);
         }

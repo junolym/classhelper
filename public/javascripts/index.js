@@ -35,17 +35,17 @@ $(document).ready(function () {
         }
     });
 
-    if (document.location.hash.length > 1) {
-        hashChange();
+    if (document.location.hash.length <= 1) {
+        document.location.hash = "#user";
     } else {
-        lc('user');
+        hashChange();
     }
 });
 
 function hashChange() {
     var hash = document.location.hash;
     if (hash.length > 1) {
-        lc(hash.slice(1));
+        loadContent(hash.slice(1));
     }
 }
 window.onhashchange = hashChange;
@@ -54,20 +54,28 @@ function contentResize() {
     $('#rightpage')[0].style.width = document.body.clientWidth - (sidebar ? 240 : 0) + 'px';
 }
 
-lc = function loadContent(content) {
-    document.location.hash = "#" + content;
-    $.get('/home/'+content).complete(function(res) {
-        $('#content').html(res.responseText);
-    });
+function responseHandler(res) {
+    var rst = res.responseText;
+    var loc = document.location;
+    if (res.status == 302) {
+        if (loc.hash == rst && rst.length > 1) {
+            loadContent(rst.slice(1));
+        } else {
+            loc.href = rst;
+        }
+    } else {
+        $('#content').html(rst);
+    }
+}
+
+function loadContent(content) {
+    $.get('/home/'+content).complete(responseHandler);
 }
 
 
 function formSubmit() {
-    $.post($("#contentForm")[0].action, $("#contentForm").serialize())
-    .complete(function(res) {
-        $('#content').html(res.responseText);
-    });
-
+    $.post($("#contentForm")[0].action,
+        $("#contentForm").serialize()).complete(responseHandler);
     return false;
 };
 

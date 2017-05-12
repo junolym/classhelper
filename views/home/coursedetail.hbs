@@ -15,27 +15,21 @@
         		<label class="sr-only" for="form-coursename">课程名称</label>
             	<input type="textarea" name="form_coursename" placeholder="课程名称" class="form-coursename form-control" id="form-coursename" value="{{course_name}}" required>
             </div>
-
             <div class="form-group">
             	<label class="sr-only" for="form-courseinfo">课程信息</label>
             	<input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
             </div>
-
             <div class="form-group">
             	<label class="sr-only" for="form-coursetime">上课时间</label>
             	<input type="text" name="form_coursetime" placeholder="上课时间" class="form-coursetime form-control" id="form-coursetime" value="{{course_time}}" required>
             </div>
-
-
             <input id="stulistinput" type="text" name="students" value="">
-
             <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">
             {{#if course_id}}修改{{else}}新建{{/if}}
             </button>
-
         </form>
         {{#if course_id}}
-        <button class="btn btn-default" onclick="confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&lc('deletecourse?cid={{course_id}}')">删除课程</button>
+        <a class="btn btn-default" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</a>
         {{/if}}
         </div>
         {{#if error}}
@@ -48,7 +42,6 @@
     <div id="tablenav">
         <h2>学生名单</h2>
     </div>
-
     <table width="600" cellpadding="0" cellspacing="0" id="stutable">
         <tr>
           <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>

@@ -10,16 +10,16 @@
   <tbody>
     {{#each courses}}
     <tr>
-      <td><a class="btn" onclick="lc('coursedetail?cid={{course_id}}')">{{course_name}}</td>
-      <td><a class="btn" onclick="lc('coursedetail?cid={{course_id}}')">{{course_time}}</td>
-      <td><a class="btn" onclick="lc('coursedetail?cid={{course_id}}')">{{student_num}}</td>
+      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_name}}</td>
+      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_time}}</td>
+      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{student_num}}</td>
       <td><a class="btn btn-default" target="_blank" href="/home/createsignin?cid={{course_id}}">开始签到</a>
-      <a class="btn btn-default" onclick="lc('createexam?cid={{course_id}}')">创建测验</a></td>
+      <a class="btn btn-default" href="#createexam?cid={{course_id}}">创建测验</a></td>
     </tr>
     {{/each}}
     <tr>
       <td></td>
-      <td><a class="btn addcoursebtn" onclick="lc('addcourse')">+</a></td>
+      <td><a class="btn addcoursebtn" href="#addcourse">+</a></td>
       <td></td>
       <td></td>
     </tr>

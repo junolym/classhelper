@@ -58,7 +58,7 @@ router.post('/addcourse', (req, res, next) => {
             return dao.addstutocourse(result.cid, result.stuArray);
         }
     }).then(() => {
-        res.render('home/reload', { location : 'course' });
+        res.status(302).send('#course');
     }).catch(helper.catchError(res, next));
 });
 
@@ -90,7 +90,7 @@ router.post('/editcourse', (req, res, next) => {
             return dao.addstutocourse(result.cid, result.stuArray);
         }
     }).then(() => {
-        res.render('home/reload', { location : 'course' });
+        res.status(302).send('#course');
     }).catch(helper.catchError(res, next));
 });
 
@@ -100,7 +100,7 @@ router.get('/deletecourse', (req, res, next) => {
     }).then(() => {
         return dao.delcourse(req.query.cid);
     }).then(() => {
-        res.render('home/reload', { location : 'course' });
+        res.status(302).send('#course');
     }).catch(helper.catchError(res, next));
 });
 
@@ -126,7 +126,7 @@ router.get('/deletesignin', (req, res, next) => {
     }).then(() => {
         return dao.delsign(req.query.sid);
     }).then(() => {
-        res.render('home/reload', { location : 'signin' });
+        res.status(302).send('#signin');
     }).catch(helper.catchError(res, next));
 });
 
@@ -168,9 +168,9 @@ router.post('/createexam', (req, res, next) => {
     helper.checkCookie(req).then((user) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
-        console.log('--------- exam body ----------');
-        console.log(req.body);
-        console.log('--------- exam body ----------');
+        // console.log('--------- exam body ----------');
+        // console.log(req.body);
+        // console.log('--------- exam body ----------');
         res.send(JSON.stringify(req.body));
     }).catch(helper.catchError(res, next));
 });
