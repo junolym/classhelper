@@ -1,7 +1,3 @@
-{{!-- <h1>post表单地址是: /home/createexam?cid={{course_id}}</h1> --}}
-
-
-
 <div class="container">
   <div class="col-sm-6 form-box" style="">
       <div class="form-top">
@@ -11,9 +7,6 @@
         </div>
         <div class="form-bottom">
           <form role="form" id="contentForm" action="/home/createexam?cid={{course_id}}" method="post"  class="addcourse-form">
-          <div class="btn-group" role="group" aria-label="...">
-          <button class="btn btn-large btn-default backbtn" type="button" onclick="lc('..')">返回</button>
-      </div>
           <div class="form-group">
             <label class="sr-only" for="form-examname">测试名称</label>
               <input type="textarea" name="form_coursename" placeholder="测试名称" class="form-coursename form-control" id="form-coursename" value="{{exam_name}}" required>

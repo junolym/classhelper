@@ -35,34 +35,27 @@ $(document).ready(function () {
         }
     });
 
-    var loc = document.location;
-    var si = loc.href.indexOf('#') + 1;
-    if (si > 0 && si < loc.href.length) {
-        lc(loc.href.slice(si));
+    if (document.location.hash.length > 1) {
+        hashChange();
     } else {
         lc('user');
     }
 });
+
+function hashChange() {
+    var hash = document.location.hash;
+    if (hash.length > 1) {
+        lc(hash.slice(1));
+    }
+}
+window.onhashchange = hashChange;
 
 function contentResize() {
     $('#rightpage')[0].style.width = document.body.clientWidth - (sidebar ? 240 : 0) + 'px';
 }
 
 lc = function loadContent(content) {
-    contentstack = window.contentstack || [];
-    if (content == '.') {
-        content = contentstack[contentstack.length-1];
-    } else if (content == '..') {
-        contentstack.pop();
-        if (contentstack.length) {
-            content = contentstack[contentstack.length-1];
-        } else {
-            content = "user";
-        }
-    } else if (content != contentstack[contentstack.length-1]) {
-        contentstack.push(content);
-    }
-    document.location.href = "#" + content;
+    document.location.hash = "#" + content;
     $.get('/home/'+content).complete(function(res) {
         $('#content').html(res.responseText);
     });
