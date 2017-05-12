@@ -39,6 +39,8 @@ $(document).ready(function () {
     var si = loc.href.indexOf('#') + 1;
     if (si > 0 && si < loc.href.length) {
         lc(loc.href.slice(si));
+    } else {
+        lc('user');
     }
 });
 
@@ -52,7 +54,11 @@ lc = function loadContent(content) {
         content = contentstack[contentstack.length-1];
     } else if (content == '..') {
         contentstack.pop();
-        content = contentstack[contentstack.length-1];
+        if (contentstack.length) {
+            content = contentstack[contentstack.length-1];
+        } else {
+            content = "user";
+        }
     } else if (content != contentstack[contentstack.length-1]) {
         contentstack.push(content);
     }

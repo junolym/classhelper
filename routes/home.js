@@ -5,6 +5,18 @@ var dao = require('../dao/dao.js');
 var helper = require('../plugins/route-helper.js');
 var cm = require('../plugins/cookie-manager.js');
 
+router.get('/user', (req, res, next) => {
+    helper.checkCookie(req).then((user) => {
+        res.render('home/user', { user : user });
+    }).catch(helper.catchError(res, next));
+});
+
+router.get('/help', (req, res, next) => {
+    helper.checkCookie(req).then((user) => {
+        res.render('home/help');
+    }).catch(helper.catchError(res, next));
+});
+
 router.get('/course', (req, res, next) => {
     helper.checkCookie(req).then((user) => {
         return dao.getcoursebyaccount(user);
