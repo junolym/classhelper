@@ -1,1 +1,27 @@
 <h1>{{title}}</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>测试编号</th>
+      <th>题目数目</th>
+      <th>作答情况</th>
+      <th>二维码</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each exam}}
+    <tr>
+      <td><a class="btn">{{exam_id}}</td>
+      <td><a class="btn">{{exam_number}}</td>
+      <td><a class="btn">{{exam_detail}}</td>
+      <td><a class="btn">{{exam_qrcode}}</a></td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td></td>
+        <td><a class="btn addcoursebtn">+</a></td>
+        <td></td>
+    </tr>
+  </tbody>
+</table>
