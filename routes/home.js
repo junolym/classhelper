@@ -144,4 +144,23 @@ router.get('/showqrcode', (req, res, next) => {
     }).catch(helper.catchError(res, next));
 });
 
+router.get('/createexam', (req, res, next) => {
+    helper.checkCookie(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        res.render('home/examdetail', { course_id : req.query.cid });
+    }).catch(helper.catchError(res, next));
+});
+
+router.post('/createexam', (req, res, next) => {
+    helper.checkCookie(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        console.log('--------- exam body ----------');
+        console.log(req.body);
+        console.log('--------- exam body ----------');
+        res.send(JSON.stringify(req.body));
+    }).catch(helper.catchError(res, next));
+});
+
 module.exports = router;
