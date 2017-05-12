@@ -21,6 +21,7 @@
       </form>
     </div>
 </div>
+
 <table class="table" id="questiontable">
   <thead>
     <tr>
@@ -46,11 +47,14 @@
 
 
 <div id="addquestion">
-  <button type="submit" class="btn btn-large btn-primary" id="xuanze"  style="font-size:14px" onclick="addquestion()">添加选择题</button>
-  <button class="addbtn btn btn-large btn-primary" id="jieda" style="font-size:14px">添加解答题</button>
+  <button type="submit" class="btn btn-large btn-primary" id="xuanze"  style="font-size:14px" onclick="addselectquestion()">添加选择题</button>
+  <button class="addbtn btn btn-large btn-primary" id="jieda" style="font-size:14px" onclick="addlongquestion()">添加解答题</button>
 </div>
-{{!--
+
 <div id="exambtn">
+  <form role="form" id="examForm" action="/home/createexam?cid={{course_id}}" method="post" onsubmit="getqusetion();return examformSubmit()" class="addcourse-form">
+  <input id="examinput" type="text" name="exam" value="">
   <button type="submit" class="btn btn-large btn-primary" id="saveexam"  style="font-size:14px">保存测试</button>
   <button class="addbtn btn btn-large btn-primary" id="saveandstart" style="font-size:14px">保存并开始</button>
-</div> --}}
+  </form>
+</div>

@@ -412,7 +412,10 @@ table {
   /*float: left;*/
 }
 
-
+#examinput {
+  display: none;
+  visibility:hidden;
+}
 
 /*-------------------------------*/
 /*          Dark Overlay         */

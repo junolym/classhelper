@@ -78,6 +78,15 @@ function formSubmit() {
     return false;
 };
 
+function examformSubmit() {
+  $.post($("#examForm")[0].action, $("#examForm").serialize())
+  .complete(function(res) {
+      $('#content').html(res.responseText);
+  });
+
+  return false;
+}
+
 function setEditable() {
         //设置表格可编辑
     var trs = $('#stutable')[0].getElementsByTagName("tr");
@@ -110,8 +119,8 @@ function addstudent() {
     var td1 = tr.insertCell(1);
 }
 
-
-function addquestion() {
+//添加选择题
+function addselectquestion() {
     var table = $('#questiontable')[0];
     var questions = $('#questiontable')[0].getElementsByTagName("tr");
     var quesNum = questions.length;
@@ -121,19 +130,86 @@ function addquestion() {
     var description = newques.insertCell(1);
     var answer = newques.insertCell(2);
     var operation = newques.insertCell(3);
-
-    operation.innerHTML =
-    "<a class='btn btn-default' target='_blank'>编辑题目</a>\
-    <a class='btn btn-default' style='margin-left:5px'>删除题目</a>"
-
+    //题号
     id.innerText = quesNum;
-    description.setAttribute("contentEditable", "true");
-
-
+    //描述
+    description.innerHTML +=
+    "<div><textarea  cols=50 rows=4>描述</textarea></div>"
+    //答案
     answer.innerHTML +=
-    "<div><textarea  cols=40 rows=4>选项A</textarea></div>\
-    <div><textarea  cols=40 rows=4>选项B</textarea></div>\
-    <div><textarea  cols=40 rows=4>选项C</textarea></div>\
-    <div><textarea  cols=40 rows=4>选项D</textarea></div>\
+    "<div><p>正确答案:</p><textarea cols=5 rows=1></textarea></div>\
+    A<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项A</textarea></div>\
+    B<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项B</textarea></div>\
+    C<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项C</textarea></div>\
+    D<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项D</textarea></div>\
     "
+    //操作
+    var deleteid = "deletebtn" + quesNum;
+    operation.innerHTML =
+    // "<div class='deletequestion'><a class='btn btn-default' style='margin-left:5px'>删除题目</a></div>"
+    "<button class='btn btn-large' style='font-size:4px' onclick='deleteQuestion(this.id)'>删除题目</button>"
+    operation.getElementsByTagName("button")[0].id = deleteid;
+}
+
+function addlongquestion() {
+  var table = $('#questiontable')[0];
+  var questions = $('#questiontable')[0].getElementsByTagName("tr");
+  var quesNum = questions.length;
+
+  var newques = table.insertRow(quesNum);
+  var id = newques.insertCell(0);
+  var description = newques.insertCell(1);
+  var answer = newques.insertCell(2);
+  var operation = newques.insertCell(3);
+  //题号
+  id.innerText = quesNum;
+  //描述
+  description.innerHTML +=
+  "<div><textarea  cols=50 rows=4>描述</textarea></div>"
+
+  //答案
+  answer.innerHTML +=
+  "<div><textarea  cols=50 rows=4>答案</textarea></div>";
+
+  //操作
+  var deleteid = "deletebtn" + quesNum;
+  operation.innerHTML =
+  // "<div class='deletequestion'><a class='btn btn-default' style='margin-left:5px'>删除题目</a></div>"
+  "<button class='btn btn-large' style='font-size:4px' onclick='deleteQuestion(this.id)'>删除题目</button>"
+  operation.getElementsByTagName("button")[0].id = deleteid;
+}
+
+//删除试题
+function deleteQuestion(id) {
+  var num = parseInt(id.substr(9,id.length));
+  var questions = $('#questiontable')[0].getElementsByTagName("tr");
+  questions[num].remove();
+}
+
+//提交试题
+function getqusetion(){
+  var list = [];
+  var questions = $('#questiontable')[0].getElementsByTagName("tr");
+
+  for (var i = 1; i < questions.length; i++) {
+      //题号，描述
+      var td = questions[i].getElementsByTagName("td");
+      var id = td[0].innerText;
+      var description = td[1].getElementsByTagName("textarea")[0].value;
+      //选项
+      var selectionset = [];
+      var selections = td[2].getElementsByTagName("textarea");
+      if (selections.length >= 1) {
+        for (var j = 1; j < selections.length; j++) {
+          selectionset.push(selections[j].value);
+        }
+      }
+
+      //答案
+      var answer = selections[0].value;
+
+      list.push([id, description, selectionset, answer]);
+  }
+
+  document.getElementById("examinput").value = JSON.stringify(list);
 }
