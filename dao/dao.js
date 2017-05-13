@@ -205,6 +205,7 @@ exports.getexambycourse = function(course_id) {
     return pool.query(sql, course_id)
 };
 
+
 /**
  * addexam
  *
@@ -286,6 +287,25 @@ exports.getexambyid = function(exam_id) {
             return Promise.resolve(result);
         }
     });
+}
+
+/**
+ * getexambyaccount
+ *
+ * @returns {Object} Promise
+ * [course_id, exam_id, exam_name, name, exam_num, stu_num]
+ *
+ */
+exports.getexambyaccount = function(account) {
+    var sql = "select course_id, exam_id, exam_name, course_name as name, "
+            + "count(ans_ex_id) as exam_num, student_num as stu_num "
+            + "from exams "
+            + "inner join courses on ex_coz_id=course_id "
+            + "left join answers on ans_ex_id=exam_id "
+            + "where coz_account=? "
+            + "group by exam_id "
+            + "order by exam_time desc";
+    return pool.query(sql, account);
 }
 
 /**
@@ -398,7 +418,8 @@ exports.getsignbyid = function(sign_id) {
     var sql = "select sg_coz_id as course_id, ss_stu_id as stu_id, "
             + "ss_stu_name as name, stu_sign_time as time "
             + "from stu_sign, signup "
-            + "where sign_id=? and sign_id=ss_sign_id";
+            + "where sign_id=? and sign_id=ss_sign_id "
+            + "order by stu_sign_time";
     return pool.query(sql, sign_id);
 }
 
