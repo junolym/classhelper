@@ -190,6 +190,11 @@ function deleteQuestion(id) {
 //提交试题
 function getqusetion(){
   var list = [];
+
+  //课程名称
+  var name = $("#exam_name")[0].value;
+  list.push([name]);
+
   var questions = $('#questiontable')[0].getElementsByTagName("tr");
 
   for (var i = 1; i < questions.length; i++) {
