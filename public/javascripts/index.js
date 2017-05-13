@@ -73,20 +73,10 @@ function loadContent(content) {
 }
 
 
-function formSubmit() {
-    $.post($("#contentForm")[0].action,
-        $("#contentForm").serialize()).complete(responseHandler);
+function formSubmit(selector) {
+    $.post($(selector)[0].action, $(selector).serialize()).complete(responseHandler);
     return false;
 };
-
-function examformSubmit() {
-  $.post($("#examForm")[0].action, $("#examForm").serialize())
-  .complete(function(res) {
-      $('#content').html(res.responseText);
-  });
-
-  return false;
-}
 
 function setEditable() {
         //设置表格可编辑

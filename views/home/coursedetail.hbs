@@ -7,9 +7,9 @@
         </div>
         <div class="form-bottom">
         {{#if course_id}}
-        <form role="form" id="contentForm" action="/home/editcourse?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit()" class="addcourse-form">
+        <form role="form" id="contentForm" action="/home/editcourse?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
         {{else}}
-        <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="getstudents();return formSubmit()" class="addcourse-form">
+        <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
         {{/if}}
         	<div class="form-group">
         		<label class="sr-only" for="form-coursename">课程名称</label>

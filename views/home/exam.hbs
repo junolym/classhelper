@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th>测验名称</th>
-      <th>课程名称</th>    
+      <th>课程名称</th>
       <th>学生总人数</th>
       <th>已测验学生</th>
       <th>查看</th>
@@ -11,13 +11,12 @@
   <tbody>
     {{#each exam}}
     <tr>
-      <td><a class="btn" onclick="lc('examdetail?cid={{course_id}}&sid={{exam_id}}')">{{exam_name}}</a></td>
-      <td><a class="btn" onclick="lc('coursedetail?cid={{course_id}}')">{{name}}</a></td>
-      <td><a class="btn" onclick="lc('coursedetail?cid={{course_id}}')">{{stu_num}}</a></td>
-      <td><a class="btn" onclick="lc('examdetail?cid={{course_id}}&sid={{exam_id}}')">{{exam_num}}</a></td>
-      <td><a class="btn  btn-default" onclick="lc('examdetail?cid={{course_id}}&sid={{exam_id}}')">查看详细</a>
-      <a class="btn  btn-default" target="_blank" href="/home/showqrcode?cid={{course_id}}&sid={{exam_id}}">显示二维码</a>
-      <a class="btn  btn-default" target="_blank" href="">开始</a>
+      <td><a class="btn" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
+      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{name}}</a></td>
+      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{stu_num}}</a></td>
+      <td><a class="btn" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
+      <td><a class="btn  btn-default" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">查看详细</a>
+      <a class="btn  btn-default" target="_blank" href="/home/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
       </td>
     </tr>
     {{/each}}
