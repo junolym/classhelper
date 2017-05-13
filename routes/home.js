@@ -21,6 +21,7 @@ router.get('/course', (req, res, next) => {
         return dao.getcoursebyaccount(user);
     }).then((result) => {
         var courses = JSON.parse(JSON.stringify(result));
+        //console.log(courses);
         res.render('home/course', { title: '课程列表', courses: courses });
     }).catch(helper.catchError(res, next));
 });
@@ -37,7 +38,16 @@ router.get('/signin', (req, res, next) => {
 
 router.get('/exam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        res.render('home/exam', { title: '测验列表' });
+        return dao.getexambyaccount(user);
+        // var exams = [{
+        //                 course_id:"course_id",
+        //                 exam_id:"exam_id",
+        //                 exam_name:"exam_name",
+        //                 name:"name",
+        //                 stu_num:"stu_num",
+        //                 exam_num:"exam_num"}];
+    }).then((result) => {
+        res.render('home/exam', { title: '测验列表', exam: result });
     }).catch(helper.catchError(res, next));
 });
 
@@ -159,12 +169,15 @@ router.get('/createexam', (req, res, next) => {
 
 router.post('/createexam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        return dao.checkcourse(user, req.query.cid);
-    }).then(() => {
+        var examname = req.body.examname.toString();
+        examname = examname.split('"');
+        return dao.addexam(req.query.cid, examname[1], req.body.exam);
+    }).then((result) => {
         // console.log('--------- exam body ----------');
         // console.log(req.body);
         // console.log('--------- exam body ----------');
-        res.send(JSON.stringify(req.body));
+        res.status(302).send('#course');
+        //res.send(JSON.stringify(result));
     }).catch(helper.catchError(res, next));
 });
 
