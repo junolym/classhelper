@@ -46,7 +46,8 @@
 
 <div id="exambtn">
   <form role="form" id="examForm" action="/home/createexam?cid={{course_id}}" method="post" onsubmit="getqusetion();return examformSubmit()" class="addcourse-form">
-  <input id="examinput" type="text" name="exam" value="">
+  <input id="examname" type="text" name="examname" value=""/>
+  <input id="examinput" type="text" name="exam" value=""/>
   <button type="submit" class="btn btn-large btn-primary" id="saveexam"  style="font-size:14px">保存测试</button>
   <button class="addbtn btn btn-large btn-primary" id="saveandstart" style="font-size:14px">保存并开始</button>
   </form>

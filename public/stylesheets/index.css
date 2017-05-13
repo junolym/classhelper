@@ -412,7 +412,7 @@ table {
   /*float: left;*/
 }
 
-#examinput {
+#examinput, #examname {
   display: none;
   visibility:hidden;
 }
