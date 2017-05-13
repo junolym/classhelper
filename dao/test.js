@@ -1,6 +1,12 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
 
+dao.getexambyaccount('stsluy')
+.then(function(doc) {
+    console.log(doc);
+}).catch(function(err) {
+    console.log(err);
+});
 // dao.addcourse('test2', '综合实训-(全国大学生计算机设计大赛)', 
 //     '周六、日 1-15', null)
 //     .then(function(doc) {
@@ -139,12 +145,12 @@ var data = require('./data.js');
     //     console.log(err);
     // });
 
-    var info = ['test', '2333', null];
-    dao.updateuserinfo('test2', info).then(function(doc) {
-        console.log(doc);
-    }).catch(function(err) {
-        console.log(err);
-    });
+    // var info = ['test', '2333', null];
+    // dao.updateuserinfo('test2', info).then(function(doc) {
+    //     console.log(doc);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
     // dao.updateuserpwd('test1', '4F3CC6E16818F2E5F728D5E75D93D157', 'FDB6C662D36651211F14977097250CCA')
     // .then(function(doc) {
     //     console.log(doc);
