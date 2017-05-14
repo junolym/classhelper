@@ -8,11 +8,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var home = require('./routes/home');
-var login = require('./routes/login');
-var logout = require('./routes/logout');
-var qrcode = require('./routes/qrcode');
 var signin = require('./routes/signin');
-var signinresult = require('./routes/signinresult');
+var exam = require('./routes/exam');
 
 var app = express();
 
@@ -36,12 +33,10 @@ app.use(session({
 
 app.use('/', index);
 app.use('/home', home);
-app.use('/login', login);
-app.use('/logout', logout);
-app.use('/qrcode', qrcode);
 app.use('/signin', signin);
 app.use('/s', signin);
-app.use('/signinresult', signinresult);
+app.use('/exam', exam);
+app.use('/e', exam);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

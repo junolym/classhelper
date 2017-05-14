@@ -21,7 +21,6 @@ router.get('/course', (req, res, next) => {
         return dao.getcoursebyaccount(user);
     }).then((result) => {
         var courses = JSON.parse(JSON.stringify(result));
-        //console.log(courses);
         res.render('home/course', { title: '课程列表', courses: courses });
     }).catch(helper.catchError(res, next));
 });

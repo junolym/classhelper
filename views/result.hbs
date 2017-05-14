@@ -3,19 +3,24 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-	<title>{{title}}</title>
+	<title>{{msg}}</title>
     <link href="/images/loginIcon.jpg" rel="icon" >
 	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
-	<link href="/stylesheets/signinresult.css" rel="stylesheet">
+	<link href="/stylesheets/result.css" rel="stylesheet">
 	<link href="/stylesheets/form-elements.css" rel="stylesheet">
 </head>
 <body>
 	<div class="container">
-	{{#if error}}
-    <div class="alert alert-danger" role="alert">{{{error}}}</div>
+	{{#if err}}
+    <div class="alert alert-danger" role="alert">
+        <h1>{{msg}}</h1>
+        {{err}}
+    </div>
     {{else}}
-    <div class="alert alert-success" role="alert">签到成功！</div>
+    <div class="alert alert-success" role="alert">
+        <h1>{{msg}}</h1>
+    </div>
     {{/if}}
 	</div>
 </body>
