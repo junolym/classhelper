@@ -391,6 +391,16 @@ table {
   height: 150px;
 }
 
+.tddes {
+  margin-left:10px;
+  width:400px;
+}
+
+.tdans {
+  margin-left:10px;
+  width:400px;
+}
+
 #addquestion {
   float: left;
 }

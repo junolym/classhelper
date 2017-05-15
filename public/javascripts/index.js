@@ -172,9 +172,19 @@ function addlongquestion() {
 
 //删除试题
 function deleteQuestion(id) {
+  //删除表格中对应的行
   var num = parseInt(id.substr(9,id.length));
   var questions = $('#questiontable')[0].getElementsByTagName("tr");
   questions[num].remove();
+  //重新排列题号
+  if (num < questions.length) {
+    for (var i = num; i < questions.length; i++) {
+      var td = questions[i].getElementsByTagName('td');
+      td[0].innerText = i;
+
+      var btn = td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
+    }
+  }
 }
 
 //提交试题
