@@ -125,15 +125,28 @@ function addselectquestion() {
     id.innerText = quesNum;
     //描述
     description.innerHTML +=
-    "<div><textarea  cols=50 rows=4>描述</textarea></div>"
+    "<div><textarea  cols=50 rows=4></textarea></div>"
     //答案
     answer.innerHTML +=
-    "<div><p>正确答案:</p><textarea cols=5 rows=1></textarea></div>\
-    A<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项A</textarea></div>\
-    B<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项B</textarea></div>\
-    C<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项C</textarea></div>\
-    D<div><textarea  cols=40 rows=2 overflow-y='scroll'>选项D</textarea></div>\
-    "
+    "<div class='eachquestion'>\
+      <div class='rightans'>\
+        <p>正确答案:</p>\
+        <textarea cols=5 rows=1></textarea>\
+      </div>\
+      <div class='allSelection'>\
+        <div class='examselection'>\
+          <p>A</p>\
+          <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>\
+        </div>\
+        <div class='examselection'>\
+          <p>B</p>\
+          <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>\
+        </div>\
+      </div>\
+      <div class='addselections'>\
+        <a class='btn addselectionbtn' onclick='addquestion()'>+</a>\
+      </div>\
+    </div>"
     //操作
     var deleteid = "deletebtn" + quesNum;
     operation.innerHTML =
@@ -168,6 +181,21 @@ function addlongquestion() {
   // "<div class='deletequestion'><a class='btn btn-default' style='margin-left:5px'>删除题目</a></div>"
   "<button class='btn btn-large' style='font-size:4px' onclick='deleteQuestion(this.id)'>删除题目</button>"
   operation.getElementsByTagName("button")[0].id = deleteid;
+}
+
+//添加选项
+function addquestion() {
+  var selections = $('.allSelection')[0];
+
+  var newSelection = document.createElement('div');
+  newSelection.setAttribute('class', 'examselection');
+  var num = selections.getElementsByTagName('div').length;
+  var alpha = String.fromCharCode(64 + parseInt(num + 1));
+  newSelection.innerHTML =
+    "<p>" + alpha + "</p>\
+    <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>"
+
+  selections.appendChild(newSelection);
 }
 
 //删除试题
