@@ -127,6 +127,7 @@ function addselectquestion() {
     description.innerHTML +=
     "<div><textarea  cols=50 rows=4></textarea></div>"
     //答案
+    var ansId = "select" + quesNum;
     answer.innerHTML +=
     "<div class='eachquestion'>\
       <div class='rightans'>\
@@ -144,9 +145,10 @@ function addselectquestion() {
         </div>\
       </div>\
       <div class='addselections'>\
-        <a class='btn addselectionbtn' onclick='addquestion()'>+</a>\
+        <a class='btn addselectionbtn' onclick='addquestion(this.id)'>+</a>\
       </div>\
     </div>"
+    answer.getElementsByTagName('a')[0].id = ansId;
     //操作
     var deleteid = "deletebtn" + quesNum;
     operation.innerHTML =
@@ -169,11 +171,11 @@ function addlongquestion() {
   id.innerText = quesNum;
   //描述
   description.innerHTML +=
-  "<div><textarea  cols=50 rows=4>描述</textarea></div>"
+  "<div><textarea  cols=50 rows=4></textarea></div>"
 
   //答案
   answer.innerHTML +=
-  "<div><textarea  cols=50 rows=4>答案</textarea></div>";
+  "<div><textarea  cols=50 rows=4></textarea></div>";
 
   //操作
   var deleteid = "deletebtn" + quesNum;
@@ -184,8 +186,9 @@ function addlongquestion() {
 }
 
 //添加选项
-function addquestion() {
-  var selections = $('.allSelection')[0];
+function addquestion(id) {
+  var num = parseInt(id.substr(6, id.length));
+  var selections = $('.allSelection')[num-1];
 
   var newSelection = document.createElement('div');
   newSelection.setAttribute('class', 'examselection');
