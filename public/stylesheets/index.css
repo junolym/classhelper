@@ -438,6 +438,23 @@ table {
   line-height: 15px;
 }
 
+.secbtn {
+  margin-top: 5px;
+  float: right;
+}
+.delsec {
+  font-size: 12px;
+  float: right;
+  margin-left: 5px;
+}
+
+.addsec {
+  font-size: 12px;
+  float: right;
+}
+
+
+
 #addquestion {
   float: left;
 }

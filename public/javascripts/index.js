@@ -127,7 +127,8 @@ function addselectquestion() {
     description.innerHTML +=
     "<div><textarea  cols=50 rows=4></textarea></div>"
     //答案
-    var ansId = "select" + quesNum;
+    var addsecId = "select" + quesNum;
+    var delsecId = "delsect" + quesNum;
     answer.innerHTML +=
     "<div class='eachquestion'>\
       <div class='rightans'>\
@@ -144,11 +145,15 @@ function addselectquestion() {
           <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>\
         </div>\
       </div>\
-      <div class='addselections'>\
-        <a class='btn addselectionbtn' onclick='addquestion(this.id)'>+</a>\
+      <div id='secbtn'>\
+        <button class='btn btn-primary delsec' style='font-size:12px' onclick='deleteselection(this.id)'>删除选项</button>\
+        <button class='btn  btn-primary addsec'  style='font-size:12px' onclick='addselection(this.id)'>添加选项</button>\
       </div>\
     </div>"
-    answer.getElementsByTagName('a')[0].id = ansId;
+      // <a class='btn addselectionbtn' onclick='addselection(this.id)'>+</a>\
+    answer.getElementsByTagName('button')[0].id = delsecId;
+    answer.getElementsByTagName('button')[1].id = addsecId;
+
     //操作
     var deleteid = "deletebtn" + quesNum;
     operation.innerHTML =
@@ -186,7 +191,7 @@ function addlongquestion() {
 }
 
 //添加选项
-function addquestion(id) {
+function addselection(id) {
   var num = parseInt(id.substr(6, id.length));
   var selections = $('.allSelection')[num-1];
 
@@ -201,6 +206,14 @@ function addquestion(id) {
   selections.appendChild(newSelection);
 }
 
+//删除最后一个选项
+function deleteselection(id) {
+  var num = parseInt(id.substr(7, id.length));
+  var node = $('.allSelection')[num-1].getElementsByTagName('div');
+  var lastnode = node[node.length-1];
+  lastnode.parentNode.removeChild(lastnode);
+}
+
 //删除试题
 function deleteQuestion(id) {
   //删除表格中对应的行
@@ -213,7 +226,9 @@ function deleteQuestion(id) {
       var td = questions[i].getElementsByTagName('td');
       td[0].innerText = i;
 
-      var btn = td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
+      td[2].getElementsByTagName('button')[0].id = "delsect" + i;
+      td[2].getElementsByTagName('button')[1].id = "select" + i;
+      td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
     }
   }
 }
