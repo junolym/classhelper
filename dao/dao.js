@@ -3,7 +3,7 @@ var pool  = mysql.createPool({
     host: 'classhelper.ml',
     user: 'root',
     password: 'sysusdcs',
-    database: 'test',
+    database: 'beta',
     charset: 'utf8mb4_unicode_ci'
 });
 
@@ -315,11 +315,9 @@ exports.getexambyid = function(exam_id) {
  */
 exports.getexambyaccount = function(account) {
     var sql = "select course_id, exam_id, exam_name, course_name as name, "
-            + "count(ans_ex_id) as exam_num, student_num as stu_num "
-            + "from exams "
-            + "inner join courses on ex_coz_id=course_id "
-            + "left join answers on ans_ex_id=exam_id "
-            + "where coz_account=? "
+            + "exam_stu_num as exam_num, student_num as stu_num "
+            + "from exams, courses "
+            + "where coz_account=? and ex_coz_id=course_id "
             + "group by exam_id "
             + "order by exam_time desc";
     return pool.query(sql, account);
@@ -451,11 +449,9 @@ exports.getsignbyid = function(sign_id) {
 exports.getsignbyaccount = function(account) {
     var sql = "select sign_id, course_id, course_name as name, "
             + "sign_time as time, "
-            + "count(ss_sign_id) as sign_num, student_num as stu_num "
-            + "from signup "
-            + "inner join courses on sg_coz_id=course_id "
-            + "left join stu_sign on sign_id=ss_sign_id "
-            + "where coz_account=? "
+            + "sg_stu_num as sign_num, student_num as stu_num "
+            + "from signup, courses "
+            + "where sg_coz_id=course_id and coz_account=? "
             + "group by sign_id "
             + "order by time desc";
     return pool.query(sql, account);
