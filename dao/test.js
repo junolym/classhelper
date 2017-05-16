@@ -1,14 +1,14 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
 
-dao.checkstudent(15332020, 29, '张增辉')
-.then(function(doc) {
-    console.log(doc);
-}).catch(function(err) {
-    console.log(err);
-});
+// dao.checkstudent(15332020, 29, '张增辉')
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
 
-// dao.addanswer(12, 1, 1, 0, 'ans')
+// dao.addanswer(1, 1, 1, 0, 'ans')
 // .then(function(doc) {
 //     console.log(doc);
 // }).catch(function(err) {
@@ -83,7 +83,7 @@ dao.checkstudent(15332020, 29, '张增辉')
     // }).catch(function(err) {
     //     console.log(err);
     // });
-    // dao.addexam(8, 'exam', "{'num': 0}")
+    // dao.addexam(1, 'exam', "{'num': 0}")
     // .then(function(doc) {
     //     console.log(doc);
     // }).catch(function(err) {
@@ -123,7 +123,7 @@ dao.checkstudent(15332020, 29, '张增辉')
     //     console.log(err);
     // });
     //     console.log(signid);
-    // dao.studentsign(1, 45, '14331024', '陈俊贤')
+    // dao.studentsign(1, 1, '14331024', '陈俊贤')
     // .then(function(doc) {
     //     console.log(doc);
     // }).catch(function(err) {

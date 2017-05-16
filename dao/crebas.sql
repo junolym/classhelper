@@ -1,8 +1,10 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/05/16 22:28:51                          */
+/* Created on:     2017/05/16 23:27:24                          */
 /*==============================================================*/
 
+
+drop trigger addans;
 
 drop trigger addstudent;
 
@@ -11,6 +13,8 @@ drop trigger delstudent;
 drop trigger delete_exam;
 
 drop trigger delete_sign;
+
+drop trigger stusign;
 
 drop table if exists answers;
 
@@ -36,6 +40,7 @@ create table answers
    ans_ex_id            int not null,
    ans_stu_id           int not null,
    ans_stu_name         char(40),
+   ans_score            char(10),
    ans_answer           text,
    ans_time             datetime default CURRENT_TIMESTAMP,
    primary key (ans_ex_id, ans_stu_id)
@@ -78,6 +83,7 @@ create table exams
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    exam_question        text,
    exam_statistics      text,
+   exam_stu_num         int default 0,
    primary key (exam_id)
 );
 
@@ -89,6 +95,7 @@ create table signup
    sign_id              int not null auto_increment,
    sign_time            datetime default CURRENT_TIMESTAMP,
    sg_coz_id            int,
+   sg_stu_num           int default 0,
    primary key (sign_id)
 );
 
@@ -139,6 +146,12 @@ alter table signup add constraint FK_couser_sign foreign key (sg_coz_id)
       references courses (course_id) on delete cascade on update restrict;
 
 
+create trigger addans after insert
+on answers for each row
+update exams set exam_stu_num=exam_stu_num+1
+where exam_id=new.ans_ex_id;
+
+
 create trigger addstudent after insert
 on coz_stu for each row
 update courses set student_num=student_num+1 where course_id=new.cs_coz_id;
@@ -157,6 +170,12 @@ delete from answers where ans_ex_id=old.exam_id;
 create trigger delete_sign after delete
 on signup for each row
 delete from stu_sign where ss_sign_id=old.sign_id;
+
+
+create trigger stusign after insert
+on stu_sign for each row
+update signup set sg_stu_num=sg_stu_num+1
+where sign_id=new.ss_sign_id;
 
 insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
 
