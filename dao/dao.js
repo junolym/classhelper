@@ -198,7 +198,8 @@ exports.delcourse = function(course_id) {
  *
  * @param {number} course_id
  * @returns {Object} Promise
- * result course数据
+ * select * from exams where ex_coz_id= ?
+ * 等具体需求再修改
  */
 exports.getexambycourse = function(course_id) {
     var sql = "select * from exams where ex_coz_id= ?";
@@ -263,20 +264,36 @@ exports.updateexam = function(exam_id, exam_name, exam_question) {
     });
 };
 
-// exports.checkexam = function(account, exam_id) {
-//     var sql = "select coz_account from courses, exams"
-//             + "where exam_id=? and ex_coz_id=course_id";
-//     pool.query(sql, exam_id, function(err, result, fields) {
-
-//     });
-
-// }
+/**
+ * checkexam
+ *
+ * @param {string} account
+ * @param {number} course_id
+ * @param {number} exam_id
+ * @returns {Object} Promise
+ */
+exports.checkexam = function(account, course_id, exam_id) {
+    var sql = "select coz_account from exams, courses "
+            + "where exam_id=? and ex_coz_id=? and course_id = ex_coz_id "
+            + "and coz_account=?";
+    return pool.query(sql, [exam_id, course_id, account])
+    .then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject(new UserError('测验校验失败'));
+        } else {
+            return Promise.resolve();
+        }
+    });
+}
 
 /**
  * getexambyid
  *
  * @param {number} exam_id
  * @returns {Object} Promise
+ * [exam_id, ex_coz_id, exam_name, exam_question, ex_statistics]
+ * exam_state, exam_time暂未使用
+ *
  */
 exports.getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
@@ -314,6 +331,7 @@ exports.getexambyaccount = function(account) {
  * @param {number} course_id
  * @returns {Object} Promise
  * signid
+ *
  */
 exports.addsign = function(course_id) {
     var sql = "insert into signup set sg_coz_id=?";
@@ -486,7 +504,7 @@ exports.getstubycourse = function(course_id) {
  *
  * @param {string} account
  * @param {number} course_id
- * @returns {Object} Promise err
+ * @returns {Object} Promise
  */
 exports.checkcourse = function(account, course_id) {
     var sql = "select coz_account from courses "
@@ -572,3 +590,47 @@ exports.delstuofcourse = function(course_id) {
     return pool.query(sql, course_id);
 }
 
+/**
+ * addanswer
+ *
+ * @param {number} exam_id
+ * @param {number} stu_id
+ * @param {string} stu_name
+ * @param {number} score
+ * @param {string} answer object to string
+ * @return {Object} Promise
+ * 这里不做任何检查，请保证插入数据正确！
+ * 可使用checkstudent
+ */
+exports.addanswer = function(exam_id, stu_id, stu_name, score, answer) {
+    var sql = "insert into answers(ans_ex_id, ans_stu_id, ans_stu_name, "
+            + "ans_score, ans_answer) values(?, ?, ?, ?, ?)";
+    return pool.query(sql, [exam_id, stu_id, stu_name, score, answer]);
+}
+
+// exports.getansby = function(course_id) {
+// }
+//
+
+/**
+ * checkstudent
+ *
+ * @param {number} stu_id
+ * @param {number} course_id
+ * @param {string} stu_name
+ * @return {Object} Promise
+ */
+exports.checkstudent = function(stu_id, course_id, stu_name) {
+    var sql = "select cs_stu_name from coz_stu "
+            + "where cs_coz_id=? and cs_stu_id=?";
+    var parameter = [course_id, stu_id];
+    return pool.query(sql, parameter).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject(new UserError('学号不在此课程内'));
+        } else if (result[0].cs_stu_name != stu_name) {
+            return Promise.reject(new UserError('学号姓名不符'));
+        } else {
+            return Promise.resolve();
+        }
+    });
+}
