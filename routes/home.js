@@ -161,9 +161,8 @@ router.get('/createexam', (req, res, next) => {
 
 router.post('/createexam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        var examname = req.body.examname.toString();
-        examname = examname.split('"');
-        return dao.addexam(req.query.cid, examname[1], req.body.exam);
+        var examname = JSON.parse(req.body.examname);
+        return dao.addexam(req.query.cid, examname[0][0], req.body.exam);
     }).then((result) => {
         res.status(302).send('#exam');
     }).catch(helper.catchError(res, next));

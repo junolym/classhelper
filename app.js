@@ -27,7 +27,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   secret: '_CLASS_HELPER_',
-  cookie: { maxAge: 1000*60*60*6 },
   key: 'sessionid'
 }));
 
