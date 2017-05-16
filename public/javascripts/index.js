@@ -269,10 +269,14 @@ function deleteQuestion(id) {
     for (var i = num; i < questions.length; i++) {
       var td = questions[i].getElementsByTagName('td');
       td[0].innerText = i;
-
-      td[2].getElementsByTagName('button')[0].id = "delsect" + i;
-      td[2].getElementsByTagName('button')[1].id = "select" + i;
-      td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
+      if (td[2].getElementsByTagName('button') == 2) {
+        td[2].getElementsByTagName('button')[0].id = "delsect" + i;
+        td[2].getElementsByTagName('button')[1].id = "select" + i;
+        td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
+      }
+      else {
+        td[3].getElementsByTagName('button')[0].id = "deletebtn" + i;
+      }
     }
   }
 }
