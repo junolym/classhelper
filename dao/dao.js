@@ -3,7 +3,7 @@ var pool  = mysql.createPool({
     host: 'classhelper.ml',
     user: 'root',
     password: 'sysusdcs',
-    database: 'beta',
+    database: 'test',
     charset: 'utf8mb4_unicode_ci'
 });
 
