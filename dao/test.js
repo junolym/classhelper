@@ -1,12 +1,31 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
 
-dao.getexambyaccount('stsluy')
+dao.checkstudent(15332020, 29, '张增辉')
 .then(function(doc) {
     console.log(doc);
 }).catch(function(err) {
     console.log(err);
 });
+
+// dao.addanswer(12, 1, 1, 0, 'ans')
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.checkexam('test', '7', '11')
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.getexambyaccount('stsluy')
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
 // dao.addcourse('test2', '综合实训-(全国大学生计算机设计大赛)', 
 //     '周六、日 1-15', null)
 //     .then(function(doc) {

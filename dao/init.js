@@ -20,4 +20,3 @@ dao.adduser("root", "stsluy", "7E852574927312FFDBC74408F2C92671",
     console.log(err);
 });
 
-

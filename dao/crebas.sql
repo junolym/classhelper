@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/05/05 22:00:41                          */
+/* Created on:     2017/05/16 22:28:51                          */
 /*==============================================================*/
 
 
@@ -8,7 +8,11 @@ drop trigger addstudent;
 
 drop trigger delstudent;
 
+drop trigger delete_exam;
+
 drop trigger delete_sign;
+
+drop table if exists answers;
 
 drop table if exists courses;
 
@@ -23,6 +27,19 @@ drop index Index_sign_id on stu_sign;
 drop table if exists stu_sign;
 
 drop table if exists users;
+
+/*==============================================================*/
+/* Table: answers                                               */
+/*==============================================================*/
+create table answers
+(
+   ans_ex_id            int not null,
+   ans_stu_id           int not null,
+   ans_stu_name         char(40),
+   ans_answer           text,
+   ans_time             datetime default CURRENT_TIMESTAMP,
+   primary key (ans_ex_id, ans_stu_id)
+);
 
 /*==============================================================*/
 /* Table: courses                                               */
@@ -44,7 +61,7 @@ create table courses
 create table coz_stu
 (
    cs_coz_id            int not null,
-   cs_stu_id            int not null,
+   cs_stu_id            bigint not null,
    cs_stu_name          char(40) not null,
    primary key (cs_coz_id, cs_stu_id)
 );
@@ -57,9 +74,10 @@ create table exams
    exam_id              int not null auto_increment,
    ex_coz_id            int,
    exam_name            char(20),
-   exam_state           tinyint,
+   exam_state           tinyint default 0,
    exam_time            datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    exam_question        text,
+   exam_statistics      text,
    primary key (exam_id)
 );
 
@@ -129,6 +147,11 @@ update courses set student_num=student_num+1 where course_id=new.cs_coz_id;
 create trigger delstudent after delete
 on coz_stu for each row
 update courses set student_num=student_num-1 where course_id=old.cs_coz_id;
+
+
+create trigger delete_exam after delete
+on exams for each row
+delete from answers where ans_ex_id=old.exam_id;
 
 
 create trigger delete_sign after delete
