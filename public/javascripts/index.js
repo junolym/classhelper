@@ -305,17 +305,18 @@ function getqusetion(){
       }
       //判断答案
       var answer = "";
+      var judgeanswer = 0; // 1 is true , 0 is false
       var judge = td[2].getElementsByTagName('select');
       if (judge.length > 0) {
         type = 1;
-        var answer = judge[0].getElementsByTagName('option')[judge[0].selectedIndex].value;
+        var judgeanswer = 1 - parseInt(judge[0].selectedIndex);
       }
 
       //其他答案
       else {
          answer = selections[0].value;
       }
-      list.push([id, type, description, selectionset, answer]);
+      list.push([id, type, description, selectionset, judgeanswer, answer]);
   }
 
   document.getElementById("examinput").value = JSON.stringify(list);

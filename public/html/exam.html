@@ -16,21 +16,17 @@
   </section>
   <!--试题详情-->
   <section>
-    <h2>一、选择题</h2>
     <ol>
       <li class="eachdescription">{{question_detail}}</br>
         <input type="radio"/><label  class="eachselection">(A)cx12</label><br/>
       </li>
-    </ol>
-    <h2>二、判断题</h2>
-    <ol>
-      <li>{{question_detail}}
-        <input type="radio" class="questionjudge"/><br />
+			<li class="eachdescription">{{question_detail}}
+        <select>
+						<option value="true">true</option>
+						<option value="false">false</option>
+				</select>
       </li>
-    </ol>
-    <h2>三、解答题</h2>
-    <ol>
-      <li>{{question_detail}}</br>
+			<li class="eachdescription">{{question_detail}}</br>
         <textarea rows="3" cols='30' overflow-y='scroll'></textarea>
       </li>
     </ol>
