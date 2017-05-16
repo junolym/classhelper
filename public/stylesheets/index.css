@@ -459,6 +459,10 @@ table {
   float: left;
 }
 
+#panduan {
+  margin-left: 10px;
+}
+
 #jieda {
   margin-left: 10px;
 }

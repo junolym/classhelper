@@ -162,6 +162,39 @@ function addselectquestion() {
     operation.getElementsByTagName("button")[0].id = deleteid;
 }
 
+function addjudgequestion() {
+  var table = $('#questiontable')[0];
+  var questions = $('#questiontable')[0].getElementsByTagName("tr");
+  var quesNum = questions.length;
+
+  var newques = table.insertRow(quesNum);
+  var id = newques.insertCell(0);
+  var description = newques.insertCell(1);
+  var answer = newques.insertCell(2);
+  var operation = newques.insertCell(3);
+  //题号
+  id.innerText = quesNum;
+  //描述
+  description.innerHTML +=
+  "<div><textarea  cols=50 rows=4></textarea></div>"
+
+  //答案
+  answer.innerHTML +=
+  "<div>\
+    <select class='judgeanswer'>\
+      <option value ='right'>right</option>\
+      <option value ='wrong'>wrong</option>\
+    </select>\
+  </div>";
+
+  //操作
+  var deleteid = "deletebtn" + quesNum;
+  operation.innerHTML =
+  // "<div class='deletequestion'><a class='btn btn-default' style='margin-left:5px'>删除题目</a></div>"
+  "<button class='btn btn-large' style='font-size:4px' onclick='deleteQuestion(this.id)'>删除题目</button>"
+  operation.getElementsByTagName("button")[0].id = deleteid;
+}
+
 function addlongquestion() {
   var table = $('#questiontable')[0];
   var questions = $('#questiontable')[0].getElementsByTagName("tr");
@@ -251,11 +284,12 @@ function getqusetion(){
 
   //课程名称
   var name = $("#exam_name")[0].value;
-  title.push([name]);
+  title.push(name);
 
   var questions = $('#questiontable')[0].getElementsByTagName("tr");
 
   for (var i = 1; i < questions.length; i++) {
+      var type = 2; // 0为选择， 1为判断，2为解答 求求求你别再由填空题或者连线题或者小作文之类的
       //题号，描述
       var td = questions[i].getElementsByTagName("td");
       var id = td[0].innerText;
@@ -264,15 +298,24 @@ function getqusetion(){
       var selectionset = [];
       var selections = td[2].getElementsByTagName("textarea");
       if (selections.length >= 1) {
+        type = 0;
         for (var j = 1; j < selections.length; j++) {
           selectionset.push(selections[j].value);
         }
       }
+      //判断答案
+      var answer = "";
+      var judge = td[2].getElementsByTagName('select');
+      if (judge.length > 0) {
+        type = 1;
+        var answer = judge[0].getElementsByTagName('option')[judge[0].selectedIndex].value;
+      }
 
-      //答案
-      var answer = selections[0].value;
-
-      list.push([id, description, selectionset, answer]);
+      //其他答案
+      else {
+         answer = selections[0].value;
+      }
+      list.push([id, type, description, selectionset, answer]);
   }
 
   document.getElementById("examinput").value = JSON.stringify(list);
