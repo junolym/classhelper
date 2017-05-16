@@ -193,7 +193,10 @@ function addlongquestion() {
 //添加选项
 function addselection(id) {
   var num = parseInt(id.substr(6, id.length));
-  var selections = $('.allSelection')[num-1];
+  var questions = $('#questiontable')[0].getElementsByTagName("tr")[num];
+  // var selections = $('.allSelection')[num-1];
+  var selections = questions.getElementsByTagName('td')[2]
+  .getElementsByTagName('div')[0].getElementsByTagName('div')[1];
 
   var newSelection = document.createElement('div');
   newSelection.setAttribute('class', 'examselection');
@@ -209,9 +212,17 @@ function addselection(id) {
 //删除最后一个选项
 function deleteselection(id) {
   var num = parseInt(id.substr(7, id.length));
-  var node = $('.allSelection')[num-1].getElementsByTagName('div');
-  var lastnode = node[node.length-1];
-  lastnode.parentNode.removeChild(lastnode);
+  var questions = $('#questiontable')[0].getElementsByTagName("tr")[num];
+  var node = questions.getElementsByTagName('td')[2]
+  .getElementsByTagName('div')[0].getElementsByTagName('div')[1].getElementsByTagName('div');
+  if (node.length == 2) {
+    window.alert("至少有两个！");
+  }
+  else {
+    // var node = $('.allSelection')[num-1].getElementsByTagName('div');
+    var lastnode = node[node.length-1];
+    lastnode.parentNode.removeChild(lastnode);
+  }
 }
 
 //删除试题

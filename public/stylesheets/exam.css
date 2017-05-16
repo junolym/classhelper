@@ -1,0 +1,32 @@
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+body,
+html {
+  height: 100%;
+}
+
+h1 {
+  font-size: 25px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 20px;
+  margin-left: 3px;
+}
+
+.eachdescription{
+  font-size: 20px;
+}
+
+.eachselection {
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.questionjudge {
+  margin-left: 5px;
+}
