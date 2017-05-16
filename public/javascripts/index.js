@@ -61,7 +61,11 @@ function responseHandler(res) {
         if (loc.hash == rst && rst.length > 1) {
             loadContent(rst.slice(1));
         } else {
-            loc.href = rst;
+            if (rst[0] == '#') {
+                loc.hash = rst;
+            } else {
+                loc.href = rst + loc.hash;
+            }
         }
     } else {
         $('#content').html(rst);

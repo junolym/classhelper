@@ -28,7 +28,7 @@
                         		</div>
                             </div>
                             <div class="form-bottom">
-			                    <form role="form" action="/login" method="post" class="login-form"  onsubmit="return encryptPassword()">
+			                    <form role="form" action="/login" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
 			                    	<div class="form-group">
 			                    		<label class="sr-only" for="form-username">账号</label>
 			                        	<input type="text" name="form_username" placeholder="账号" class="form-username form-control" id="form-username" required>
@@ -52,6 +52,8 @@
 <script type="text/javascript" src="/javascripts/jquery.md5.js"></script>
 <script type="text/javascript">
 function encryptPassword() {
+    var f = document.getElementById('login-form');
+    f.action = '/login' + document.location.hash;
     var p = document.getElementById('form-password');
     p.value = md5('classhelper' + p.value).toUpperCase();
     return true;
