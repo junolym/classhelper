@@ -297,7 +297,7 @@ exports.checkexam = function(account, course_id, exam_id) {
  */
 exports.getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
-    return pool.query(sql, exam_id, function(err, result, fields) {
+    return pool.query(sql, exam_id).then(function(result) {
         if (result.length == 0) {
             return Promise.reject(new UserError('该试卷不存在'));
         } else {
