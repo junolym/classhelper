@@ -17,6 +17,7 @@
       <td><a class="btn" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
       <td><a class="btn  btn-default" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">查看详细</a>
       <a class="btn  btn-default" target="_blank" href="/home/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
+      <a class="btn  btn-default" target="_blank" onclick="return confirm('确定删除本测试？本操作不可恢复')&&loadContent('deleteexam?cid={{course_id}}&sid={{exam_id}}')">删除测验</a>
       </td>
     </tr>
     {{/each}}
