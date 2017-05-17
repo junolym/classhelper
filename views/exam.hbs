@@ -22,21 +22,21 @@
         <li class="eachdescription">{{question_detail}}</br>
           {{#each selection}}
           <input type="radio"/><label  class="eachselection">{{selection}}</label><br/>
-          {{#each}}
+          {{/each}}
         </li>
-        {{#elseif question_judgeanswer}}
+        {{else if question_judgeanswer}}
         <li class="eachdescription">{{question_detail}}
           <select>
               <option value="true">true</option>
               <option value="false">false</option>
           </select>
         </li>
-        {{#else}}
+        {{else}}
         <li class="eachdescription">{{question_detail}}</br>
           <textarea rows="3" cols='30' overflow-y='scroll'></textarea>
         </li>
         {{/if}}
-        {{#each}}
+        {{/each}}
       </ol>
     </section>
 
