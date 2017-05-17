@@ -139,15 +139,25 @@ router.get('/createsignin', (req, res, next) => {
     }).then((result) => {
         var key = qrcode.add({ cid: req.query.cid, sid: result });
         res.redirect('/qrcode#/s?k=' + key);
+        ///
     }).catch(helper.catchError(res, next));
 });
 
 router.get('/showqrcode', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        return dao.checksign(user, req.query.cid, req.query.sid);
+        if (req.query.sid)
+            return dao.checksign(user, req.query.cid, req.query.sid);
+        else if (req.query.eid)
+            return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
-        var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
-        res.redirect('/qrcode#/s?k=' + key);
+        if (req.query.sid) {
+            var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
+            res.redirect('/qrcode#/s?k=' + key);
+        }
+        else if (req.query.eid) {
+            var key = qrcode.add({ cid: req.query.cid, eid: req.query.eid });
+            res.redirect('/qrcode#/e?k=' + key);
+        }
     }).catch(helper.catchError(res, next));
 });
 
@@ -164,6 +174,16 @@ router.post('/createexam', (req, res, next) => {
         var examname = JSON.parse(req.body.examname);
         return dao.addexam(req.query.cid, examname[0][0], req.body.exam);
     }).then((result) => {
+        res.status(302).send('#exam');
+    }).catch(helper.catchError(res, next));
+});
+
+router.get('/deleteexam', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return dao.delexam(req.query.eid);
+    }).then(() => {
         res.status(302).send('#exam');
     }).catch(helper.catchError(res, next));
 });
