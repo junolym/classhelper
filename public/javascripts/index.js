@@ -285,8 +285,7 @@ function deleteQuestion(id) {
   }
 }
 
-//提交试题
-function getqusetion(){
+function getquestionOld() {
   var list = [];
   var title = [];
 
@@ -329,4 +328,64 @@ function getqusetion(){
 
   document.getElementById("examinput").value = JSON.stringify(list);
   document.getElementById("examname").value = JSON.stringify(title);
+}
+
+//提交试题
+function getqusetion(){
+  /* --- new exam object --- */
+  var exam = {};
+  /* --- new exam object --- */
+  $('#form_name')[0].value = $("#exam_name")[0].value;
+
+  var questions = $('#questiontable')[0].getElementsByTagName("tr");
+
+  for (var i = 1; i < questions.length; i++) {
+      var type = 2; // 0为选择， 1为判断，2为解答 求求求你别再由填空题或者连线题或者小作文之类的
+      //题号，描述
+      var td = questions[i].getElementsByTagName("td");
+      var id = td[0].innerText;
+      var description = td[1].getElementsByTagName("textarea")[0].value;
+      //选项
+      var selectionset = [];
+      var selections = td[2].getElementsByTagName("textarea");
+      if (selections.length >= 1) {
+        type = 0;
+        for (var j = 1; j < selections.length; j++) {
+          selectionset.push(selections[j].value);
+        }
+      }
+      //判断答案
+      var answer = "";
+      var judgeanswer = 0; // 1 is true , 0 is false
+      var judge = td[2].getElementsByTagName('select');
+      if (judge.length > 0) {
+        type = 1;
+        var judgeanswer = 1 - parseInt(judge[0].selectedIndex);
+      }
+
+      //其他答案
+      else {
+         answer = selections[0].value;
+      }
+      list.push([id, type, description, selectionset, judgeanswer, answer]);
+
+      /* --- new exam object --- */
+      id = parseInt(id);
+
+      exam[id] = {
+        type : type,
+        standardAnswer : answer,
+        description : description,
+        selectionSet : selectionset
+      }
+      /* --- new exam object --- */
+  }
+
+  document.getElementById("examinput").value = JSON.stringify(list);
+  document.getElementById("examname").value = JSON.stringify(title);
+  
+  /* --- new exam object --- */
+  $('#form_exam')[0].value = JSON.stringify(exam);
+  /* --- new exam object --- */
+  return exam;
 }
