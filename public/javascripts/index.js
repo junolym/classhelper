@@ -129,24 +129,20 @@ function addselectquestion() {
     id.innerText = quesNum;
     //描述
     description.innerHTML +=
-    "<div><textarea  cols=50 rows=4></textarea></div>"
+    "<div><textarea cols=50 rows=4></textarea></div>"
     //答案
     var addsecId = "select" + quesNum;
     var delsecId = "delsect" + quesNum;
     answer.innerHTML +=
     "<div class='eachquestion'>\
       <div class='rightans'>\
-        <p>正确答案:</p>\
-        <textarea cols=5 rows=1></textarea>\
       </div>\
       <div class='allSelection'>\
         <div class='examselection'>\
-          <p>A</p>\
-          <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>\
+          <input type='checkbox'>A<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>\
         </div>\
         <div class='examselection'>\
-          <p>B</p>\
-          <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>\
+          <input type='checkbox'>B<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>\
         </div>\
       </div>\
       <div id='secbtn'>\
@@ -185,10 +181,8 @@ function addjudgequestion() {
   //答案
   answer.innerHTML +=
   "<div>\
-    <select class='judgeanswer'>\
-      <option value ='right'>right</option>\
-      <option value ='wrong'>wrong</option>\
-    </select>\
+    <input type='radio' name='"+quesNum+"' value='1' checked='checked'>正确<br>\
+    <input type='radio' name='"+quesNum+"' value='0'>错误\
   </div>";
 
   //操作
@@ -239,10 +233,7 @@ function addselection(id) {
   newSelection.setAttribute('class', 'examselection');
   var num = selections.getElementsByTagName('div').length;
   var alpha = String.fromCharCode(64 + parseInt(num + 1));
-  newSelection.innerHTML =
-    "<p>" + alpha + "</p>\
-    <textarea  cols=40 rows=2 overflow-y='scroll'></textarea>"
-
+  newSelection.innerHTML = "<input type='checkbox'>" + alpha + "<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>";
   selections.appendChild(newSelection);
 }
 
@@ -253,7 +244,7 @@ function deleteselection(id) {
   var node = questions.getElementsByTagName('td')[2]
   .getElementsByTagName('div')[0].getElementsByTagName('div')[1].getElementsByTagName('div');
   if (node.length == 2) {
-    window.alert("至少有两个！");
+    window.alert("至少需要两个选项");
   }
   else {
     // var node = $('.allSelection')[num-1].getElementsByTagName('div');
@@ -285,57 +276,10 @@ function deleteQuestion(id) {
   }
 }
 
-function getquestionOld() {
-  var list = [];
-  var title = [];
-
-  //课程名称
-  var name = $("#exam_name")[0].value;
-  title.push(name);
-
-  var questions = $('#questiontable')[0].getElementsByTagName("tr");
-
-  for (var i = 1; i < questions.length; i++) {
-      var type = 2; // 0为选择， 1为判断，2为解答 求求求你别再由填空题或者连线题或者小作文之类的
-      //题号，描述
-      var td = questions[i].getElementsByTagName("td");
-      var id = td[0].innerText;
-      var description = td[1].getElementsByTagName("textarea")[0].value;
-      //选项
-      var selectionset = [];
-      var selections = td[2].getElementsByTagName("textarea");
-      if (selections.length >= 1) {
-        type = 0;
-        for (var j = 1; j < selections.length; j++) {
-          selectionset.push(selections[j].value);
-        }
-      }
-      //判断答案
-      var answer = "";
-      var judgeanswer = 0; // 1 is true , 0 is false
-      var judge = td[2].getElementsByTagName('select');
-      if (judge.length > 0) {
-        type = 1;
-        var judgeanswer = 1 - parseInt(judge[0].selectedIndex);
-      }
-
-      //其他答案
-      else {
-         answer = selections[0].value;
-      }
-      list.push([id, type, description, selectionset, judgeanswer, answer]);
-  }
-
-  document.getElementById("examinput").value = JSON.stringify(list);
-  document.getElementById("examname").value = JSON.stringify(title);
-}
-
 //提交试题
-function getqusetion(){
-  /* --- new exam object --- */
-  var exam = {};
-  /* --- new exam object --- */
-  $('#form_name')[0].value = $("#exam_name")[0].value;
+function getquestion(){
+  var exams = [];
+  $('#examname')[0].value = $("#exam_name")[0].value;
 
   var questions = $('#questiontable')[0].getElementsByTagName("tr");
 
@@ -343,49 +287,46 @@ function getqusetion(){
       var type = 2; // 0为选择， 1为判断，2为解答 求求求你别再由填空题或者连线题或者小作文之类的
       //题号，描述
       var td = questions[i].getElementsByTagName("td");
-      var id = td[0].innerText;
+      var id = parseInt(td[0].innerText);
       var description = td[1].getElementsByTagName("textarea")[0].value;
       //选项
       var selectionset = [];
       var selections = td[2].getElementsByTagName("textarea");
-      if (selections.length >= 1) {
+      if (selections.length > 1) {
         type = 0;
-        for (var j = 1; j < selections.length; j++) {
+        for (var j = 0; j < selections.length; j++) {
           selectionset.push(selections[j].value);
         }
       }
-      //判断答案
-      var answer = "";
-      var judgeanswer = 0; // 1 is true , 0 is false
-      var judge = td[2].getElementsByTagName('select');
-      if (judge.length > 0) {
-        type = 1;
-        var judgeanswer = 1 - parseInt(judge[0].selectedIndex);
+      var answer;
+      if (type == 0) {
+        answer = {};
+        var checks = td[2].getElementsByTagName('input');
+        for (var j = 0; j < checks.length; j++) {
+          if (checks[j].checked) {
+            answer[j] = 1;
+          }
+        }
+      } else {
+        var checks = td[2].getElementsByTagName('input');
+        if (checks.length) {
+          type = 1;
+          answer = checks[0].checked ? 1 : 0;
+        } else {
+          answer = selections[0].value;
+        }
       }
 
-      //其他答案
-      else {
-         answer = selections[0].value;
-      }
-      list.push([id, type, description, selectionset, judgeanswer, answer]);
-
-      /* --- new exam object --- */
-      id = parseInt(id);
-
-      exam[id] = {
+      var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
+      var exam = {
         type : type,
-        standardAnswer : answer,
         description : description,
+        standardAnswer : answer,
         selectionSet : selectionset
-      }
-      /* --- new exam object --- */
+      };
+      exam[types[exam.type]] = true;
+      exams.push(exam);
   }
 
-  document.getElementById("examinput").value = JSON.stringify(list);
-  document.getElementById("examname").value = JSON.stringify(title);
-  
-  /* --- new exam object --- */
-  $('#form_exam')[0].value = JSON.stringify(exam);
-  /* --- new exam object --- */
-  return exam;
+  $('#examinput')[0].value = JSON.stringify(exams);
 }

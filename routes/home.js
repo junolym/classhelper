@@ -3,6 +3,7 @@ var router = express.Router();
 var dao = require('../dao/dao.js');
 var helper = require('../plugins/route-helper.js');
 var qrcode = require('../plugins/qrcode-manager.js');
+var examManager = require('../plugins/exam-manager.js');
 
 router.get('/user', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
@@ -171,9 +172,11 @@ router.get('/createexam', (req, res, next) => {
 
 router.post('/createexam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        var examname = JSON.parse(req.body.examname);
-        return dao.addexam(req.query.cid, examname[0][0], req.body.exam);
-    }).then((result) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        var examname = req.body.examname || 'untitled';
+        return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
+    }).then(() => {
         res.status(302).send('#exam');
     }).catch(helper.catchError(res, next));
 });
@@ -185,6 +188,16 @@ router.get('/deleteexam', (req, res, next) => {
         return dao.delexam(req.query.eid);
     }).then(() => {
         res.status(302).send('#exam');
+    }).catch(helper.catchError(res, next));
+});
+
+router.get('/examdetail', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getExam(req.query.eid);
+    }).then((result) => {
+        res.render('home/examdetail', { course_id : req.query.cid });
     }).catch(helper.catchError(res, next));
 });
 

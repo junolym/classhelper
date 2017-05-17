@@ -12,28 +12,34 @@
 </head>
 <body>
     <section>
-      <h1>{{exam_name}}</h1>
+      <h1>{{examname}}</h1>
     </section>
     <!--试题详情-->
     <section>
       <ol>
-        {{#each question}}
+        {{#each exam}}
         {{#if question_selection}}
-        <li class="eachdescription">{{question_detail}}</br>
-          {{#each selection}}
-          <input type="radio"/><label  class="eachselection">{{selection}}</label><br/>
+        <li class="eachdescription">{{description}}</br>
+          {{#each selectionSet}}
+          <input type="checkbox" {{lookup ../answer @index}} /><label class="eachselection">{{this}}</label><br/>
           {{/each}}
         </li>
         {{else if question_judgeanswer}}
-        <li class="eachdescription">{{question_detail}}
-          <select>
-              <option value="true">true</option>
-              <option value="false">false</option>
-          </select>
+        <li class="eachdescription">{{description}}<br>
+          {{#if answer_right}}
+          <input type="radio" name="{{@index}}" value="1" checked>正确<br>
+          <input type="radio" name="{{@index}}" value="0">错误
+          {{else if answer_wrong}}
+          <input type="radio" name="{{@index}}" value="1">正确<br>
+          <input type="radio" name="{{@index}}" value="0" checked>错误
+          {{else}}
+          <input type="radio" name="{{@index}}" value="1">正确<br>
+          <input type="radio" name="{{@index}}" value="0">错误
+          {{/if}}
         </li>
         {{else}}
-        <li class="eachdescription">{{question_detail}}</br>
-          <textarea rows="3" cols='30' overflow-y='scroll'></textarea>
+        <li class="eachdescription">{{description}}</br>
+          <textarea rows="3" cols="30" overflow-y="scroll">{{answer}}</textarea>
         </li>
         {{/if}}
         {{/each}}
@@ -42,7 +48,7 @@
 
     <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
     <script>window.jQuery || document.write('<script src="js/jquery-1.11.0.min.js"><\/script>')</script>
-    <script src='/bootstrap/js/bootstrap.min.js'></script>
-    <script src='/javascripts/index.js'></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/javascripts/exam.js"></script>
 </body>
 </html>

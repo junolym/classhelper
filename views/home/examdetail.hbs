@@ -9,7 +9,7 @@
           <form role="form" id="contentForm" action="/home/createexam?cid={{course_id}}" method="post"  class="addcourse-form">
           <div class="form-group">
             <label class="sr-only" for="form-examname">测试名称</label>
-              <input type="textarea" name="form_coursename" placeholder="测试名称" class="form-coursename form-control" id="exam_name" value="" required>
+              <input type="textarea" name="form_coursename" placeholder="测试名称" class="form-coursename form-control" id="exam_name" value="{{examname}}" required>
             </div>
       </form>
     </div>
@@ -27,9 +27,9 @@
   <tbody>
     {{#each question}}
     <tr>
-      <td><a class="btn">{{question_id}}</td>
-      <td><a class="btn">{{question_detail}}</td>
-      <td><a class="btn">{{question_answer}}</td>
+      <td><a class="btn">{{question_id}}</a></td>
+      <td><a class="btn">{{question_detail}}</a></td>
+      <td><a class="btn">{{question_answer}}</a></td>
       <td><a class="btn btn-default" onclick="">删除题目</a></td>
     </tr>
     {{/each}}
@@ -45,11 +45,9 @@
 </div>
 
 <div id="exambtn">
-  <form role="form" id="examForm" action="/home/createexam?cid={{course_id}}" method="post" onsubmit="getqusetion();return formSubmit('#examForm')" class="addcourse-form">
+  <form role="form" id="examForm" action="/home/createexam?cid={{course_id}}" method="post" onsubmit="getquestion();return formSubmit('#examForm')" class="addcourse-form">
   <input id="examname" type="text" name="examname" value=""/>
   <input id="examinput" type="text" name="exam" value=""/>
-  <input id="form_name" type="text" name="form_name" value=""/>
-  <input id="form_exam" type="text" name="form_exam" value=""/>
   <button type="submit" class="btn btn-large btn-primary" id="saveexam"  style="font-size:14px">保存测试</button>
   <button class="addbtn btn btn-large btn-primary" id="saveandstart" style="font-size:14px">保存并开始</button>
   </form>
