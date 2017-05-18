@@ -107,6 +107,10 @@ ExamManager = {
             }
         });
     },
+    deleteExam : (eid) => {
+        delete ExamManager.exams[eid];
+        return dao.delexam(req.query.eid);
+    },
     addStuAnswer : (eid, stuId, answers) => {
         console.log('answer added: %s', JSON.stringify(answer));
         ExamManager.exams[eid].answers[stuId] = answers;

@@ -185,7 +185,7 @@ router.get('/deleteexam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
-        return dao.delexam(req.query.eid);
+        return examManager.deleteExam(req.query.eid);
     }).then(() => {
         res.status(302).send('#exam');
     }).catch(helper.catchError(res, next));
