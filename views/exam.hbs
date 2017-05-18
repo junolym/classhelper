@@ -26,16 +26,8 @@
         </li>
         {{else if question_judgeanswer}}
         <li class="eachdescription">{{description}}<br>
-          {{#if answer_right}}
-          <input type="radio" name="{{@index}}" value="1" checked>正确<br>
-          <input type="radio" name="{{@index}}" value="0">错误
-          {{else if answer_wrong}}
-          <input type="radio" name="{{@index}}" value="1">正确<br>
-          <input type="radio" name="{{@index}}" value="0" checked>错误
-          {{else}}
-          <input type="radio" name="{{@index}}" value="1">正确<br>
-          <input type="radio" name="{{@index}}" value="0">错误
-          {{/if}}
+          <input type="radio" name="{{@index}}" value="1" {{answer_right}}>正确<br>
+          <input type="radio" name="{{@index}}" value="0" {{answer_wrong}}>错误
         </li>
         {{else}}
         <li class="eachdescription">{{description}}</br>

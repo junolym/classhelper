@@ -51,24 +51,7 @@ router.get('/showanswer', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        result = JSON.parse(JSON.stringify(result));
-        var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
-        var judgeAnswers = ['answer_wrong', 'answer_right'];
-        result.exam.forEach((e) => {
-            e[types[e.type]] = true;
-            if (e.type == 0) {
-                e.answer = [];
-                for (var i in e.standardAnswer) {
-                    e.answer[i] = 'checked';
-                }
-                console.log(e);
-            } else if (e.type == 1) {
-                e[judgeAnswers[e.standardAnswer]] = true;
-            } else {
-                e.answer = e.standardAnswer;
-            }
-        });
-        res.render('exam', result);
+        res.render('exam', { examname: result.examname, exam: result.examWithAnswer } );
     }).catch((err) => {
         if (err.needLogin) {
             res.redirect('/login');

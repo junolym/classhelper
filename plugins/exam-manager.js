@@ -43,21 +43,28 @@ ExamManager = {
                 }
                 averageGrade : number,
             }
-        }
+        },
+        examWithAnswer : [],
+        lastused : Date
     }
     */
     createExam : (cid, examname, exam) => {
-        return dao.addexam(cid, examname, JSON.stringify(exam)).then((eid) => {
+        var exam_question = JSON.stringify(exam);
+        return dao.addexam(cid, examname, exam_question).then((eid) => {
             ExamManager.exams[eid] = {
                 cid : cid,
                 examname : examname,
-                exam : exam
+                exam : exam,
+                examWithAnswer : JSON.parse(exam_question),
+                lastused : new Date()
             }
-            console.log('exam created: %s', JSON.stringify(exam));
-        });
+            ExamManager.resolveExam(eid);
+        })
     },
     getExam : (eid) => {
         if (ExamManager.exams[eid]) {
+            // update last used
+            ExamManager.exams[eid].lastused = new Date();
             return new Promise((resolve) => {
                 resolve(ExamManager.exams[eid]);
             });
@@ -67,11 +74,37 @@ ExamManager = {
             ExamManager.exams[eid] = {
                 cid : result.ex_coz_id,
                 examname : result.exam_name,
-                exam : JSON.parse(result.exam_question)
+                exam : JSON.parse(result.exam_question),
+                examWithAnswer : JSON.parse(result.exam_question),
+                lastused : new Date()
             };
+            ExamManager.resolveExam(eid);
             return new Promise((resolve) => {
                 resolve(ExamManager.exams[eid]);
             });
+        });
+    },
+    // Add data for rendering exam page
+    resolveExam : (eid) => {
+        var exam = ExamManager.exams[eid];
+        var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
+        var judgeAnswers = ['answer_wrong', 'answer_right'];
+        exam.exam.forEach((e) => {
+            e[types[e.type]] = true;
+        });
+        exam.examWithAnswer.forEach((e) => {
+            e[types[e.type]] = true;
+            if (e.question_selection) {
+                e.answer = [];
+                for (var i in e.standardAnswer) {
+                    e.answer[i] = 'checked';
+                }
+                console.log(e);
+            } else if (e.question_judgeanswer) {
+                e[judgeAnswers[e.standardAnswer]] = 'checked';
+            } else {
+                e.answer = e.standardAnswer;
+            }
         });
     },
     addStuAnswer : (eid, stuId, answers) => {
@@ -87,5 +120,16 @@ ExamManager = {
         return ExamManager.exams[eid].statistics;
     }
 }
+
+// check (per hour) and clear useless exam ( > 3 hours )
+setInterval(() => {
+    var now = new Date();
+    for (var i in ExamManager.exams) {
+        var lastused = ExamManager.exams[i].lastused;
+        if (now - lastused > 1000*60*60*3) { // 3 hours
+            delete ExamManager.exams[i];
+        }
+    }
+}, 1000*60*60);
 
 module.exports = ExamManager;

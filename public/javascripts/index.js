@@ -317,14 +317,12 @@ function getquestion(){
         }
       }
 
-      var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
       var exam = {
         type : type,
         description : description,
         standardAnswer : answer,
         selectionSet : selectionset
       };
-      exam[types[exam.type]] = true;
       exams.push(exam);
   }
 
