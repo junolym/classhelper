@@ -8,7 +8,7 @@
 
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
-    <link href="/stylesheets/index.css" rel="stylesheet">
+    <link href="/stylesheets/exam.css" rel="stylesheet">
 </head>
 <body>
     <section>
@@ -18,22 +18,18 @@
     <section>
       <ol>
         {{#each exam}}
-        {{#if question_selection}}
         <li class="eachdescription">{{description}}</br>
+        {{#if question_selection}}
           {{#each selectionSet}}
           <input type="checkbox" {{lookup ../answer @index}} /><label class="eachselection">{{this}}</label><br/>
           {{/each}}
-        </li>
         {{else if question_judgeanswer}}
-        <li class="eachdescription">{{description}}<br>
           <input type="radio" name="{{@index}}" value="1" {{answer_right}}>正确<br>
           <input type="radio" name="{{@index}}" value="0" {{answer_wrong}}>错误
-        </li>
         {{else}}
-        <li class="eachdescription">{{description}}</br>
           <textarea rows="3" cols="30" overflow-y="scroll">{{answer}}</textarea>
-        </li>
         {{/if}}
+        </li>
         {{/each}}
       </ol>
     </section>
