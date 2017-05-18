@@ -14,6 +14,7 @@ function UserError (message) {
 };
 UserError.prototype = new Error();
 UserError.prototype.constructor = UserError;
+exports.UserError = UserError;
 
 /**
  * login

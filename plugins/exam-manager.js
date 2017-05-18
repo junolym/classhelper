@@ -1,4 +1,5 @@
 var dao = require('../dao/dao.js');
+var UserError = dao.UserError;
 
 ExamManager = {
     exams : {},
@@ -56,7 +57,9 @@ ExamManager = {
                 examname : examname,
                 exam : exam,
                 examWithAnswer : JSON.parse(exam_question),
-                lastused : new Date()
+                lastused : new Date(),
+                answers : {},
+                statistics : {}
             }
             ExamManager.resolveExam(eid);
         })
@@ -76,7 +79,9 @@ ExamManager = {
                 examname : result.exam_name,
                 exam : JSON.parse(result.exam_question),
                 examWithAnswer : JSON.parse(result.exam_question),
-                lastused : new Date()
+                lastused : new Date(),
+                answers : {},
+                statistics : {}
             };
             ExamManager.resolveExam(eid);
             return new Promise((resolve) => {
@@ -89,17 +94,28 @@ ExamManager = {
         var exam = ExamManager.exams[eid];
         var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
         var judgeAnswers = ['answer_wrong', 'answer_right'];
-        exam.exam.forEach((e) => {
+        exam.exam.forEach((e, index) => {
             e[types[e.type]] = true;
-        });
-        exam.examWithAnswer.forEach((e) => {
-            e[types[e.type]] = true;
+            e.id = index;
             if (e.question_selection) {
+                e.label = [];
+                e.selectionSet.forEach((s, i) => {
+                    e.label[i] = String.fromCharCode(65 + i);
+                });
+            }
+        });
+        exam.examWithAnswer.forEach((e, index) => {
+            e[types[e.type]] = true;
+            e.id = index;
+            if (e.question_selection) {
+                e.label = [];
+                e.selectionSet.forEach((s, i) => {
+                    e.label[i] = String.fromCharCode(65 + i);
+                });
                 e.answer = [];
                 for (var i in e.standardAnswer) {
                     e.answer[i] = 'checked';
                 }
-                console.log(e);
             } else if (e.question_judgeanswer) {
                 e[judgeAnswers[e.standardAnswer]] = 'checked';
             } else {
@@ -111,9 +127,16 @@ ExamManager = {
         delete ExamManager.exams[eid];
         return dao.delexam(req.query.eid);
     },
-    addStuAnswer : (eid, stuId, answers) => {
-        console.log('answer added: %s', JSON.stringify(answer));
-        ExamManager.exams[eid].answers[stuId] = answers;
+    addStuAnswer : (eid, answer) => {
+        return ExamManager.getExam(eid).then((exam) => {
+            return dao.checkstudent(answer.studentid, exam.cid, answer.name);
+        }).then(() => {
+            ExamManager.exams[eid].answers[answer.studentid] = answer;
+            // TODO: 改卷
+            var score = 0;
+            return dao.addanswer(eid, answer.studentid, answer.name,
+                score, JSON.stringify(answer));
+        });
     },
     getStuAnswer : (eid, stuId) => {
         console.log('answer returned: %s', JSON.stringify(ExamManager.exams[eid].answers[stuId]));

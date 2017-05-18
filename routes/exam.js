@@ -10,14 +10,15 @@ router.get('/', (req, res, next) => {
         res.cookie('exam', req.query.k);
         res.redirect('/exam');
     } else {
-        if (!req.cookies || !qrcode.get(req.cookies.exam))
+        if (!req.cookies || !qrcode.get(req.cookies.exam)) {
             return res.redirect('/result?msg=请求试卷失败&err=请正确扫描二维码');
+        }
         var eid = qrcode.get(req.cookies.exam).eid;
         examManager.getExam(eid).then((result) => {
-            res.render('exam', result);
+            res.render('exam', { title: "答题页面", examname: result.examname, exam: result.exam });
         }).catch((err) => {
             if (err.userError) {
-                res.redirect('/result?msg=测试失败&err=' + err.message);
+                res.redirect('/result?msg=请求试卷失败&err=' + err.message);
             } else {
                 next(err);
             }
@@ -26,7 +27,19 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    res.send(JSON.stringify(req.body));
+    if (!req.cookies || !qrcode.get(req.cookies.exam)) {
+        return res.redirect('/result?msg=交卷失败&err=请正确扫描二维码');
+    }
+    var eid = qrcode.get(req.cookies.exam).eid;
+    examManager.addStuAnswer(eid, req.body).then(() => {
+        res.redirect('/result?msg=交卷成功');
+    }).catch((err) => {
+        if (err.userError) {
+            res.redirect('/result?msg=交卷失败&err=' + err.message);
+        } else {
+            next(err);
+        }
+    });
 });
 
 router.get('/preview', (req, res, next) => {
@@ -35,7 +48,7 @@ router.get('/preview', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', result);
+        res.render('exam', { preview: true, title: "预览试卷", examname: result.examname, exam: result.exam });
     }).catch((err) => {
         if (err.needLogin) {
             res.redirect('/login');
@@ -51,7 +64,7 @@ router.get('/showanswer', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', { examname: result.examname, exam: result.examWithAnswer } );
+        res.render('exam', { preview: true, title: "答案", examname: result.examname, exam: result.examWithAnswer } );
     }).catch((err) => {
         if (err.needLogin) {
             res.redirect('/login');
