@@ -16,6 +16,8 @@ UserError.prototype = new Error();
 UserError.prototype.constructor = UserError;
 exports.UserError = UserError;
 
+
+
 /**
  * login
  *
@@ -24,7 +26,7 @@ exports.UserError = UserError;
  * @returns {Object} Promise
  * result account数据
  * */
-exports.login = function(account, password) {
+var login = function(account, password) {
     return getuser(account).then(function(result) {
         if (result[0].password != password) {
             return Promise.reject(new UserError('密码错误'));
@@ -52,7 +54,6 @@ var getuser = function getuser(account) {
     });
 };
 
-exports.getuser;
 
 
 
@@ -67,7 +68,7 @@ exports.getuser;
  * @param {string} n_phone
  * @returns {Object} Promise
  */
-exports.adduser = function(admin, n_account, n_password, n_username,
+var adduser = function(admin, n_account, n_password, n_username,
                             n_email, n_phone) {
     // 权限
     var sql = "select admin from users where account=?";
@@ -94,7 +95,7 @@ exports.adduser = function(admin, n_account, n_password, n_username,
  * @param {array} userinfo [username, email, phone]
  * @returns {Object} Promise
  */
-exports.updateuserinfo = function(account, userinfo) {
+var updateuserinfo = function(account, userinfo) {
     var sql = "update users set username=?, email=?, phone=? "
             + "where account=?";
     var parameter = userinfo;
@@ -115,7 +116,7 @@ exports.updateuserinfo = function(account, userinfo) {
  * @param {string} oldpwd
  * @param {string} newpwd
  */
-exports.updateuserpwd = function(account, oldpwd, newpwd) {
+var updateuserpwd = function(account, oldpwd, newpwd) {
     var sql = "update users set password=? "
             + "where account=? and password=?";
     return pool.query(sql, [newpwd,account,oldpwd]).then(function(result) {
@@ -133,7 +134,7 @@ exports.updateuserpwd = function(account, oldpwd, newpwd) {
  * @param {string} account
  * @returns {Object} Promise
  */
-exports.deluser = function(account) {
+var deluser = function(account) {
     var sql = "delete from users where account=?";
     return pool.query(sql, account).then(function(result) {
         if (result.affectedRows == 0) {
@@ -152,7 +153,7 @@ exports.deluser = function(account) {
  * result  [course_id, course_name, student_num]
  * 不判断account是否存在，result可以为[]
  */
-exports.getcoursebyaccount = function(account) {
+var getcoursebyaccount = function(account) {
     var sql = "select course_id, course_name, course_time, student_num "
             + "from courses "
             + "where coz_account=?";
@@ -169,7 +170,7 @@ exports.getcoursebyaccount = function(account) {
  * @returns {Object} Promise
  * result  course_id
  */
-exports.addcourse=function(account, course_name, course_time, course_info){
+var addcourse=function(account, course_name, course_time, course_info){
     var sql = "insert into courses(coz_account, course_name, "
             + "course_time, course_info) values (?, ?, ?, ?)";
     var parameter = [account, course_name, course_time, course_info];
@@ -183,7 +184,7 @@ exports.addcourse=function(account, course_name, course_time, course_info){
  *
  * @param {number} course_id
  */
-exports.delcourse = function(course_id) {
+var delcourse = function(course_id) {
     var sql = "delete from courses where course_id=?";
     return pool.query(sql, course_id).then(function(result) {
         if (result.affectedRows == 0) {
@@ -202,7 +203,7 @@ exports.delcourse = function(course_id) {
  * select * from exams where ex_coz_id= ?
  * 等具体需求再修改
  */
-exports.getexambycourse = function(course_id) {
+var getexambycourse = function(course_id) {
     var sql = "select * from exams where ex_coz_id= ?";
     return pool.query(sql, course_id)
 };
@@ -217,7 +218,7 @@ exports.getexambycourse = function(course_id) {
  * @returns {Object} Promise
  * result exam_id
  */
-exports.addexam = function(course_id, exam_name, exam_question) {
+var addexam = function(course_id, exam_name, exam_question) {
     var sql = "insert into exams(exam_name, ex_coz_id, exam_question) "
             + "values (?, ?, ?)";
     var parameter = [exam_name, course_id, exam_question];
@@ -232,7 +233,7 @@ exports.addexam = function(course_id, exam_name, exam_question) {
  * @param {number} exam_id
  * @returns {Object} Promise
  */
-exports.delexam = function(exam_id) {
+var delexam = function(exam_id) {
     var sql = "delete from exams where exam_id=?";
     return pool.query(sql, exam_id).then(function(result) {
         if (result.affectedRows == 0) {
@@ -252,7 +253,7 @@ exports.delexam = function(exam_id) {
  * @param {object} exam_question json格式,详见文档
  * @returns {Object} Promise
  */
-exports.updateexam = function(exam_id, exam_name, exam_question) {
+var updateexam = function(exam_id, exam_name, exam_question) {
     var sql = "update exams set exam_name=?, exam_question=? "
             + "where exam_id=?";
     var parameter = [exam_name, exam_question, exam_id];
@@ -273,7 +274,7 @@ exports.updateexam = function(exam_id, exam_name, exam_question) {
  * @param {number} exam_id
  * @returns {Object} Promise
  */
-exports.checkexam = function(account, course_id, exam_id) {
+var checkexam = function(account, course_id, exam_id) {
     var sql = "select coz_account from exams, courses "
             + "where exam_id=? and ex_coz_id=? and course_id = ex_coz_id "
             + "and coz_account=?";
@@ -296,7 +297,7 @@ exports.checkexam = function(account, course_id, exam_id) {
  * exam_state, exam_time暂未使用
  *
  */
-exports.getexambyid = function(exam_id) {
+var getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
     return pool.query(sql, exam_id).then(function(result) {
         if (result.length == 0) {
@@ -314,7 +315,7 @@ exports.getexambyid = function(exam_id) {
  * [course_id, exam_id, exam_name, name, exam_num, stu_num]
  *
  */
-exports.getexambyaccount = function(account) {
+var getexambyaccount = function(account) {
     var sql = "select course_id, exam_id, exam_name, course_name as name, "
             + "exam_stu_num as exam_num, student_num as stu_num "
             + "from exams, courses "
@@ -332,7 +333,7 @@ exports.getexambyaccount = function(account) {
  * signid
  *
  */
-exports.addsign = function(course_id) {
+var addsign = function(course_id) {
     var sql = "insert into signup set sg_coz_id=?";
     return pool.query(sql, course_id).then(function(result) {
         return Promise.resolve(result.insertId);
@@ -348,7 +349,7 @@ exports.addsign = function(course_id) {
  * @param {string} stu_name
  * @returns {Object} Promise
  */
-exports.studentsign = function(course_id, sign_id, stu_id,
+var studentsign = function(course_id, sign_id, stu_id,
                                 stu_name) {
     // 检查学号、姓名、课程相符
     var sql = "select cs_stu_name from coz_stu "
@@ -384,7 +385,7 @@ exports.studentsign = function(course_id, sign_id, stu_id,
  * [stu_id2, stu_name2] ]
  * @returns {Object} Promise
  */
-exports.addstutocourse = function(course_id, coz_stu) {
+var addstutocourse = function(course_id, coz_stu) {
     var parameter = [];
     for (var i in coz_stu) {
         parameter.push([course_id, coz_stu[i][0], coz_stu[i][1]]);
@@ -402,7 +403,7 @@ exports.addstutocourse = function(course_id, coz_stu) {
  * [id2, name2] ]
  * @returns {Object} Promise
  */
-exports.addstudent = function(student) {
+var addstudent = function(student) {
     var sql = "insert into students(student_id, student_name) values ?";
     return pool.query(sql, [student]);
 };
@@ -414,7 +415,7 @@ exports.addstudent = function(student) {
  * @returns {Object} Promise
  * [{sign_id, time, sign_num, stu_num}]
  */
-exports.getsignbycourse = function(course_id) {
+var getsignbycourse = function(course_id) {
     var sql = "select sign_id, course_id, sign_time as time, "
             + "count(ss_sign_id) as sign_num, "
             + "student_num as stu_num "
@@ -431,7 +432,7 @@ exports.getsignbycourse = function(course_id) {
  * @returns {Object} Promise
  * [{course_id, id, name, time}]
  */
-exports.getsignbyid = function(sign_id) {
+var getsignbyid = function(sign_id) {
     var sql = "select sg_coz_id as course_id, ss_stu_id as stu_id, "
             + "ss_stu_name as name, stu_sign_time as time "
             + "from stu_sign, signup "
@@ -447,7 +448,7 @@ exports.getsignbyid = function(sign_id) {
  * @returns {Object} Promise
  * [{sign_id, course_id, name, time, sign_num, stu_num}]
  */
-exports.getsignbyaccount = function(account) {
+var getsignbyaccount = function(account) {
     var sql = "select sign_id, course_id, course_name as name, "
             + "sign_time as time, "
             + "sg_stu_num as sign_num, student_num as stu_num "
@@ -466,7 +467,7 @@ exports.getsignbyaccount = function(account) {
  * @param {number} sign_id
  * @returns {Object} Promise
  */
-exports.checksign = function(account, course_id, sign_id) {
+var checksign = function(account, course_id, sign_id) {
     var sql = "select sign_id "
             + "from courses, signup "
             + "where coz_account=? and course_id=? "
@@ -488,7 +489,7 @@ exports.checksign = function(account, course_id, sign_id) {
  * @returns {Object} Promise
  * [id, name]
  */
-exports.getstubycourse = function(course_id) {
+var getstubycourse = function(course_id) {
     var sql = "select cs_stu_id as id, cs_stu_name as name "
             + "from courses, coz_stu "
             + "where course_id=? "
@@ -503,7 +504,7 @@ exports.getstubycourse = function(course_id) {
  * @param {number} course_id
  * @returns {Object} Promise
  */
-exports.checkcourse = function(account, course_id) {
+var checkcourse = function(account, course_id) {
     var sql = "select coz_account from courses "
             + "where course_id=? ";
     return pool.query(sql, course_id).then(function(result) {
@@ -524,7 +525,7 @@ exports.checkcourse = function(account, course_id) {
  * @returns {Object} Promise
  * [course_name, course_time, course_info, student_num]
  */
-exports.getcoursebyid = function(course_id) {
+var getcoursebyid = function(course_id) {
     var sql = "select course_name, course_time, course_info, student_num "
             + "from courses where course_id=?"
     return pool.query(sql, course_id).then(function(result) {
@@ -545,7 +546,7 @@ exports.getcoursebyid = function(course_id) {
  * @param {string} n_course_info
  * @returns {Object} Promise
  */
-exports.updatecourse = function(course_id, n_course_name, n_course_time,
+var updatecourse = function(course_id, n_course_name, n_course_time,
                                 n_course_info) {
     var sql = "update courses set course_name=?, course_time=?, "
             + "course_info=? where course_id=?"
@@ -565,7 +566,7 @@ exports.updatecourse = function(course_id, n_course_name, n_course_time,
  * @param {number} sign_id
  * @returns {Object} Promise
  */
-exports.delsign = function(sign_id) {
+var delsign = function(sign_id) {
     var sql = 'delete from signup where sign_id=?';
     return pool.query(sql, sign_id).then(function(result) {
         if (result.affectedRows == 0) {
@@ -582,7 +583,7 @@ exports.delsign = function(sign_id) {
  * @param {number} course_id
  * @returns {Object} Promise
  */
-exports.delstuofcourse = function(course_id) {
+var delstuofcourse = function(course_id) {
     var sql = 'delete from coz_stu where cs_coz_id=?';
     return pool.query(sql, course_id);
 }
@@ -599,15 +600,18 @@ exports.delstuofcourse = function(course_id) {
  * 这里不做任何检查，请保证插入数据正确！
  * 可使用checkstudent
  */
-exports.addanswer = function(exam_id, stu_id, stu_name, score, answer) {
+var addanswer = function(exam_id, stu_id, stu_name, score, answer) {
     var sql = "insert into answers(ans_ex_id, ans_stu_id, ans_stu_name, "
             + "ans_score, ans_answer) values(?, ?, ?, ?, ?)";
-    return pool.query(sql, [exam_id, stu_id, stu_name, score, answer]);
+    return pool.query(sql, [exam_id, stu_id, stu_name, score, answer])
+        .catch(function(err) {
+            if (/PRIMARY/.test(err)) {
+                return Promise.reject(new UserError('请勿重复交卷'));
+            }
+            return Promise.reject(err);
+        });
 }
 
-// exports.getansby = function(course_id) {
-// }
-//
 
 /**
  * checkstudent
@@ -617,7 +621,7 @@ exports.addanswer = function(exam_id, stu_id, stu_name, score, answer) {
  * @param {string} stu_name
  * @return {Object} Promise
  */
-exports.checkstudent = function(stu_id, course_id, stu_name) {
+var checkstudent = function(stu_id, course_id, stu_name) {
     var sql = "select cs_stu_name from coz_stu "
             + "where cs_coz_id=? and cs_stu_id=?";
     var parameter = [course_id, stu_id];
@@ -631,3 +635,108 @@ exports.checkstudent = function(stu_id, course_id, stu_name) {
         }
     });
 }
+
+/**
+ * getanswerbyexam
+ *
+ * @param {number} exam_id
+ * @return {Object} Promise
+ * [student_id, student_name, score, answer]
+ * 其他字段未给出，支持字段重命名
+ */
+var getanswerbyexam = function(exam_id) {
+    var sql = "select ans_stu_id as student_id, "
+            + "ans_stu_name as student_name, "
+            + "ans_score as score, "
+            + "ans_answer as answer "
+            + "from answers "
+            + "where ans_ex_id=?";
+    return pool.query(sql, exam_id);
+}
+
+/**
+ * getanswerbystudent
+ *
+ * @param {number} exam_id
+ * @param {number} stu_id
+ * @return {Object} Promise
+ * [student_id, student_name, score, answer]
+ * 其他字段未给出，支持字段重命名
+ */
+var getanswerbystudent = function(exam_id, stu_id) {
+    var sql = "select ans_stu_id as student_id, "
+            + "ans_stu_name as student_name, "
+            + "ans_score as score, "
+            + "ans_answer as answer "
+            + "from answers "
+            + "where ans_ex_id=? and ans_stu_id=?";
+    return pool.query(sql, [exam_id, stu_id]).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject(new UserError('答卷不存在!'));
+        } else {
+            return Promise.resolve(result);
+        }
+    });
+}
+
+/**
+ * copyexam
+ *
+ * @param {number} src_exam_id 源试卷id
+ * @param {number} des_course_id 目标课程id
+ * @return {Object} Promise
+ * exam_id
+ */
+var copyexam = function(src_exam_id, des_course_id) {
+    var sql = "select * from exams where exam_id=?";
+    return pool.query(sql, src_exam_id).then(function(result) {
+        if (result.length == 0) {
+            return Promise.reject(new UserError('测验不存在!'));
+        } else {
+            console.log(result);
+            return addexam(des_course_id, result[0].exam_name, 
+                            result[0].exam_question);
+        }
+    });
+}
+
+exports.login = login;
+exports.getuser = getuser;
+exports.adduser = adduser;
+exports.deluser = deluser;
+exports.updateuserinfo = updateuserinfo;
+exports.updateuserpwd = updateuserpwd;
+
+exports.addcourse = addcourse;
+exports.delcourse = delcourse;
+exports.updatecourse = updatecourse;
+exports.getcoursebyid = getcoursebyid;
+exports.getcoursebyaccount = getcoursebyaccount;
+exports.addstutocourse = addstutocourse;
+exports.delstuofcourse = delstuofcourse;
+exports.getstubycourse = getstubycourse;
+exports.checkcourse = checkcourse;
+exports.checkstudent = checkstudent;
+
+exports.addexam = addexam;
+exports.delexam = delexam;
+exports.updateexam = updateexam;
+exports.copyexam = copyexam;
+exports.getexambyid = getexambyid;
+exports.getexambycourse = getexambycourse;
+exports.getexambyaccount = getexambyaccount;
+exports.checkexam = checkexam;
+
+exports.addsign = addsign;
+exports.delsign = delsign;
+exports.studentsign = studentsign;
+exports.getsignbyid = getsignbyid;
+exports.getsignbyaccount = getsignbyaccount;
+exports.getsignbycourse = getsignbycourse;
+exports.checksign = checksign;
+
+exports.addanswer = addanswer;
+exports.getanswerbyexam = getanswerbyexam;
+exports.getanswerbystudent = getanswerbystudent;
+
+exports.addstudent = addstudent;
