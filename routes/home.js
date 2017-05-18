@@ -191,7 +191,8 @@ router.get('/deleteexam', (req, res, next) => {
     }).catch(helper.catchError(res, next));
 });
 
-router.get('/examdetail', (req, res, next) => {
+
+router.get('/editexam', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
@@ -201,4 +202,17 @@ router.get('/examdetail', (req, res, next) => {
     }).catch(helper.catchError(res, next));
 });
 
+router.get('/submitions', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getExam(req.query.eid);
+    }).then((result) => {
+        // just for debugging
+        var examstring = JSON.stringify(result);
+        var _result = JSON.parse(examstring);
+        _result.examstring = examstring;
+        res.render('home/submitions', _result);
+    }).catch(helper.catchError(res, next));
+});
 module.exports = router;

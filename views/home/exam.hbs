@@ -11,13 +11,14 @@
   <tbody>
     {{#each exam}}
     <tr>
-      <td><a class="btn" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
+      <td><a class="btn" href="#submitions?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{name}}</a></td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{stu_num}}</a></td>
-      <td><a class="btn" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
-      <td><a class="btn  btn-default" href="#examdetail?cid={{course_id}}&eid={{exam_id}}">查看详细</a>
+      <td><a class="btn" href="#submitions?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
+      <td><a class="btn  btn-default" href="#submitions?cid={{course_id}}&eid={{exam_id}}">查看提交</a>
       <a class="btn  btn-default" target="_blank" href="/home/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
       <a class="btn  btn-default" target="_blank" onclick="return confirm('确定删除本测试？本操作不可恢复')&&loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}')">删除</a>
+      <a class="btn  btn-default" href="#editexam?cid={{course_id}}&eid={{exam_id}}">编辑</a>
       <a class="btn  btn-default" target="_blank" href="/exam/preview?cid={{course_id}}&eid={{exam_id}}">预览</a>
       <a class="btn  btn-default" target="_blank" href="/exam/showanswer?cid={{course_id}}&eid={{exam_id}}">显示答案</a>
       </td>
