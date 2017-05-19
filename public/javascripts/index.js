@@ -328,3 +328,64 @@ function getquestion(){
 
   $('#examinput')[0].value = JSON.stringify(exams);
 }
+
+function importlist(fls) {
+    if (fls && fls.length > 0) {
+        ImportFile = fls[0];
+        var fileX = ImportFile.name.split(".").reverse()[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var data = e.target.result;
+            // 二进制读取
+            workbook = XLSX.read(data, {
+                type: 'binary'
+            });
+            var sheetNames = workbook.SheetNames;
+            
+            // 删除现有数据
+            var tr = $("#stutable").find("tr")[0];
+            $("#stutable").html(tr);
+            
+            // 读取excel
+            for (var i in sheetNames) {
+                var worksheet = workbook.Sheets[sheetNames[i]];
+                var json = XLSX.utils.sheet_to_json(worksheet);
+                if (json.length==0 || !json[0]['学号'] || !json[0]['姓名']) {
+                    alert(sheetNames[i] + "格式错误！");
+                } else {
+                    for (var i in json) {
+                        var table = $("#stutable");
+                        table.append("<tr><td>" + json[i]['学号'] + "</td><td>" + json[i]['姓名'] + "</td></tr>");
+                    }
+                }
+            }
+            setEditable();
+        }
+        reader.readAsBinaryString(ImportFile);
+    }
+}
+
+function exportlist() {
+    var table = {};
+
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
+
+    table['!ref'] = "A1:B" + "trs.length";
+    // table['A1'] = {v: '学号'};
+    // table['B1'] = {v: '姓名'};
+
+    for (var i = 0; i < trs.length; i++) {
+        var td = trs[i].getElementsByTagName("td");
+        table['A' + i ] = {v: td[0].innerText};
+        table['B' + i ] = {v: td[1].innerText};
+    }
+
+    var wb = {
+        SheetNames: ['sheet1'],
+        Sheets: {
+            'sheet1': table
+        }
+    }
+    // 这个怎么导出？
+    // XLSX.writeFile(workbook, filename)
+}

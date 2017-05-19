@@ -55,9 +55,14 @@
         {{/each}}
     </table>
     <script type="text/javascript">setEditable()</script>
+    <script type="text/javascript" src="/javascripts/xlsx.full.min.js"></script>
+
     <div id="tablebtn">
-        <button type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">导入名单</button>
-        <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px">保存名单</button>
+        <div type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">
+            <a href="#">导入名单</a>
+            <input type="file" id="upload" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importlist(this.files)">
+        </div>
+        <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px" onclick="exportlist">保存名单</button>
         <button class="addbtn btn btn-large btn-primary" id="addtd" style="font-size:18px" onclick="addstudent();setEditable()">添加学生</button>
     </div>
 </div>
