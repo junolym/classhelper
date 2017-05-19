@@ -1,12 +1,18 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
 
-dao.copyexam(13, 6)
-.then(function(doc) {
-    console.log(doc);
-}).catch(function(err) {
-    console.log(err);
-});
+// dao.updatestatistics("1", null)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.copyexam(13, 6)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
 // dao.getanswerbystudent(13, 14331040)
 // .then(function(doc) {
 //     console.log(doc);
