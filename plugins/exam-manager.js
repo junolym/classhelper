@@ -98,7 +98,7 @@ ExamManager = {
                 exam.statistics[index] = {};
                 exam.statistics[index].right = 0;
                 exam.statistics[index].wrong = 0;
-                exam.statistics[index].count = [];
+                exam.statistics[index].count = [0, 0];
             }
             if (e.question_selection) {
                 e.label = [];
@@ -155,7 +155,7 @@ ExamManager = {
                     wrong++;
                     exam.statistics[i].wrong++;
                 }
-                if (q.type == 0) {
+                if (answer[i].length > 1) {
                     answer[i].forEach((a) => {
                         exam.statistics[i].count[a]++;
                     })
