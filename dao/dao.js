@@ -293,7 +293,7 @@ var checkexam = function(account, course_id, exam_id) {
  *
  * @param {number} exam_id
  * @returns {Object} Promise
- * [exam_id, ex_coz_id, exam_name, exam_question, ex_statistics]
+ * [exam_id, ex_coz_id, exam_name, exam_question, exam_statistics]
  * exam_state, exam_time暂未使用
  *
  */
@@ -700,6 +700,25 @@ var copyexam = function(src_exam_id, des_course_id) {
     });
 }
 
+/**
+ * updatestatistics
+ *
+ * @param {number} exam_id
+ * @param {string} statistics 新的统计结果
+ * @return {Object} Promise
+ */
+var updatestatistics = function(exam_id, statistics) {
+    var sql = "update exams set exam_statistics = ? "
+            + "where exam_id = ?";
+    return pool.query(sql, [statistics, exam_id]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject(new UserError("该测验不存在"));
+        } else {
+            return Promise.resolve();
+        }
+    });
+}
+
 exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
@@ -721,6 +740,7 @@ exports.checkstudent = checkstudent;
 exports.addexam = addexam;
 exports.delexam = delexam;
 exports.updateexam = updateexam;
+exports.updatestatistics = updatestatistics;
 exports.copyexam = copyexam;
 exports.getexambyid = getexambyid;
 exports.getexambycourse = getexambycourse;
