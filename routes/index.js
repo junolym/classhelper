@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/login', (req, res, next) => {
     if (req.session.user) {
-        res.redirect('/');
+        res.redirect(req.query.next || '/');
     } else {
         res.render('login', { title: 'Login - Classhelper' });
     }

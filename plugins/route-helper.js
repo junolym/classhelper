@@ -23,7 +23,7 @@ function catchError(req, res, next, reload, userError) {
             if (reload) {
                 res.status(302).send('/login');
             } else {
-                res.redirect('/login?next='+req.originalUrl);
+                res.redirect('/login?next='+encodeURIComponent(req.originalUrl));
             }
         } else if (err.userError && userError) {
             userError(err);
