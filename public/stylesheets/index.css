@@ -294,30 +294,23 @@ table {
 /*-------------------------------*/
 /*          course               */
 /*-------------------------------*/
-.btn-group {
-  margin: 10px 0 10px 0;
+.addcourse, .stulist {
+  max-width: 50%;
+  min-width: 300px;
+  display:inline-block;
+  vertical-align: top;
 }
-.btn-group .btn {
-  padding-left: 25px;
-  padding-right: 25px;
+.stulist {
+  max-width: 30%;
 }
-.backbtn {
-  border-radius: 25px 5px 5px 25px;
+.addcourse h2, .stulist h2 {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-.addcourse {
-  margin-left: auto;
-  margin-right: auto;
-  width: 60%;
-}
-
 .addtitle {
   text-align: center;
 }
 
-.addbtn {
-  position: relative;
-  float: right;
-}
 .addcoursebtn {
   font-size: 30pt;
   font-weight: 100;
@@ -330,13 +323,6 @@ table {
 #stulistinput {
   display: none;
   visibility: hidden;
-}
-
-.stulist {
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 60%;
 }
 
 #stutable {
@@ -356,7 +342,7 @@ table {
 }
 
 #tablebtn {
-  float:right;
+  margin-top: 50px;
 }
 
 #editstubtn {
@@ -380,9 +366,7 @@ table {
   margin-right: 15px;
 }
 
-#tablebtn {
-  margin-right:20px;
-}
+
 
 /*-------------------------------*/
 /*          exam                 */

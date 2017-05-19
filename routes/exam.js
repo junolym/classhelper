@@ -8,22 +8,17 @@ var examManager = require('../plugins/exam-manager.js');
 router.get('/', (req, res, next) => {
     if (req.query.k) {
         res.cookie('exam', req.query.k);
-        res.redirect('/exam');
-    } else {
-        if (!req.cookies || !qrcode.get(req.cookies.exam)) {
-            return res.redirect('/result?msg=请求试卷失败&err=请正确扫描二维码');
-        }
-        var eid = qrcode.get(req.cookies.exam).eid;
-        examManager.getExam(eid).then((result) => {
-            res.render('exam', { title: "答题页面", examname: result.examname, exam: result.exam });
-        }).catch((err) => {
-            if (err.userError) {
-                res.redirect('/result?msg=请求试卷失败&err=' + err.message);
-            } else {
-                next(err);
-            }
-        });
+        return res.redirect('/exam');
     }
+    if (!req.cookies || !qrcode.get(req.cookies.exam)) {
+        return res.redirect('/result?msg=请求试卷失败&err=请正确扫描二维码');
+    }
+    var eid = qrcode.get(req.cookies.exam).eid;
+    examManager.getExam(eid).then((result) => {
+        res.render('exam', { title: "答题页面", examname: result.examname, exam: result.exam });
+    }).catch(helper.catchError(req, res, next, false, (err) => {
+        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+    }));
 });
 
 router.post('/', (req, res, next) => {
@@ -32,14 +27,11 @@ router.post('/', (req, res, next) => {
     }
     var eid = qrcode.get(req.cookies.exam).eid;
     examManager.addStuAnswer(eid, req.body).then(() => {
+        res.clearCookie('exam');
         res.redirect('/result?msg=交卷成功');
-    }).catch((err) => {
-        if (err.userError) {
-            res.redirect('/result?msg=交卷失败&err=' + err.message);
-        } else {
-            next(err);
-        }
-    });
+    }).catch(helper.catchError(req, res, next, false, (err) => {
+        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+    }));
 });
 
 router.get('/preview', (req, res, next) => {
@@ -49,13 +41,9 @@ router.get('/preview', (req, res, next) => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
         res.render('exam', { preview: true, title: "预览试卷", examname: result.examname, exam: result.exam });
-    }).catch((err) => {
-        if (err.needLogin) {
-            res.redirect('/login');
-        } else {
-            next(err);
-        }
-    });
+    }).catch(helper.catchError(req, res, next, false, (err) => {
+        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+    }));
 });
 
 router.get('/showanswer', (req, res, next) => {
@@ -65,13 +53,18 @@ router.get('/showanswer', (req, res, next) => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
         res.render('exam', { preview: true, title: "答案", examname: result.examname, exam: result.examWithAnswer } );
-    }).catch((err) => {
-        if (err.needLogin) {
-            res.redirect('/login');
-        } else {
-            next(err);
-        }
-    });
+    }).catch(helper.catchError(req, res, next, false, (err) => {
+        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+    }));
+});
+
+router.get('/showqrcode', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        var key = qrcode.add({ cid: req.query.cid, eid: req.query.eid });
+        res.redirect('/qrcode#/e?k=' + key);
+    }).catch(helper.catchError(req, res, next, false));
 });
 
 module.exports = router;

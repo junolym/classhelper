@@ -2,6 +2,29 @@ var express = require('express');
 var router = express.Router();
 var qrcode = require('../plugins/qrcode-manager.js');
 var dao = require('../dao/dao.js');
+var helper = require('../plugins/route-helper.js');
+
+router.get('/create', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        return dao.addsign(req.query.cid);
+    }).then((result) => {
+        var key = qrcode.add({ cid: req.query.cid, sid: result });
+        res.redirect('/qrcode#/s?k=' + key);
+    }).catch(helper.catchError(req, res, next, false, (err) => {
+        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+    }));
+});
+
+router.get('/showqrcode', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checksign(user, req.query.cid, req.query.sid);
+    }).then(() => {
+        var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
+        res.redirect('/qrcode#/s?k=' + key);
+    }).catch(helper.catchError(req, res, next, false));
+});
 
 router.get('/', (req, res, next) => {
     if (req.query.k) {

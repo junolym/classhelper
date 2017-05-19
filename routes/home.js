@@ -8,13 +8,13 @@ var examManager = require('../plugins/exam-manager.js');
 router.get('/user', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         res.render('home/user', { user : user });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/help', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         res.render('home/help');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/course', (req, res, next) => {
@@ -23,7 +23,7 @@ router.get('/course', (req, res, next) => {
     }).then((result) => {
         var courses = JSON.parse(JSON.stringify(result));
         res.render('home/course', { title: '课程列表', courses: courses });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/signin', (req, res, next) => {
@@ -33,7 +33,7 @@ router.get('/signin', (req, res, next) => {
         var signin = JSON.parse(JSON.stringify(result));
         signin.forEach(helper.dateConverter);
         res.render('home/signin', { title: '签到列表', signin: signin });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/exam', (req, res, next) => {
@@ -41,13 +41,13 @@ router.get('/exam', (req, res, next) => {
         return dao.getexambyaccount(user);
     }).then((result) => {
         res.render('home/exam', { title: '测验列表', exam: result });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/addcourse', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         res.render('home/coursedetail', { title: '添加课程' });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.post('/addcourse', (req, res, next) => {
@@ -61,7 +61,7 @@ router.post('/addcourse', (req, res, next) => {
         }
     }).then(() => {
         res.status(302).send('#course');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/signindetail', (req, res, next) => {
@@ -73,7 +73,7 @@ router.get('/signindetail', (req, res, next) => {
         result = JSON.parse(JSON.stringify(result));
         result.forEach(helper.dateConverter);
         res.render('home/signindetail', { course_id : req.query.cid, signin_id : req.query.sid, signindetail: result });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 
@@ -93,7 +93,7 @@ router.post('/editcourse', (req, res, next) => {
         }
     }).then(() => {
         res.status(302).send('#course');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/deletecourse', (req, res, next) => {
@@ -103,7 +103,7 @@ router.get('/deletecourse', (req, res, next) => {
         return dao.delcourse(req.query.cid);
     }).then(() => {
         res.status(302).send('#course');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/coursedetail', (req, res, next) => {
@@ -119,7 +119,7 @@ router.get('/coursedetail', (req, res, next) => {
     }).then((result) => {
         coursedetail.students = JSON.parse(JSON.stringify(result));
         res.render('home/coursedetail', coursedetail);
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/deletesignin', (req, res, next) => {
@@ -129,37 +129,7 @@ router.get('/deletesignin', (req, res, next) => {
         return dao.delsign(req.query.sid);
     }).then(() => {
         res.status(302).send('#signin');
-    }).catch(helper.catchError(res, next));
-});
-
-router.get('/createsignin', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        return dao.checkcourse(user, req.query.cid);
-    }).then(() => {
-        return dao.addsign(req.query.cid);
-    }).then((result) => {
-        var key = qrcode.add({ cid: req.query.cid, sid: result });
-        res.redirect('/qrcode#/s?k=' + key);
-        ///
-    }).catch(helper.catchError(res, next));
-});
-
-router.get('/showqrcode', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        if (req.query.sid)
-            return dao.checksign(user, req.query.cid, req.query.sid);
-        else if (req.query.eid)
-            return dao.checkexam(user, req.query.cid, req.query.eid);
-    }).then(() => {
-        if (req.query.sid) {
-            var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
-            res.redirect('/qrcode#/s?k=' + key);
-        }
-        else if (req.query.eid) {
-            var key = qrcode.add({ cid: req.query.cid, eid: req.query.eid });
-            res.redirect('/qrcode#/e?k=' + key);
-        }
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/createexam', (req, res, next) => {
@@ -167,7 +137,7 @@ router.get('/createexam', (req, res, next) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
         res.render('home/examdetail', { course_id : req.query.cid });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.post('/createexam', (req, res, next) => {
@@ -178,7 +148,7 @@ router.post('/createexam', (req, res, next) => {
         return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
     }).then(() => {
         res.status(302).send('#exam');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/deleteexam', (req, res, next) => {
@@ -188,7 +158,7 @@ router.get('/deleteexam', (req, res, next) => {
         return examManager.deleteExam(req.query.eid);
     }).then(() => {
         res.status(302).send('#exam');
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 
@@ -199,7 +169,7 @@ router.get('/editexam', (req, res, next) => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
         res.render('home/examdetail', { course_id : req.query.cid });
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/submitions', (req, res, next) => {
@@ -213,6 +183,6 @@ router.get('/submitions', (req, res, next) => {
         var _result = JSON.parse(examstring);
         _result.examstring = examstring;
         res.render('home/submitions', _result);
-    }).catch(helper.catchError(res, next));
+    }).catch(helper.catchError(req, res, next, true));
 });
 module.exports = router;

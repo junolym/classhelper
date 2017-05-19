@@ -17,10 +17,16 @@ function checkLogin(req, res) {
     });
 }
 
-function catchError(res, next) {
+function catchError(req, res, next, reload, userError) {
     return function(err) {
         if (err.needLogin) {
-            res.status(302).send('/login');
+            if (reload) {
+                res.status(302).send('/login');
+            } else {
+                res.redirect('/login?next='+req.originalUrl);
+            }
+        } else if (err.userError && userError) {
+            userError(err);
         } else {
             next(err);
         }

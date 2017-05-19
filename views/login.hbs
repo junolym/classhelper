@@ -53,7 +53,7 @@
 <script type="text/javascript">
 function encryptPassword() {
     var f = document.getElementById('login-form');
-    f.action = '/login' + document.location.hash;
+    f.action = document.location.href;
     var p = document.getElementById('form-password');
     p.value = md5('classhelper' + p.value).toUpperCase();
     return true;

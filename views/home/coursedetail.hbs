@@ -1,10 +1,6 @@
 <div class="addcourse container">
-	<div class="col-sm-6 form-box" style="">
-    	<div class="form-top">
-    		<div class="form-top-left">
-    			<h3 class="addtitle">{{title}}</h3>
-    		</div>
-        </div>
+    <h2>课程信息</h2>
+	<div class="form-box">
         <div class="form-bottom">
         {{#if course_id}}
         <form role="form" id="contentForm" action="/home/editcourse?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
@@ -16,33 +12,40 @@
             	<input type="textarea" name="form_coursename" placeholder="课程名称" class="form-coursename form-control" id="form-coursename" value="{{course_name}}" required>
             </div>
             <div class="form-group">
-            	<label class="sr-only" for="form-courseinfo">课程信息</label>
-            	<input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
-            </div>
-            <div class="form-group">
             	<label class="sr-only" for="form-coursetime">上课时间</label>
             	<input type="text" name="form_coursetime" placeholder="上课时间" class="form-coursetime form-control" id="form-coursetime" value="{{course_time}}" required>
             </div>
+            <div class="form-group">
+                <label class="sr-only" for="form-courseinfo">课程信息</label>
+                <input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
+            </div>
             <input id="stulistinput" type="text" name="students" value="">
-            <button type="submit" class="addbtn btn btn-large btn-primary addCoursebtn" style="font-size:18px">
-            {{#if course_id}}修改{{else}}新建{{/if}}
+            <button type="submit" class="btn btn-primary addCoursebtn">
+            {{#if course_id}}修改课程{{else}}新建课程{{/if}}
             </button>
+            {{#if course_id}}
+            <button class="btn btn-danger" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</button>
+            {{/if}}
         </form>
-        {{#if course_id}}
-        <a class="btn btn-default" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</a>
-        {{/if}}
         </div>
         {{#if error}}
         <div class="alert alert-danger" role="alert">{{error}}</div>
         {{/if}}
     </div>
+
+    <div id="tablebtn">
+        <h3>修改名单</h3>
+        <div type="submit" class="btn btn-large btn-default" id="getstu">
+            <input type="file" id="upload" placeholder="从excel文件导入" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importlist(this.files)">
+        </div>
+        <button type="submit" class="btn btn-large btn-default" id="savestu" onclick="exportlist()">保存名单</button>
+        <button class="addbtn btn btn-large btn-default" id="addtd" onclick="addstudent();setEditable()">添加学生</button>
+    </div>
 </div>
 
 <div class="container stulist">
-    <div id="tablenav">
-        <h2>学生名单</h2>
-    </div>
-    <table width="600" cellpadding="0" cellspacing="0" id="stutable">
+    <h2>学生名单</h2>
+    <table cellpadding="0" cellspacing="0" id="stutable">
         <tr>
           <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>
           <td id="stuName" width="150" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>
@@ -56,15 +59,6 @@
     </table>
     <script type="text/javascript">setEditable()</script>
     <script type="text/javascript" src="/javascripts/xlsx.full.min.js"></script>
-    <script type="text/javascript" src="/javascripts/FileSaver.js"></script>
 
-    <div id="tablebtn">
-        <div type="submit" class="btn btn-large btn-primary" id="getstu" style="font-size:18px">
-            <a href="#">导入名单</a>
-            <input type="file" id="upload" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importlist(this.files)">
-        </div>
-        <button type="submit" class="btn btn-large btn-primary" id="savestu" style="font-size:18px" onclick="exportlist()">保存名单</button>
-        <button class="addbtn btn btn-large btn-primary" id="addtd" style="font-size:18px" onclick="addstudent();setEditable()">添加学生</button>
-    </div>
 </div>
 

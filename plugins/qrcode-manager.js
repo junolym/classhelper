@@ -11,7 +11,11 @@ QrcodeManager = {
 
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
         var key;
+        var count = 0;
         do {
+            if (++count > 1000) {
+                config.length++;
+            }
             key = "";
             for (var i = 0; i < config.length; i++) {
                 key += chars[Math.floor(Math.random()*chars.length)];

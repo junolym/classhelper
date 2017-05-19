@@ -28,7 +28,7 @@ router.post('/login', (req, res) => {
         req.session.user = req.body.form_username;
         // TODO
         // get user's nick name, email, phone and store it
-        res.redirect('/');
+        res.redirect(req.query.next || '/');
     }).catch((err) => {
         if (err.userError) {
             res.render('login', { error : err.message });
