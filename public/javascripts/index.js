@@ -370,22 +370,29 @@ function exportlist() {
 
     var trs = $('#stutable')[0].getElementsByTagName("tr");
 
-    table['!ref'] = "A1:B" + "trs.length";
-    // table['A1'] = {v: '学号'};
-    // table['B1'] = {v: '姓名'};
+    table['!ref'] = "A1:B" + trs.length;
 
     for (var i = 0; i < trs.length; i++) {
         var td = trs[i].getElementsByTagName("td");
-        table['A' + i ] = {v: td[0].innerText};
-        table['B' + i ] = {v: td[1].innerText};
+        table['A' + (i + 1)] = {v: td[0].innerText};
+        table['B' + (i + 1)] = {v: td[1].innerText};
     }
 
-    var wb = {
+    var workbook = {
         SheetNames: ['sheet1'],
         Sheets: {
             'sheet1': table
         }
     }
-    // 这个怎么导出？
-    // XLSX.writeFile(workbook, filename)
+
+    var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
+    var wbout = XLSX.write(workbook,wopts);
+    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "test.xlsx");
+}
+
+function s2ab(s) {
+  var buf = new ArrayBuffer(s.length);
+  var view = new Uint8Array(buf);
+  for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+  return buf;
 }
