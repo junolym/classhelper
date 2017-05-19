@@ -134,7 +134,7 @@ ExamManager = {
     },
     deleteExam : (eid) => {
         delete ExamManager.exams[eid];
-        return dao.delexam(req.query.eid);
+        return dao.delexam(eid);
     },
     addStuAnswer : (eid, answer) => {
         return ExamManager.getExam(eid).then((exam) => {
