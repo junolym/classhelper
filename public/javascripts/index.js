@@ -139,10 +139,10 @@ function addselectquestion() {
       </div>\
       <div class='allSelection'>\
         <div class='examselection'>\
-          <input type='checkbox'>A<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>\
+          <input type='checkbox'>A<textarea  cols=40 rows=1 overflow-y='scroll' class='seletext'></textarea>\
         </div>\
         <div class='examselection'>\
-          <input type='checkbox'>B<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>\
+          <input type='checkbox'>B<textarea  cols=40 rows=1 overflow-y='scroll' class='seletext'></textarea>\
         </div>\
       </div>\
       <div id='secbtn'>\
@@ -233,7 +233,7 @@ function addselection(id) {
   newSelection.setAttribute('class', 'examselection');
   var num = selections.getElementsByTagName('div').length;
   var alpha = String.fromCharCode(64 + parseInt(num + 1));
-  newSelection.innerHTML = "<input type='checkbox'>" + alpha + "<textarea  cols=40 rows=1 overflow-y='scroll'></textarea>";
+  newSelection.innerHTML = "<input type='checkbox'>" + alpha + "<textarea  cols=40 rows=1 overflow-y='scroll' class='seletext'></textarea>";
   selections.appendChild(newSelection);
 }
 
@@ -341,11 +341,11 @@ function importlist(fls) {
                 type: 'binary'
             });
             var sheetNames = workbook.SheetNames;
-            
+
             // 删除现有数据
             var tr = $("#stutable").find("tr")[0];
             $("#stutable").html(tr);
-            
+
             // 读取excel
             for (var i in sheetNames) {
                 var worksheet = workbook.Sheets[sheetNames[i]];

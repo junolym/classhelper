@@ -423,6 +423,9 @@ table {
   font-size:15px;
 }
 
+.seletext {
+  margin-top: 3px;
+}
 
 /*增加选项*/
 .addselections {
