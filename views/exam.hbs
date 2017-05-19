@@ -17,10 +17,10 @@
       <form action="/exam" method="POST" id="examform">
       {{#unless preview}}
       <div class="selectiondiv">
-        学号 <input type="number" name="studentid"><br>
+        学号 <input type="number" name="studentid" id="stuid"><br>
       </div>
       <div class="selectiondiv">
-        姓名 <input type="text" name="name">
+        姓名 <input type="text" name="name" id="stuname">
       </div>
       {{/unless}}
       <ol>
@@ -53,9 +53,15 @@
         {{/each}}
       </ol>
       {{#unless preview}}
-      <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button>
+      <!-- <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button> -->
       {{/unless}}
+      <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button>
       </form>
     </section>
+
+    <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.0.min.js"><\/script>')</script>
+    <script src='/bootstrap/js/bootstrap.min.js'></script>
+    <script src='/javascripts/exam.js'></script>
 </body>
 </html>
