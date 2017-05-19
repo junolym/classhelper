@@ -365,6 +365,27 @@ function importlist(fls) {
     }
 }
 
+function exportlist() {
+    var table = {};
 
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
 
+    table['!ref'] = "A1:B" + "trs.length";
+    // table['A1'] = {v: '学号'};
+    // table['B1'] = {v: '姓名'};
 
+    for (var i = 0; i < trs.length; i++) {
+        var td = trs[i].getElementsByTagName("td");
+        table['A' + i ] = {v: td[0].innerText};
+        table['B' + i ] = {v: td[1].innerText};
+    }
+
+    var wb = {
+        SheetNames: ['sheet1'],
+        Sheets: {
+            'sheet1': table
+        }
+    }
+    // 这个怎么导出？
+    // XLSX.writeFile(workbook, filename)
+}
