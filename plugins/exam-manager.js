@@ -83,9 +83,14 @@ ExamManager = {
             };
             ExamManager.resolveExam(exam);
             ExamManager.exams[eid] = exam;
-            return new Promise((resolve) => {
-                resolve(exam);
+            return dao.getanswerbyexam(eid);
+        }).then((result) => {
+            result = JSON.parse(JSON.stringify(result));
+            result.forEach((r) => {
+                var ans = ExamManager.exams[eid].answers;
+                ans[r.student_id] = JSON.parse(r.answer);
             });
+            return Promise.resolve(ExamManager.exams[eid]);
         });
     },
     // Add data for rendering exam page
