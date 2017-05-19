@@ -25,12 +25,15 @@ ExamManager = {
             }, {
                 type : 2,
                 description : description,
-                standardAnswer : answer, // answer string
+                standardAnswer : string,
                 selectionSet : []
             }
         ],
         answers : {
             stuId : {
+                name : string,
+                score : number,
+                time : Date,
                 questionNumber : {
                     answer : answer,
                     grade : number
@@ -66,11 +69,8 @@ ExamManager = {
     },
     getExam : (eid) => {
         if (ExamManager.exams[eid]) {
-            // update last used
             ExamManager.exams[eid].lastused = new Date();
-            return new Promise((resolve) => {
-                resolve(ExamManager.exams[eid]);
-            });
+            return Promise.resolve(ExamManager.exams[eid]);
         }
         return dao.getexambyid(eid).then((result) => {
             result = JSON.parse(JSON.stringify(result))[0];
@@ -96,7 +96,6 @@ ExamManager = {
         var judgeAnswers = ['answer_wrong', 'answer_right'];
         exam.exam.forEach((e, index) => {
             e[types[e.type]] = true;
-            e.id = index;
             if (e.question_selection) {
                 e.label = [];
                 e.selectionSet.forEach((s, i) => {
@@ -141,6 +140,12 @@ ExamManager = {
     getStuAnswer : (eid, stuId) => {
         console.log('answer returned: %s', JSON.stringify(ExamManager.exams[eid].answers[stuId]));
         return ExamManager.exams[eid].answers[stuId];
+    },
+    getAnswers : (eid) => {
+        return ExamManager.getExam(eid).then((exam) => {
+            var ans = exam.answers;
+            return Promise.resolve(Object.keys(ans).map(key => ans[key]));
+        });
     },
     getStatistics : (eid) => {
         console.log('statistics returned: %s', JSON.stringify(ExamManager.exams[eid].statistics));

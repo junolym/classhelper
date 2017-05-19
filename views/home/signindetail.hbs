@@ -1,4 +1,5 @@
-<table class="table">
+{{#if signindetail}}
+<table class="table table-striped">
   <thead>
     <tr>
       <th>学号</th>
@@ -16,3 +17,8 @@
     {{/each}}
   </tbody>
 </table>
+{{else}}
+<div class="jumbotron alert alert-info text-center" role="alert">
+    <p>暂时还没有同学签到，点击<a target="_blank" href="/signin/showqrcode?cid={{course_id}}&sid={{signin_id}}">显示签到二维码</a></p>
+</div>
+{{/if}}

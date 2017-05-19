@@ -12,7 +12,6 @@
     <section>
       <h1>{{examname}}</h1>
     </section>
-    <!--试题详情-->
     <section>
       <form action="/exam" method="POST" id="examform">
       {{#unless preview}}
@@ -24,12 +23,12 @@
       </div>
       {{/unless}}
       <ol>
-        {{#each exam}}
+        {{#each exam as |question id|}}
         <li class="eachdescription">{{description}}</br>
         {{#if question_selection}}
           {{#each selectionSet}}
           <div class="selectiondiv">
-            <input type="checkbox"name="{{../id}}" class='check' value="{{@index}}" {{lookup ../answer @index}} />
+            <input type="checkbox" name="{{id}}" class='check' value="{{@index}}" {{lookup ../answer @index}} />
             <label class="seletionNum">{{lookup ../label @index}}</label><label class="eachselection">{{this}}</label><br/>
           </div>
           {{/each}}

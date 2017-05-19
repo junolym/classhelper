@@ -1,4 +1,5 @@
-<table class="table">
+{{#if courses}}
+<table class="table table-striped">
   <thead>
     <tr>
       <th>课程名称</th>
@@ -25,3 +26,8 @@
     </tr>
   </tbody>
 </table>
+{{else}}
+<div class="jumbotron alert alert-info text-center" role="alert">
+    <p>还没有课程哦，点此<a href="#addcourse">创建课程</a>吧</p>
+</div>
+{{/if}}
