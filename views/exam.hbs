@@ -24,12 +24,24 @@
         <li class="eachdescription">{{description}}</br>
         {{#if question_selection}}
           {{#each selectionSet}}
-          <input type="checkbox" name="{{../id}}" value="{{@index}}" {{lookup ../answer @index}} />
-          <label>{{lookup ../label @index}}</label><label class="eachselection">{{this}}</label><br/>
+          <div class="selectiondiv">
+            <input type="checkbox"name="{{../id}}" class='check' value="{{@index}}" {{lookup ../answer @index}} />
+            <label class="seletionNum">{{lookup ../label @index}}</label><label class="eachselection">{{this}}</label><br/>
+          </div>
           {{/each}}
         {{else if question_judgeanswer}}
-          <input type="radio" name="{{id}}" value="1" {{answer_right}}>正确<br>
-          <input type="radio" name="{{id}}" value="0" {{answer_wrong}}>错误
+          <div class="selectiondiv">
+            <input type="radio" class='radiobox' name="{{id}}" value="1" {{answer_right}}>
+            <label class="eachselection">
+              正确
+            </label>
+          </div>
+          <div class="selectiondiv">
+            <input type="radio" class='radiobox' name="{{id}}" value="0" {{answer_wrong}}>
+            <label class="eachselection">
+              错误
+            </label>
+          </div>
         {{else}}
           <textarea name="{{@index}}" form="examform" rows="3" cols="30" overflow-y="scroll">{{answer}}</textarea>
         {{/if}}
@@ -37,7 +49,7 @@
         {{/each}}
       </ol>
       {{#unless preview}}
-      <button type="submit">提交</button>
+      <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button>
       {{/unless}}
       </form>
     </section>
