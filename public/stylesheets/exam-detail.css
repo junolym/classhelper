@@ -1,0 +1,104 @@
+
+/*-------------------------------*/
+/*          exam                 */
+/*-------------------------------*/
+.quesdescription {
+  height: 150px;
+}
+
+.tddes {
+  margin-left:10px;
+  width:350px;
+}
+
+.tdans {
+  margin-left:10px;
+  width:350px;
+}
+
+/*题目答案样式*/
+.rightans > p {
+  float: left;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.examselection > p{
+  float: left;
+  font-size: 15px;
+  margin-top: 5px;
+}
+
+.rightans > textarea, .examselection > textarea {
+  margin-left: 3px;
+}
+
+/*题目选项*/
+.examselection > p{
+  font-size:15px;
+}
+
+.seletext {
+  margin-top: 3px;
+}
+
+/*增加选项*/
+.addselections {
+  width: 30px;
+  height: 30px;
+  margin-left: 180px;
+  border: none;
+}
+
+.addselectionbtn {
+  font-size: 30pt;
+  font-weight: 100;
+  line-height: 15px;
+}
+
+.secbtn {
+  margin-top: 5px;
+  float: right;
+}
+.delsec {
+  font-size: 12px;
+  float: right;
+  margin-left: 5px;
+}
+
+.addsec {
+  font-size: 12px;
+  float: right;
+}
+
+
+
+#addquestion {
+  float: left;
+}
+
+#panduan {
+  margin-left: 10px;
+}
+
+#jieda {
+  margin-left: 10px;
+}
+
+#exambtn {
+  float: left;
+}
+
+#saveexam {
+  margin-left: 5px;
+}
+
+#saveandstart {
+  margin-left: 5px;
+  /*float: left;*/
+}
+
+#examinput, #examname {
+  display: none;
+  visibility:hidden;
+}

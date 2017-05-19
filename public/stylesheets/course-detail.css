@@ -1,0 +1,77 @@
+
+/*-------------------------------*/
+/*          course               */
+/*-------------------------------*/
+.addcourse, .stulist {
+  max-width: 50%;
+  min-width: 300px;
+  display:inline-block;
+  vertical-align: top;
+}
+.stulist {
+  max-width: 30%;
+}
+.addcourse h2, .stulist h2 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.addtitle {
+  text-align: center;
+}
+
+.addcoursebtn {
+  font-size: 30pt;
+  font-weight: 100;
+  line-height: 56px;
+}
+
+/*-------------------------------*/
+/*          table                */
+/*-------------------------------*/
+#stulistinput {
+  display: none;
+  visibility: hidden;
+}
+
+#stutable {
+  border:1px solid #CCCCCC;
+}
+
+#stutable > td {
+  background: "#FFFFFF";
+}
+
+#stuID, #stuName {
+  font-size: 20px;
+}
+
+#getstu, #savestu, #addtd {
+  margin-top: 10px;
+}
+
+#tablebtn {
+  margin-top: 50px;
+}
+
+#editstubtn {
+  float: right;
+  margin-right:25px;
+  font-size:10px;
+  width:80px;
+  height:40px;
+}
+
+#tablenav > h2 {
+  float:left;
+  font-size:25px;
+}
+
+#getstu {
+  margin-right:15px;
+}
+
+#savestu {
+  margin-right: 15px;
+}
+
+
