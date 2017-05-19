@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
     }
     var eid = qrcode.get(req.cookies.exam).eid;
     examManager.getExam(eid).then((result) => {
-        res.render('exam', { title: "答题页面", examname: result.examname, exam: result.exam });
+        res.render('exam', { title: "答题页面", examname: result.examname, exam: result.questions });
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));
@@ -40,7 +40,7 @@ router.get('/preview', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', { preview: true, title: "预览试卷", examname: result.examname, exam: result.exam });
+        res.render('exam', { preview: true, title: "预览试卷", examname: result.examname, exam: result.questions });
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));
@@ -52,7 +52,7 @@ router.get('/showanswer', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', { preview: true, title: "答案", examname: result.examname, exam: result.examWithAnswer } );
+        res.render('exam', { preview: true, title: "答案", examname: result.examname, exam: result.questionsWithAnswer } );
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));

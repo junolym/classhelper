@@ -1,5 +1,6 @@
 var dao = require('../dao/dao.js');
 var UserError = dao.UserError;
+var helper = require('./route-helper.js');
 
 ExamManager = {
     exams : {},
@@ -8,14 +9,11 @@ ExamManager = {
     eid : {
         cid : 1,
         examname : name,
-        exam : [
+        questions : [
             {
                 type : 0,
                 description : description,
-                standardAnswer : { // A & C
-                    0: 1,
-                    2: 1
-                },
+                standardAnswer : [0, 2], // A & C
                 selectionSet : [selection, selection, selection]
             }, {
                 type : 1,
@@ -40,31 +38,31 @@ ExamManager = {
                 }
             }
         },
-        statistics : {
-            questionNumber : {
-                count : {
-                    answer : number
-                }
-                averageGrade : number,
+        statistics : [
+            {
+                count : [number, number, number],
+                right: number,
+                wrong: number
             }
-        },
-        examWithAnswer : [],
+        ],
+        questionsWithAnswer : [],
         lastused : Date
     }
     */
-    createExam : (cid, examname, exam) => {
-        var exam_question = JSON.stringify(exam);
+    createExam : (cid, examname, questions) => {
+        var exam_question = JSON.stringify(questions);
         return dao.addexam(cid, examname, exam_question).then((eid) => {
-            ExamManager.exams[eid] = {
+            var exam = {
                 cid : cid,
                 examname : examname,
-                exam : exam,
-                examWithAnswer : JSON.parse(exam_question),
+                questions : questions,
+                questionsWithAnswer : JSON.parse(exam_question),
                 lastused : new Date(),
                 answers : {},
-                statistics : {}
+                statistics : []
             }
-            ExamManager.resolveExam(eid);
+            ExamManager.exams[eid] = exam;
+            ExamManager.resolveExam(exam);
         })
     },
     getExam : (eid) => {
@@ -74,36 +72,43 @@ ExamManager = {
         }
         return dao.getexambyid(eid).then((result) => {
             result = JSON.parse(JSON.stringify(result))[0];
-            ExamManager.exams[eid] = {
+            var exam = {
                 cid : result.ex_coz_id,
                 examname : result.exam_name,
-                exam : JSON.parse(result.exam_question),
-                examWithAnswer : JSON.parse(result.exam_question),
+                questions : JSON.parse(result.exam_question),
+                questionsWithAnswer : JSON.parse(result.exam_question),
                 lastused : new Date(),
                 answers : {},
-                statistics : {}
+                statistics : []
             };
-            ExamManager.resolveExam(eid);
+            ExamManager.resolveExam(exam);
+            ExamManager.exams[eid] = exam;
             return new Promise((resolve) => {
-                resolve(ExamManager.exams[eid]);
+                resolve(exam);
             });
         });
     },
     // Add data for rendering exam page
-    resolveExam : (eid) => {
-        var exam = ExamManager.exams[eid];
+    resolveExam : (exam) => {
         var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
         var judgeAnswers = ['answer_wrong', 'answer_right'];
-        exam.exam.forEach((e, index) => {
+        exam.questions.forEach((e, index) => {
             e[types[e.type]] = true;
+            if (e.type < 2) {
+                exam.statistics[index] = {};
+                exam.statistics[index].right = 0;
+                exam.statistics[index].wrong = 0;
+                exam.statistics[index].count = [];
+            }
             if (e.question_selection) {
                 e.label = [];
                 e.selectionSet.forEach((s, i) => {
                     e.label[i] = String.fromCharCode(65 + i);
+                    exam.statistics[index].count[i] = 0;
                 });
             }
         });
-        exam.examWithAnswer.forEach((e, index) => {
+        exam.questionsWithAnswer.forEach((e, index) => {
             e[types[e.type]] = true;
             e.id = index;
             if (e.question_selection) {
@@ -112,9 +117,9 @@ ExamManager = {
                     e.label[i] = String.fromCharCode(65 + i);
                 });
                 e.answer = [];
-                for (var i in e.standardAnswer) {
-                    e.answer[i] = 'checked';
-                }
+                e.standardAnswer.forEach((a) => {
+                    e.answer[a] = 'checked';
+                });
             } else if (e.question_judgeanswer) {
                 e[judgeAnswers[e.standardAnswer]] = 'checked';
             } else {
@@ -130,12 +135,39 @@ ExamManager = {
         return ExamManager.getExam(eid).then((exam) => {
             return dao.checkstudent(answer.studentid, exam.cid, answer.name);
         }).then(() => {
+            answer.time = new Date();
+            helper.dateConverter(answer);
+            ExamManager.resolveAnswer(ExamManager.exams[eid], answer);
             ExamManager.exams[eid].answers[answer.studentid] = answer;
-            // TODO: 改卷
-            var score = 0;
             return dao.addanswer(eid, answer.studentid, answer.name,
-                score, JSON.stringify(answer));
+                answer.score, JSON.stringify(answer));
         });
+    },
+    resolveAnswer : (exam, answer) => {
+        answer.score = 100;
+        var right = 0, wrong = 0;
+        exam.questions.forEach((q, i) => {
+            if (q.type < 2) {
+                if (q.standardAnswer.toString() == answer[i].toString()) {
+                    right++;
+                    exam.statistics[i].right++;
+                } else {
+                    wrong++;
+                    exam.statistics[i].wrong++;
+                }
+                if (q.type == 0) {
+                    answer[i].forEach((a) => {
+                        exam.statistics[i].count[a]++;
+                    })
+                } else {
+                    exam.statistics[i].count[answer[i]]++;
+                }
+            }
+        });
+        if (right + wrong > 0) {
+            answer.score = 100 * right / (right + wrong);
+            answer.score = Math.round(answer.score * 2) / 2;
+        }
     },
     getStuAnswer : (eid, stuId) => {
         console.log('answer returned: %s', JSON.stringify(ExamManager.exams[eid].answers[stuId]));

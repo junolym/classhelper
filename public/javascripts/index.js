@@ -300,11 +300,11 @@ function getquestion(){
       }
       var answer;
       if (type == 0) {
-        answer = {};
+        answer = [];
         var checks = td[2].getElementsByTagName('input');
         for (var j = 0; j < checks.length; j++) {
           if (checks[j].checked) {
-            answer[j] = 1;
+            answer.push(j);
           }
         }
       } else {
