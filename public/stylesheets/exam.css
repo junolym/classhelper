@@ -46,8 +46,7 @@ h2 {
 }
 
 #jiaojuan {
-  text-align: center;
-  margin:0 auto;
-  width:80%;
-  height:100%;
+  margin-left:40%;
+  width:20%;
+  font-size: 20px;
 }
