@@ -172,7 +172,7 @@ router.get('/editexam', (req, res, next) => {
     }).catch(helper.catchError(req, res, next, true));
 });
 
-router.get('/submitions', (req, res, next) => {
+router.get('/submitlist', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
@@ -182,7 +182,7 @@ router.get('/submitions', (req, res, next) => {
         var examstring = JSON.stringify(result);
         var _result = JSON.parse(examstring);
         _result.examstring = examstring;
-        res.render('home/submitions', _result);
+        res.render('home/submitlist', _result);
     }).catch(helper.catchError(req, res, next, true));
 });
 module.exports = router;

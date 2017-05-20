@@ -29,6 +29,7 @@ ExamManager = {
         ],
         answers : {
             stuId : {
+                studentid : stuId,
                 name : string,
                 score : number,
                 time : Date,
@@ -151,7 +152,7 @@ ExamManager = {
     resolveAnswer : (exam, answer) => {
         answer.score = 100;
         var right = 0, wrong = 0;
-        exam.questions.forEach((q, i) => {
+        exam.questions.forEach((q, i) => { // 第i题，问题是q，回答是answer[i]
             if (q.type < 2) {
                 if (q.standardAnswer.toString() == answer[i].toString()) {
                     right++;
@@ -160,7 +161,7 @@ ExamManager = {
                     wrong++;
                     exam.statistics[i].wrong++;
                 }
-                if (answer[i].length > 1) {
+                if (answer[i].length > 1) { // 回答是多选，每个选项是a
                     answer[i].forEach((a) => {
                         exam.statistics[i].count[a]++;
                     })
