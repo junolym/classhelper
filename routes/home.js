@@ -176,13 +176,11 @@ router.get('/submitlist', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
-        return examManager.getExam(req.query.eid);
+        return examManager.getAnswers(req.query.eid);
     }).then((result) => {
         // just for debugging
         var examstring = JSON.stringify(result);
-        var _result = JSON.parse(examstring);
-        _result.examstring = examstring;
-        res.render('home/submitlist', _result);
+        res.render('home/submitlist', { submitlist: result, debugstring: examstring });
     }).catch(helper.catchError(req, res, next, true));
 });
 module.exports = router;

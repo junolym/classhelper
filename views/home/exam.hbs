@@ -12,10 +12,10 @@
   <tbody>
     {{#each exam}}
     <tr>
-      <td><a class="btn" href="#submitions?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
+      <td><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{name}}</a></td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{stu_num}}</a></td>
-      <td><a class="btn" href="#submitions?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
+      <td><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
       <td>
       <a class="btn  btn-default" target="_blank" href="/exam/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
       <div class="btn-group">
@@ -23,7 +23,7 @@
         查看 <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><a class="btn" href="#submitions?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
+        <li><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
         <li><a class="btn" target="_blank" href="/exam/preview?cid={{course_id}}&eid={{exam_id}}">预览试卷</a></li>
         <li><a class="btn" target="_blank" href="/exam/showanswer?cid={{course_id}}&eid={{exam_id}}">显示答案</a></li>
       </ul>
