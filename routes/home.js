@@ -178,9 +178,11 @@ router.get('/submitlist', (req, res, next) => {
     }).then(() => {
         return examManager.getAnswers(req.query.eid);
     }).then((result) => {
-        // just for debugging
-        var examstring = JSON.stringify(result);
-        res.render('home/submitlist', { submitlist: result, debugstring: examstring });
+        res.render('home/submitlist', {
+            course_id: req.query.cid,
+            exam_id: req.query.eid,
+            submitlist: result
+        });
     }).catch(helper.catchError(req, res, next, true));
 });
 

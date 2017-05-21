@@ -1,3 +1,31 @@
-<h1>本页包括学生提交列表</h1>
-<h2>debug information</h2>
-<pre style="white-space: pre-wrap;word-wrap: break-word;">{{debugstring}}</pre>
+{{#if submitlist}}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>学号</th>
+      <th>姓名</th>
+      <th>交卷时间</th>
+      <th>分数</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each submitlist}}
+    <tr onclick="answer('{{studentid}}')">
+      <td>{{studentid}}</td>
+      <td>{{name}}</td>
+      <td>{{time}}</td>
+      <td>{{score}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<script type="text/javascript">
+    function answer(stu) {
+        document.location = '#studentanswer?cid={{course_id}}&&eid={{exam_id}}&student=' + stu;
+    }
+</script>
+{{else}}
+<div class="jumbotron alert alert-info text-center" role="alert">
+    <p>还没有学生提交答卷哦，点此<a target="_blank" href="/exam/showqrcode?cid={{course_id}}&eid={{exam_id}}">发放试卷</a>吧</p>
+</div>
+{{/if}}
