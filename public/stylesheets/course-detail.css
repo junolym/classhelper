@@ -1,19 +1,9 @@
-
-/*-------------------------------*/
-/*          course               */
-/*-------------------------------*/
-.addcourse, .stulist {
-  max-width: 50%;
-  min-width: 300px;
-  display:inline-block;
-  vertical-align: top;
-}
 .stulist {
-  max-width: 30%;
+  max-height: 42rem;
+  overflow-y: auto;
 }
-.addcourse h2, .stulist h2 {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.form-button {
+  margin-top: 4rem;
 }
 .addtitle {
   text-align: center;
@@ -24,10 +14,6 @@
   font-weight: 100;
   line-height: 56px;
 }
-
-/*-------------------------------*/
-/*          table                */
-/*-------------------------------*/
 #stulistinput {
   display: none;
   visibility: hidden;

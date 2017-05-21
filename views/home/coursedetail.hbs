@@ -1,5 +1,6 @@
+<link href="/stylesheets/fileinput.min.css" rel="stylesheet">
 <link href="/stylesheets/course-detail.css" rel="stylesheet">
-<div class="addcourse container">
+<div class="addcourse col-md-6">
     <h2>课程信息</h2>
 	<div class="form-box">
         <div class="form-bottom">
@@ -21,46 +22,52 @@
                 <input type="text" name="form_courseinfo" placeholder="课程信息" class="form-courseinfo form-control" id="form-courseinfo" value="{{course_info}}">
             </div>
             <input id="stulistinput" type="text" name="students" value="">
-            <button type="submit" class="btn btn-primary addCoursebtn">
-            {{#if course_id}}修改课程{{else}}新建课程{{/if}}
-            </button>
-            {{#if course_id}}
-            <button class="btn btn-danger" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</button>
-            {{/if}}
+
+            <div id="tablebtn">
+                <h3>编辑学生名单</h3>
+                <input type="file" class="file" data-show-remove="false" data-show-preview="false" data-show-upload="false" data-show-caption="false" data-browse-label="从Excel文件导入"
+                data-browse-class="btn btn-large btn-default btn-block" id="upload" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-allowed-file-extensions='["xlsx"]' onchange="importlist(this.files)" />
+                <a class="btn btn-large btn-default btn-block" id="savestu" onclick="exportlist('{{course_name}}-学生名单')">导出为Excel文件</a>
+                <a class="addbtn btn btn-large btn-default btn-block" id="addtd" onclick="addstudent();setEditable()">添加空白行</a>
+            </div>
+
+            <div class="form-button">
+                <button type="submit" class="btn btn-primary addCoursebtn btn-block">
+                {{#if course_id}}修改课程{{else}}新建课程{{/if}}
+                </button>
+                {{#if course_id}}
+                <a class="btn btn-danger btn-block" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</a>
+                {{/if}}
+            </div>
         </form>
         </div>
-        {{#if error}}
-        <div class="alert alert-danger" role="alert">{{error}}</div>
-        {{/if}}
     </div>
 
-    <div id="tablebtn">
-        <h3>修改名单</h3>
-        <div type="submit" class="btn btn-large btn-default" id="getstu">
-            <input type="file" id="upload" placeholder="从excel文件导入" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importlist(this.files)">
-        </div>
-        <button type="submit" class="btn btn-large btn-default" id="savestu" onclick="exportlist()">保存名单</button>
-        <button class="addbtn btn btn-large btn-default" id="addtd" onclick="addstudent();setEditable()">添加学生</button>
-    </div>
 </div>
 
-<div class="container stulist">
+<div class="col-md-3">
     <h2>学生名单</h2>
-    <table cellpadding="0" cellspacing="0" id="stutable">
-        <tr>
-          <td id="stuID"  width="150" bgcolor="#EFEFEF" EditType="TextBox">学号</td>
-          <td id="stuName" width="150" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>
-        </tr>
-        {{#each students}}
-        <tr>
-          <td>{{id}}</td>
-          <td>{{name}}</td>
-        </tr>
-        {{/each}}
-    </table>
-    <script type="text/javascript">setEditable()</script>
-    <script type="text/javascript" src="/javascripts/xlsx.full.min.js"></script>
-    <script type="text/javascript" src="/javascripts/FileSaver.js"></script>
-
+    <div class="stulist">
+        <table cellpadding="0" cellspacing="0" id="stutable" class="table table-hover table-condensed table-bordered">
+            <tr>
+              <td id="stuID"  bgcolor="#EFEFEF" EditType="TextBox">学号</td>
+              <td id="stuName" bgcolor="#EFEFEF" EditType="TextBox">姓名</td>
+            </tr>
+            {{#each students}}
+            <tr>
+              <td>{{id}}</td>
+              <td>{{name}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+    <script type="text/javascript">
+        setEditable();
+        loadJsAsync('/javascripts/fileinput.min.js');
+        loadJsAsync('/javascripts/xlsx.full.min.js');
+        loadJsAsync('/javascripts/FileSaver.js');
+        loadJsAsync('/javascripts/course-detail.js');
+        $(".file").fileinput && $(".file").fileinput()
+    </script>
 </div>
 

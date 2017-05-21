@@ -60,7 +60,10 @@ router.post('/addcourse', (req, res, next) => {
             return dao.addstutocourse(result.cid, result.stuArray);
         }
     }).then(() => {
-        res.status(302).send('#course');
+        res.status(601).send(JSON.stringify({
+            reload: '#course',
+            notify: ['课程添加成功', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -92,7 +95,10 @@ router.post('/editcourse', (req, res, next) => {
             return dao.addstutocourse(result.cid, result.stuArray);
         }
     }).then(() => {
-        res.status(302).send('#course');
+        res.status(601).send(JSON.stringify({
+            reload: '#course',
+            notify: ['课程修改成功', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -102,7 +108,10 @@ router.get('/deletecourse', (req, res, next) => {
     }).then(() => {
         return dao.delcourse(req.query.cid);
     }).then(() => {
-        res.status(302).send('#course');
+        res.status(601).send(JSON.stringify({
+            reload: '#course',
+            notify: ['课程已删除', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -128,7 +137,10 @@ router.get('/deletesignin', (req, res, next) => {
     }).then(() => {
         return dao.delsign(req.query.sid);
     }).then(() => {
-        res.status(302).send('#signin');
+        res.status(601).send(JSON.stringify({
+            reload: '#signin',
+            notify: ['签到记录已删除', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -147,7 +159,10 @@ router.post('/createexam', (req, res, next) => {
         var examname = req.body.examname || 'untitled';
         return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
     }).then(() => {
-        res.status(302).send('#exam');
+        res.status(601).send(JSON.stringify({
+            reload: '#exam',
+            notify: ['测验创建成功', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -157,7 +172,10 @@ router.get('/deleteexam', (req, res, next) => {
     }).then(() => {
         return examManager.deleteExam(req.query.eid);
     }).then(() => {
-        res.status(302).send('#exam');
+        res.status(601).send(JSON.stringify({
+            reload: '#exam',
+            notify: ['测验已删除', 'success']
+        }));
     }).catch(helper.catchError(req, res, next, true));
 });
 

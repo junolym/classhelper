@@ -1,3 +1,14 @@
+function loadJsAsync(filename) {
+  jsloaded = window.jsloaded || {};
+  if (!jsloaded[filename]) {
+    var d = document, s = d.createElement('script');
+    s.src = filename;
+    (d.head || d.body).appendChild(s);
+    jsloaded[filename] = true;
+  }
+}
+loadJsAsync('/javascripts/bootstrap-notify.min.js');
+
 sidebar = false;
 $(document).ready(function () {
     var trigger = $('.hamburger');
@@ -66,6 +77,26 @@ function responseHandler(res) {
             } else {
                 loc.href = rst + loc.hash;
             }
+        }
+    } else if (res.status == 601) {
+        res = JSON.parse(rst);
+        if (res.notify) {
+          $.notify({
+            message: res.notify[0]
+          },{
+            type: res.notify[1]
+          });
+        }
+        if (res.reload) {
+          if (loc.hash == res.reload) {
+            loadContent(res.reload.slice(1));
+          } else {
+              if (res.reload[0] == '#') {
+                  loc.hash = res.reload;
+              } else {
+                  loc.href = res.reload + loc.hash;
+              }
+          }
         }
     } else {
         $('#content').html(rst);
@@ -327,72 +358,4 @@ function getquestion(){
   }
 
   $('#examinput')[0].value = JSON.stringify(exams);
-}
-
-function importlist(fls) {
-    if (fls && fls.length > 0) {
-        ImportFile = fls[0];
-        var fileX = ImportFile.name.split(".").reverse()[0];
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var data = e.target.result;
-            // 二进制读取
-            workbook = XLSX.read(data, {
-                type: 'binary'
-            });
-            var sheetNames = workbook.SheetNames;
-
-            // 删除现有数据
-            var tr = $("#stutable").find("tr")[0];
-            $("#stutable").html(tr);
-
-            // 读取excel
-            for (var i in sheetNames) {
-                var worksheet = workbook.Sheets[sheetNames[i]];
-                var json = XLSX.utils.sheet_to_json(worksheet);
-                if (json.length==0 || !json[0]['学号'] || !json[0]['姓名']) {
-                    alert(sheetNames[i] + "格式错误！");
-                } else {
-                    for (var i in json) {
-                        var table = $("#stutable");
-                        table.append("<tr><td>" + json[i]['学号'] + "</td><td>" + json[i]['姓名'] + "</td></tr>");
-                    }
-                }
-            }
-            setEditable();
-        }
-        reader.readAsBinaryString(ImportFile);
-    }
-}
-
-function exportlist() {
-    var table = {};
-
-    var trs = $('#stutable')[0].getElementsByTagName("tr");
-
-    table['!ref'] = "A1:B" + trs.length;
-
-    for (var i = 0; i < trs.length; i++) {
-        var td = trs[i].getElementsByTagName("td");
-        table['A' + (i + 1)] = {v: td[0].innerText};
-        table['B' + (i + 1)] = {v: td[1].innerText};
-    }
-
-    var workbook = {
-        SheetNames: ['sheet1'],
-        Sheets: {
-            'sheet1': table
-        }
-    }
-
-    var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
-    var wbout = XLSX.write(workbook,wopts);
-    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "test.xlsx");
-}
-
-function s2ab(s) {
-  var buf = new ArrayBuffer(s.length);
-  var view = new Uint8Array(buf);
-  for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-  return buf;
 }
