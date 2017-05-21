@@ -183,4 +183,25 @@ router.get('/submitlist', (req, res, next) => {
         res.render('home/submitlist', { submitlist: result, debugstring: examstring });
     }).catch(helper.catchError(req, res, next, true));
 });
+
+router.get('/studentanswer', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getStuAnswer(req.query.eid, req.query.student);
+    }).then((result) => {
+        res.render('home/studentanswer', result);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/statistics', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getExam(req.query.eid);
+    }).then((exam) => {
+        res.send(JSON.stringify(exam.statistics));
+    }).catch(helper.catchError(req, res, next, true));
+});
+
 module.exports = router;

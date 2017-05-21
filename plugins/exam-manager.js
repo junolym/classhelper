@@ -50,145 +50,183 @@ ExamManager = {
         lastused : Date
     }
     */
-    createExam : (cid, examname, questions) => {
-        var exam_question = JSON.stringify(questions);
-        return dao.addexam(cid, examname, exam_question).then((eid) => {
-            var exam = {
-                cid : cid,
-                examname : examname,
-                questions : questions,
-                questionsWithAnswer : JSON.parse(exam_question),
-                lastused : new Date(),
-                answers : {},
-                statistics : []
-            }
-            ExamManager.exams[eid] = exam;
-            ExamManager.resolveExam(exam);
-        })
-    },
-    getExam : (eid) => {
-        if (ExamManager.exams[eid]) {
-            ExamManager.exams[eid].lastused = new Date();
-            return Promise.resolve(ExamManager.exams[eid]);
-        }
-        return dao.getexambyid(eid).then((result) => {
-            result = JSON.parse(JSON.stringify(result))[0];
-            var exam = {
-                cid : result.ex_coz_id,
-                examname : result.exam_name,
-                questions : JSON.parse(result.exam_question),
-                questionsWithAnswer : JSON.parse(result.exam_question),
-                lastused : new Date(),
-                answers : {},
-                statistics : []
-            };
-            ExamManager.resolveExam(exam);
-            ExamManager.exams[eid] = exam;
-            return dao.getanswerbyexam(eid);
-        }).then((result) => {
-            result = JSON.parse(JSON.stringify(result));
-            result.forEach((r) => {
-                var ans = ExamManager.exams[eid].answers;
-                ans[r.student_id] = JSON.parse(r.answer);
-            });
-            return Promise.resolve(ExamManager.exams[eid]);
-        });
-    },
-    // Add data for rendering exam page
-    resolveExam : (exam) => {
-        var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
-        var judgeAnswers = ['answer_wrong', 'answer_right'];
-        exam.questions.forEach((e, index) => {
-            e[types[e.type]] = true;
-            if (e.type < 2) {
-                exam.statistics[index] = {};
-                exam.statistics[index].right = 0;
-                exam.statistics[index].wrong = 0;
-                exam.statistics[index].count = [0, 0];
-            }
-            if (e.question_selection) {
-                e.label = [];
-                e.selectionSet.forEach((s, i) => {
-                    e.label[i] = String.fromCharCode(65 + i);
-                    exam.statistics[index].count[i] = 0;
-                });
-            }
-        });
-        exam.questionsWithAnswer.forEach((e, index) => {
-            e[types[e.type]] = true;
-            e.id = index;
-            if (e.question_selection) {
-                e.label = [];
-                e.selectionSet.forEach((s, i) => {
-                    e.label[i] = String.fromCharCode(65 + i);
-                });
-                e.answer = [];
-                e.standardAnswer.forEach((a) => {
-                    e.answer[a] = 'checked';
-                });
-            } else if (e.question_judgeanswer) {
-                e[judgeAnswers[e.standardAnswer]] = 'checked';
-            } else {
-                e.answer = e.standardAnswer;
-            }
-        });
-    },
-    deleteExam : (eid) => {
-        delete ExamManager.exams[eid];
-        return dao.delexam(eid);
-    },
-    addStuAnswer : (eid, answer) => {
-        return ExamManager.getExam(eid).then((exam) => {
-            return dao.checkstudent(answer.studentid, exam.cid, answer.name);
-        }).then(() => {
-            answer.time = new Date();
-            helper.dateConverter(answer);
-            ExamManager.resolveAnswer(ExamManager.exams[eid], answer);
-            ExamManager.exams[eid].answers[answer.studentid] = answer;
-            return dao.addanswer(eid, answer.studentid, answer.name,
-                answer.score, JSON.stringify(answer));
-        });
-    },
-    resolveAnswer : (exam, answer) => {
-        answer.score = 100;
-        var right = 0, wrong = 0;
-        exam.questions.forEach((q, i) => { // 第i题，问题是q，回答是answer[i]
-            if (q.type < 2) {
-                if (q.standardAnswer.toString() == answer[i].toString()) {
-                    right++;
-                    exam.statistics[i].right++;
-                } else {
-                    wrong++;
-                    exam.statistics[i].wrong++;
-                }
-                if (answer[i].length > 1) { // 回答是多选，每个选项是a
-                    answer[i].forEach((a) => {
-                        exam.statistics[i].count[a]++;
-                    })
-                } else {
-                    exam.statistics[i].count[answer[i]]++;
-                }
-            }
-        });
-        if (right + wrong > 0) {
-            answer.score = 100 * right / (right + wrong);
-            answer.score = Math.round(answer.score * 2) / 2;
-        }
-    },
-    getStuAnswer : (eid, stuId) => {
-        console.log('answer returned: %s', JSON.stringify(ExamManager.exams[eid].answers[stuId]));
-        return ExamManager.exams[eid].answers[stuId];
-    },
-    getAnswers : (eid) => {
-        return ExamManager.getExam(eid).then((exam) => {
-            var ans = exam.answers;
-            return Promise.resolve(Object.keys(ans).map(key => ans[key]));
-        });
-    },
-    getStatistics : (eid) => {
-        console.log('statistics returned: %s', JSON.stringify(ExamManager.exams[eid].statistics));
-        return ExamManager.exams[eid].statistics;
+    createExam : createExam,
+    getExam : getExam,
+    resolveExam : resolveExam,
+    initExam : initExam,
+    deleteExam : deleteExam,
+    addStuAnswer : addStuAnswer,
+    resolveAnswer : resolveAnswer,
+    getStuAnswer : getStuAnswer,
+    getAnswers : getAnswers
+}
+
+function createExam(cid, examname, questions) {
+    var exam_question = JSON.stringify(questions);
+    var exam = {
+        cid : cid,
+        examname : examname,
+        questions : questions,
+        questionsWithAnswer : JSON.parse(exam_question),
+        lastused : new Date(),
+        answers : {},
+        statistics : []
     }
+    ExamManager.initExam(exam);
+    return dao.addexam(cid, examname, exam_question).then((eid) => {
+        ExamManager.exams[eid] = exam;
+        ExamManager.resolveExam(exam);
+        return dao.updatestatistics(eid, JSON.stringify(exam.statistics));
+    });
+}
+function getExam(eid) {
+    if (ExamManager.exams[eid]) {
+        ExamManager.exams[eid].lastused = new Date();
+        return Promise.resolve(ExamManager.exams[eid]);
+    }
+    return dao.getexambyid(eid).then(result => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        var exam = {
+            cid : result.ex_coz_id,
+            examname : result.exam_name,
+            questions : JSON.parse(result.exam_question),
+            questionsWithAnswer : JSON.parse(result.exam_question),
+            lastused : new Date(),
+            answers : {},
+            statistics : JSON.parse(result.exam_statistics) || []
+        };
+        ExamManager.resolveExam(exam);
+        ExamManager.exams[eid] = exam;
+        return dao.getanswerbyexam(eid);
+    }).then(result => {
+        result = JSON.parse(JSON.stringify(result));
+        result.forEach((r) => {
+            var ans = ExamManager.exams[eid].answers;
+            ans[r.student_id] = JSON.parse(r.answer);
+        });
+        return Promise.resolve(ExamManager.exams[eid]);
+    });
+}
+function initExam (exam) {
+    exam.questions.forEach((e, index) => {
+        if (e.type < 2) {
+            exam.statistics[index] = {};
+            exam.statistics[index].right = 0;
+            exam.statistics[index].wrong = 0;
+            exam.statistics[index].count = [0, 0];
+            e.selectionSet.forEach((s, i) => {
+                exam.statistics[index].count[i] = 0;
+            });
+        }
+    });
+}
+// Add data for rendering exam page
+function resolveExam(exam) {
+    var types = ['question_selection', 'question_judgeanswer', 'question_detail'];
+    exam.questions.forEach((e, index) => {
+        e[types[e.type]] = true;
+        if (e.question_selection) {
+            e.label = [];
+            e.selectionSet.forEach((s, i) => {
+                e.label[i] = String.fromCharCode(65 + i);
+            });
+        }
+    });
+    exam.questionsWithAnswer.forEach((e, index) => {
+        e[types[e.type]] = true;
+        e.answer = [];
+        if (e.question_selection) {
+            e.label = [];
+            e.selectionSet.forEach((s, i) => {
+                e.label[i] = String.fromCharCode(65 + i);
+            });
+            e.standardAnswer.forEach((a) => {
+                e.answer[a] = 'checked';
+            });
+        } else if (e.question_judgeanswer) {
+            e.answer[e.standardAnswer] = 'checked';
+        } else {
+            e.answer = e.standardAnswer;
+        }
+    });
+}
+function deleteExam(eid) {
+    delete ExamManager.exams[eid];
+    return dao.delexam(eid);
+}
+function addStuAnswer(eid, answer) {
+    var exam;
+    return ExamManager.getExam(eid).then(result => {
+        exam = result;
+        return dao.checkstudent(answer.studentid, exam.cid, answer.name);
+    }).then(() => {
+        answer.time = new Date();
+        helper.dateConverter(answer);
+        ExamManager.resolveAnswer(exam, answer);
+        exam.answers[answer.studentid] = answer;
+        return dao.addanswer(eid, answer.studentid, answer.name,
+            answer.score, JSON.stringify(answer));
+    }).then(() => {
+        return dao.updatestatistics(eid, JSON.stringify(exam.statistics));
+    });
+}
+function resolveAnswer(exam, answer) {
+    answer.score = 100;
+    var right = 0, wrong = 0;
+    exam.questions.forEach((q, i) => { // 第i题，问题是q，回答是answer[i]
+        if (q.type < 2) {
+            if (q.standardAnswer.toString() == answer[i].toString()) {
+                right++;
+                exam.statistics[i].right++;
+            } else {
+                wrong++;
+                exam.statistics[i].wrong++;
+            }
+            if (answer[i].length > 1) { // 回答是多选，每个选项是a
+                answer[i].forEach((a) => {
+                    exam.statistics[i].count[a]++;
+                })
+            } else {
+                exam.statistics[i].count[answer[i]]++;
+            }
+        }
+    });
+    if (right + wrong > 0) {
+        answer.score = 100 * right / (right + wrong);
+        answer.score = Math.round(answer.score * 2) / 2;
+    }
+}
+function getStuAnswer(eid, stuId) {
+    return ExamManager.getExam(eid).then(exam => {
+        if (!exam.answers[stuId]) {
+            return Promise.reject(new UserError('无该学生答卷'));
+        }
+        var ans = exam.answers[stuId];
+        var paper = JSON.parse(JSON.stringify(exam.questions));
+        paper.forEach((e, i) => {
+            if (e.type == 2) {
+                e.answer = ans[i];
+            } else {
+                e.answer = [];
+                if (ans[i] && ans[i].length > 1) {
+                    ans[i].forEach((a) => {
+                        e.answer[a] = 'checked';
+                    });
+                } else {
+                    e.answer[ans[i]] = 'checked';
+                }
+            }
+        });
+        return Promise.resolve({ cid: exam.cid, eid: eid,
+            studentid: stuId, name: ans.name, score: ans.score,
+            examname: exam.examname, paper: paper});
+    });
+}
+function getAnswers(eid) {
+    return ExamManager.getExam(eid).then(exam => {
+        var ans = exam.answers;
+        return Promise.resolve(Object.keys(ans).map(key => ans[key]));
+    });
 }
 
 // check (per hour) and clear useless exam ( > 3 hours )

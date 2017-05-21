@@ -34,13 +34,13 @@
           {{/each}}
         {{else if question_judgeanswer}}
           <div class="selectiondiv">
-            <input type="radio" class='radiobox' name="{{id}}" value="1" {{answer_right}}>
+            <input type="radio" class='radiobox' name="{{id}}" value="1" {{lookup answer 1}}>
             <label class="eachselection">
               正确
             </label>
           </div>
           <div class="selectiondiv">
-            <input type="radio" class='radiobox' name="{{id}}" value="0" {{answer_wrong}}>
+            <input type="radio" class='radiobox' name="{{id}}" value="0" {{lookup answer 0}}>
             <label class="eachselection">
               错误
             </label>

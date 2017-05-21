@@ -1,0 +1,44 @@
+<link href="/stylesheets/exam.css" rel="stylesheet">
+<h1>{{examname}}</h1>
+<div class="row">
+<h2 class="col-md-3">学号: {{studentid}}</h2>
+<h2 class="col-md-3">姓名: {{name}}</h2>
+<form class="form-inline col-md-5" id="scoreform" onsubmit="return formSubmit('#scoreform')" method="POST" action="/home/editscore?cid={{cid}}&eid={{eid}}&student={{studentid}}">
+<h2>分数:
+  <div class="form-group">
+    <input type="number" class="form-control" name="score" value={{score}}>
+  </div>
+  <button type="submit" class="btn btn-default">修改分数</button>
+</h2>
+</form>
+</div>
+<br>
+<ol>
+  {{#each paper as |question id|}}
+  <li class="eachdescription">{{description}}</br>
+  {{#if question_selection}}
+    {{#each selectionSet}}
+    <div class="selectiondiv">
+      <input type="checkbox" name="{{id}}" class='check' value="{{@index}}" {{lookup ../answer @index}} />
+      <label class="seletionNum">{{lookup ../label @index}}</label><label class="eachselection">{{this}}</label><br/>
+    </div>
+    {{/each}}
+  {{else if question_judgeanswer}}
+    <div class="selectiondiv">
+      <input type="radio" class='radiobox' name="{{id}}" value="1" {{lookup answer 1}}>
+      <label class="eachselection">
+        正确
+      </label>
+    </div>
+    <div class="selectiondiv">
+      <input type="radio" class='radiobox' name="{{id}}" value="0" {{lookup answer 0}}>
+      <label class="eachselection">
+        错误
+      </label>
+    </div>
+  {{else}}
+    <textarea name="{{@index}}" form="examform" rows="3" cols="30" overflow-y="scroll">{{answer}}</textarea>
+  {{/if}}
+  </li>
+  {{/each}}
+</ol>
