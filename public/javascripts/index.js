@@ -8,6 +8,7 @@ function loadJsAsync(filename) {
   }
 }
 loadJsAsync('/javascripts/bootstrap-notify.min.js');
+loadJsAsync('/javascripts/bootbox.min.js');
 
 sidebar = false;
 $(document).ready(function () {
@@ -112,6 +113,28 @@ function formSubmit(selector) {
     $.post($(selector)[0].action, $(selector).serialize()).complete(responseHandler);
     return false;
 };
+
+function deleteConfirm(what, message, deleteCallback) {
+  bootbox.confirm({
+    title: '确认删除'+what+'？',
+    message: message,
+    buttons: {
+        confirm: {
+            label: '删除',
+            className: 'btn-danger'
+        },
+        cancel: {
+            label: '取消',
+            className: 'btn-success'
+        }
+    },
+    callback: function (result) {
+        if (result) {
+          deleteCallback();
+        }
+    }
+  });
+}
 
 function setEditable() {
         //设置表格可编辑

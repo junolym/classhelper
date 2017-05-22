@@ -34,7 +34,7 @@
       </button>
       <ul class="dropdown-menu">
         <li><a class="btn" href="#editexam?cid={{course_id}}&eid={{exam_id}}">编辑测验</a></li>
-        <li><a class="btn" onclick="return confirm('确定删除本测验？本操作不可恢复')&&loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}')">删除测验</a></li>
+        <li><a class="btn" onclick="deleteConfirm('测验《{{exam_name}}》','本操作不可恢复', ()=>loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}'))">删除测验</a></li>
       </ul>
       </div>
       </td>

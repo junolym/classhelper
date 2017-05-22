@@ -18,7 +18,7 @@
       <td><a class="btn" href="#signindetail?cid={{course_id}}&sid={{sign_id}}">{{sign_num}}</a></td>
       <td><a class="btn  btn-default" href="#signindetail?cid={{course_id}}&sid={{sign_id}}">查看详细</a>
       <a class="btn  btn-default" target="_blank" href="/signin/showqrcode?cid={{course_id}}&sid={{sign_id}}">显示二维码</a>
-      <a class="btn btn-default" onclick="return confirm('确定删除本次签到？本操作不可恢复')&&loadContent('deletesignin?cid={{course_id}}&sid={{sign_id}}')">删除</a></td>
+      <a class="btn btn-default" onclick="deleteConfirm('本次签到？','签到时间：{{time}}',()=>loadContent('deletesignin?cid={{course_id}}&sid={{sign_id}}'))">删除</a></td>
     </tr>
     {{/each}}
   </tbody>

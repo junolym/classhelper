@@ -36,7 +36,7 @@
                 {{#if course_id}}修改课程{{else}}新建课程{{/if}}
                 </button>
                 {{#if course_id}}
-                <a class="btn btn-danger btn-block" onclick="return confirm('确认删除本课程？与本课程关联的签到和测验也将删除！')&&loadContent('deletecourse?cid={{course_id}}')">删除课程</a>
+                <a class="btn btn-danger btn-block" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('deletecourse?cid={{course_id}}'))">删除课程</a>
                 {{/if}}
             </div>
         </form>
