@@ -29,6 +29,7 @@
                 data-browse-class="btn btn-large btn-default btn-block" id="upload" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-allowed-file-extensions='["xlsx"]' onchange="importlist(this.files)" />
                 <a class="btn btn-large btn-default btn-block" id="savestu" onclick="exportlist('{{course_name}}-学生名单')">导出为Excel文件</a>
                 <a class="addbtn btn btn-large btn-default btn-block" id="addtd" onclick="addstudent();setEditable()">添加空白行</a>
+                <a class="btn btn-large btn-default btn-block" onclick="deleteConfirm('所有学生', '导入Excel文件时不需要手动清空名单', clearTable)">清空学生名单</a>
             </div>
 
             <div class="form-button">
