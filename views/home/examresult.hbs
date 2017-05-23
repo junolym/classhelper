@@ -1,0 +1,72 @@
+<link href="/stylesheets/exam.css" rel="stylesheet">
+<link href="/stylesheets/examresult.css" rel="stylesheet">
+<h1>{{examname}}</h1>
+<div class="container row">
+<div class="col-md-4 panel panel-primary">
+  <div class="panel-heading">统计信息</div>
+  <div class="panel-body" id="sumary">
+    <div class="panel panel-info">
+      <div class="panel-heading">班级人数</div>
+      <div class="panel-body">
+        <a href="#coursedetail?cid={{cid}}">
+          {{statistics.studentnum}} (查看名单)</a>
+      </div>
+      <div class="panel-heading">作答学生</div>
+      <div class="panel-body">
+        <a href="#submitlist?cid={{cid}}&eid={{eid}}">
+          {{statistics.answernum}} (查看提交)</a>
+      </div>
+      <div class="panel-heading">最高分</div>
+      <div class="panel-body">{{statistics.maxscore}}</div>
+      <div class="panel-heading">最低分</div>
+      <div class="panel-body">{{statistics.minscore}}</div>
+      <div class="panel-heading">平均分</div>
+      <div class="panel-body">{{statistics.avescore}}</div>
+    </div>
+  </div>
+</div>
+<div class="col-md-6">
+  <canvas id="cv_questions" width="400" height="200"></canvas>
+</div>
+</div>
+<ol>
+  {{#each questionsWithAnswer as |question id|}}
+  <hr><div class="row">
+  <li class="eachdescription col-md-5">{{description}}</br>
+  {{#if question_selection}}
+    {{#each selectionSet}}
+    <div class="selectiondiv">
+      <input type="checkbox" name="{{id}}" class='check' value="{{@index}}" {{lookup ../answer @index}} />
+      <label class="seletionNum">{{lookup ../label @index}}</label><label class="eachselection">{{this}}</label><br/>
+    </div>
+    {{/each}}
+  {{else if question_judgeanswer}}
+    <div class="selectiondiv">
+      <input type="radio" class='radiobox' name="{{id}}" value="1" {{lookup answer 1}}>
+      <label class="eachselection">
+        正确
+      </label>
+    </div>
+    <div class="selectiondiv">
+      <input type="radio" class='radiobox' name="{{id}}" value="0" {{lookup answer 0}}>
+      <label class="eachselection">
+        错误
+      </label>
+    </div>
+  {{else}}
+    <textarea name="{{id}}" form="examform" rows="3" cols="30" overflow-y="scroll">{{answer}}</textarea>
+  {{/if}}
+  </li>
+  {{#unless question_detail}}
+  <div class="col-md-5">
+    <canvas id="cv_answers_{{id}}" width="300" height="120"></canvas>
+  </div>
+  {{/unless}}
+  </div>
+  {{/each}}
+</ol>
+<script type="text/javascript" src="/javascripts/Chart.min.js"></script>
+<script type="text/javascript" src="/javascripts/examresult.js"></script>
+<script type="text/javascript">
+  updateCanvas({{{staJSON}}});
+</script>

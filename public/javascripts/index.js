@@ -79,7 +79,7 @@ function responseHandler(res) {
                 loc.href = rst + loc.hash;
             }
         }
-    } else if (res.status == 601) {
+    } else if (res.status == 207) {
         res = JSON.parse(rst);
         if (res.notify) {
           $.notify({

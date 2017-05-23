@@ -1,0 +1,18 @@
+.panel.panel-primary {
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 1rem;
+}
+#sumary {
+    padding: 0;
+}
+#sumary .panel-heading {
+    float: left;
+    width: 145px;
+}
+#sumary .panel-body {
+    padding: 10px 0 0 160px;
+}
+#sumary .panel {
+    margin-bottom: 0;
+}

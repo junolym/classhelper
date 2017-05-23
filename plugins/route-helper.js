@@ -21,7 +21,9 @@ function catchError(req, res, next, reload, userError) {
     return function(err) {
         if (err.needLogin) {
             if (reload) {
-                res.status(302).send('/login');
+                res.status(207).send(JSON.stringify({
+                    reload: '/login'
+                }));
             } else {
                 res.redirect('/login?next='+encodeURIComponent(req.originalUrl));
             }
