@@ -92,6 +92,7 @@ html {
   color: #ffffff;
 }
 
+.sidebar-nav li.active:before,
 .sidebar-nav li:hover:before {
   -webkit-transition: width 0.2s ease-in;
   transition: width 0.2s ease-in;
@@ -103,6 +104,7 @@ html {
   padding: 10px 15px 10px 30px;
   text-decoration: none;
 }
+.sidebar-nav li.open.active before,
 .sidebar-nav li.open:hover before {
   -webkit-transition: width 0.2s ease-in;
   transition: width 0.2s ease-in;
@@ -118,16 +120,31 @@ html {
   position: relative;
   width: 100%;
 }
+.sidebar-nav li.active a,
 .sidebar-nav li a:hover,
-.sidebar-nav li a:active,
 .sidebar-nav li a:focus,
+.sidebar-nav li.open.active a,
 .sidebar-nav li.open a:hover,
-.sidebar-nav li.open a:active,
 .sidebar-nav li.open a:focus {
   background-color: transparent;
-  color: #9a3e3e;
   text-decoration: none;
 }
+.sidebar-nav li.active a.user {
+  color: #ff37f9;
+}
+.sidebar-nav li.active a.course {
+  color: #376bff;
+}
+.sidebar-nav li.active a.signin {
+  color: #4dff37;
+}
+.sidebar-nav li.active a.exam {
+  color: #fff037;
+}
+.sidebar-nav li.active a.help {
+  color: #ff3737;
+}
+
 .sidebar-nav > .sidebar-brand {
   font-size: 22px;
   height: 65px;
@@ -159,12 +176,8 @@ html {
   /*margin-right: 15px;*/
   margin-left: 0px;
 }
-.hamburger:hover {
-  outline: none;
-}
-.hamburger:focus {
-  outline: none;
-}
+.hamburger:hover,
+.hamburger:focus,
 .hamburger:active {
   outline: none;
 }
@@ -263,7 +276,9 @@ html {
 .navheader {
   background: #1a1a1a;
 }
-
+.navheader .container {
+  margin-left: 8px;
+}
 .navbar {
   margin-bottom: 0px;
   height: 20px;
@@ -273,12 +288,10 @@ html {
 /*-------------------------------*/
 /*          table                */
 /*-------------------------------*/
-.container {
+.container#rightpage {
   margin-right: 8px;
   margin-left: 8px;
   padding: 10px;
-}
-#rightpage {
   height: 100%;
 }
 .row#content {

@@ -56,6 +56,12 @@ $(document).ready(function () {
 
 function hashChange() {
     var hash = document.location.hash;
+    if (hash.indexOf('?')==-1) {
+      var a = $('#sidebar-wrapper li [href=' + hash + ']');
+      if (a.length) {
+          navactive(a.parent());
+      }
+    }
     if (hash.length > 1) {
         loadContent(hash.slice(1));
     }
@@ -134,6 +140,11 @@ function deleteConfirm(what, message, deleteCallback) {
         }
     }
   });
+}
+
+function navactive(obj) {
+    $('#sidebar-wrapper li').removeClass('active');
+    $(obj).addClass('active');
 }
 
 function setEditable() {
