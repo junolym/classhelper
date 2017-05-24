@@ -16,3 +16,45 @@
 #sumary .panel {
     margin-bottom: 0;
 }
+/* exam or studentanswer */
+.examname {
+  font-size: 25px;
+  text-align: center;
+}
+.studentinfo h2 {
+  font-size: 20px;
+}
+/* questions and answers */
+.eachdescription{
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.eachselection {
+  margin-left: 5px;
+  font-size: 20px;
+  margin-top: -10px;
+  font-weight: normal;
+}
+
+.questionjudge {
+  margin-left: 5px;
+}
+
+.selectiondiv {
+  margin-top: 5px;
+  padding-left: 5px;
+}
+.seletionNum {
+  margin-left: 5px;
+}
+.check {
+  width: 20px;
+  height: 18px;
+}
+
+#jiaojuan {
+  margin-left:40%;
+  width:20%;
+  font-size: 20px;
+}

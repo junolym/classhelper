@@ -1,6 +1,5 @@
-<link href="/stylesheets/exam.css" rel="stylesheet">
-<h1>{{examname}}</h1>
-<div class="row">
+<h1 class="examname">{{examname}}</h1>
+<div class="studentinfo row">
 <h2 class="col-md-3">学号: {{studentid}}</h2>
 <h2 class="col-md-3">姓名: {{name}}</h2>
 <form class="form-inline col-md-5" id="scoreform" onsubmit="return formSubmit('#scoreform')" method="POST" action="/home/editscore?cid={{cid}}&eid={{eid}}&student={{studentid}}">

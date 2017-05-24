@@ -9,6 +9,13 @@
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
     <link href="/stylesheets/index.css" rel="stylesheet">
+
+    <!-- stylesheets of content -->
+    <link href="/stylesheets/fileinput.min.css" rel="stylesheet" media="none" onload="if(media!='all')media='all'">
+    <link href="/stylesheets/course-detail.css" rel="stylesheet" media="none" onload="if(media!='all')media='all'">
+    <link href="/stylesheets/exam-detail.css" rel="stylesheet" media="none" onload="if(media!='all')media='all'">
+    <link href="/stylesheets/examresult.css" rel="stylesheet">
+    <!-- /stylesheets of content -->
 </head>
 <body>
     <div id="wrapper">
@@ -81,5 +88,16 @@
     <script>window.jQuery || document.write('<script src="js/jquery-1.11.0.min.js"><\/script>')</script>
     <script src='/bootstrap/js/bootstrap.min.js'></script>
     <script src='/javascripts/index.js'></script>
+
+    <!-- javascript of content -->
+    <script type="text/javascript">
+        loadJsAsync('/javascripts/fileinput.min.js');
+        loadJsAsync('/javascripts/xlsx.full.min.js');
+        loadJsAsync('/javascripts/FileSaver.js');
+        loadJsAsync('/javascripts/course-detail.js');
+        loadJsAsync('/javascripts/Chart.min.js');
+        loadJsAsync('/javascripts/examresult.js');
+    </script>
+    <!-- /javascript of content -->
 </body>
 </html>
