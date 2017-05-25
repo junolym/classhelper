@@ -416,7 +416,7 @@ var addstudent = function(student) {
  * [{sign_id, time, sign_num, stu_num}]
  */
 var getsignbycourse = function(course_id) {
-    var sql = "select sign_id, course_id, sign_time as time, "
+    var sql = "select sign_id, sign_time as time, "
             + "sg_stu_num as sign_num, "
             + "student_num as stu_num "
             + "from signup, courses "
@@ -718,6 +718,13 @@ var updatestatistics = function(exam_id, statistics) {
         }
     });
 }
+/**
+ * delstusign
+ *
+ * @param {number} sign_id
+ * @param {number} stu_id
+ * @return {Object} Promise
+ */
 var delstusign = function(sign_id, stu_id) {
     var sql = "delete from stu_sign " 
             + "where ss_sign_id=? and ss_stu_id=?";
