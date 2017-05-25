@@ -417,11 +417,11 @@ var addstudent = function(student) {
  */
 var getsignbycourse = function(course_id) {
     var sql = "select sign_id, course_id, sign_time as time, "
-            + "count(ss_sign_id) as sign_num, "
+            + "sg_stu_num as sign_num, "
             + "student_num as stu_num "
-            + "from signup, stu_sign, courses "
+            + "from signup, courses "
             + "where course_id = ? and sg_coz_id = course_id "
-            + "and ss_sign_id = sign_id group by sign_id";
+            + "group by sign_id";
     return pool.query(sql, course_id);
 }
 
@@ -718,6 +718,17 @@ var updatestatistics = function(exam_id, statistics) {
         }
     });
 }
+var delstusign = function(sign_id, stu_id) {
+    var sql = "delete from stu_sign " 
+            + "where ss_sign_id=? and ss_stu_id=?";
+    return pool.query(sql, [sign_id, stu_id]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject(new UserError("该学生未签到!"));
+        } else {
+            return Promise.resolve();
+        }
+    })
+}
 
 exports.login = login;
 exports.getuser = getuser;
@@ -749,6 +760,7 @@ exports.checkexam = checkexam;
 
 exports.addsign = addsign;
 exports.delsign = delsign;
+exports.delstusign = delstusign;
 exports.studentsign = studentsign;
 exports.getsignbyid = getsignbyid;
 exports.getsignbyaccount = getsignbyaccount;
