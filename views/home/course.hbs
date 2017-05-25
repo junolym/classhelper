@@ -14,8 +14,19 @@
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_name}}</td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_time}}</td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{student_num}}</td>
-      <td><a class="btn btn-default" target="_blank" href="/signin/create?cid={{course_id}}">开始签到</a>
-      <a class="btn btn-default" href="#createexam?cid={{course_id}}">创建测验</a></td>
+      <td>
+        <a class="btn btn-default" target="_blank" href="/signin/create?cid={{course_id}}">开始签到</a>
+        <a class="btn btn-default" href="#createexam?cid={{course_id}}">创建测验</a>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            查看 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="btn" href="#signin" onclick="setFilter('cid={{course_id}}')">本课程的签到</a></li>
+            <li><a class="btn" href="#exam" onclick="setFilter('cid={{course_id}}')">本课程的测验</a></li>
+          </ul>
+        </div>
+      </td>
     </tr>
     {{/each}}
     <tr>

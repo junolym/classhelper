@@ -3,7 +3,7 @@
   <thead>
     <tr>
       <th>测验名称</th>
-      <th>课程名称</th>
+      <th>所属课程</th>
       <th>学生总人数</th>
       <th>已测验学生</th>
       <th>操作</th>
@@ -19,23 +19,23 @@
       <td>
       <a class="btn  btn-default" target="_blank" href="/exam/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
       <div class="btn-group">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        查看 <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
-        <li><a class="btn" target="_blank" href="/exam/preview?cid={{course_id}}&eid={{exam_id}}">预览试卷</a></li>
-        <li><a class="btn" target="_blank" href="/exam/showanswer?cid={{course_id}}&eid={{exam_id}}">显示答案</a></li>
-      </ul>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          查看 <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
+          <li><a class="btn" target="_blank" href="/exam/preview?cid={{course_id}}&eid={{exam_id}}">预览试卷</a></li>
+          <li><a class="btn" target="_blank" href="/exam/showanswer?cid={{course_id}}&eid={{exam_id}}">显示答案</a></li>
+        </ul>
       </div>
       <div class="btn-group">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        修改 <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="btn" href="#editexam?cid={{course_id}}&eid={{exam_id}}">编辑测验</a></li>
-        <li><a class="btn" onclick="deleteConfirm('测验《{{exam_name}}》','本操作不可恢复', ()=>loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}'))">删除测验</a></li>
-      </ul>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          修改 <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="btn" href="#editexam?cid={{course_id}}&eid={{exam_id}}">编辑测验</a></li>
+          <li><a class="btn" onclick="deleteConfirm('测验《{{exam_name}}》','本操作不可恢复', ()=>loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}'))">删除测验</a></li>
+        </ul>
       </div>
       </td>
     </tr>

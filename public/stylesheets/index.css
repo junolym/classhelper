@@ -284,17 +284,36 @@ html {
   height: 20px;
   border:none;
 }
-
+.navbar-header {
+  width: 0;
+  height: 0;
+}
+.navbar-searchbox {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 7px;
+    max-width: 660px;
+}
+@media (max-width: 400px) {
+  .navbar-searchbox {
+      max-width: 250px;
+  }
+}
+.navbar-searchbox input {
+  background: #111;
+  color: #eee;
+  border-color: #555;
+}
 /*-------------------------------*/
 /*          table                */
 /*-------------------------------*/
-.container#rightpage {
+#rightpage {
   margin-right: 8px;
   margin-left: 8px;
   padding: 10px;
   height: 100%;
 }
-.row#content {
+#content {
   margin-left: 0px;
   margin-right: 0px;
   width: 100%;

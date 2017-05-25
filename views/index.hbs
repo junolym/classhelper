@@ -44,12 +44,12 @@
                     <a href="#signin" class="signin"><i class="fa fa-check-square-o"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签到</a>
                 </li>
                 <li class="item" onclick="navactive(this)">
-                    <a href="#exam" class="exam"><i class="fa fa-file-excel-o"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测试</a>
+                    <a href="#exam" class="exam"><i class="fa fa-file-excel-o"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测验</a>
                 </li>
                 <li class="bottomItem" onclick="navactive(this)">
                     <a href="#help" class="help"><i class="fa fa-hand-o-left"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;帮助</a>
                 </li>
-                <li class="bottomItem" onclick="navactive(this)">
+                <li class="bottomItem">
                     <a href="/logout"><i class="fa fa-sign-out"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;退出</a>
                 </li>
             </ul>
@@ -59,24 +59,25 @@
         </nav>
         <!-- /#sidebar-wrapper -->
 
-        <!-- Page Content -->
         <div id="page-content-wrapper">
             <nav class="navbar navbar-default navbar-fixed-top navheader">
                 <div class="container">
                     <div class="navbar-header">
-                        <a>
-                           <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-                                <span class="hamb-top"></span>
-                                <span class="hamb-middle"></span>
-                                <span class="hamb-bottom"></span>
-                            </button>
-                        </a>
+                       <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                            <span class="hamb-top"></span>
+                            <span class="hamb-middle"></span>
+                            <span class="hamb-bottom"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-searchbox form-group">
+                        <input type="text" id="tablefilter" placeholder="列表过滤" class="form-control" oninput="tablefilter(this.value)" />
                     </div>
                 </div>
             </nav>
-            <div class="container" id="rightpage">
-                <div class="row" id="content">
-                </div>
+
+            <div id="rightpage">
+                <!-- Page Content -->
+                <div id="content"></div>
             </div>
         </div>
         <!-- /#page-content-wrapper -->

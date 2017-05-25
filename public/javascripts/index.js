@@ -69,23 +69,13 @@ function hashChange() {
 window.onhashchange = hashChange;
 
 function contentResize() {
-    $('#rightpage')[0].style.width = document.body.clientWidth - (sidebar ? 240 : 0) + 'px';
+    $('#rightpage')[0].style.width = document.body.clientWidth - (sidebar ? 240 : 20) + 'px';
 }
 
 function responseHandler(res) {
     var rst = res.responseText;
     var loc = document.location;
-    if (res.status == 302) {
-        if (loc.hash == rst && rst.length > 1) {
-            loadContent(rst.slice(1));
-        } else {
-            if (rst[0] == '#') {
-                loc.hash = rst;
-            } else {
-                loc.href = rst + loc.hash;
-            }
-        }
-    } else if (res.status == 207) {
+    if (res.status == 207) {
         res = JSON.parse(rst);
         if (res.notify) {
           $.notify({
@@ -107,6 +97,9 @@ function responseHandler(res) {
         }
     } else {
         $('#content').html(rst);
+        $('#tablefilter').val(window.tablefiltertext);
+        tablefilter(window.tablefiltertext);
+        window.tablefiltertext = "";
     }
 }
 
@@ -145,6 +138,21 @@ function deleteConfirm(what, message, deleteCallback) {
 function navactive(obj) {
     $('#sidebar-wrapper li').removeClass('active');
     $(obj).addClass('active');
+}
+
+function tablefilter(keyword) {
+    var trs = $('tbody tr');
+    for (var i = 0; i < trs.length; i++) {
+        if (trs[i].outerHTML.match(keyword)) {
+            $(trs[i]).removeClass('hidden');
+        } else {
+            $(trs[i]).addClass('hidden');
+        }
+    }
+}
+
+function setFilter(keyword) {
+    window.tablefiltertext = keyword;
 }
 
 function setEditable() {
