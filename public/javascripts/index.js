@@ -61,6 +61,12 @@ function hashChange() {
       if (a.length) {
           navactive(a.parent());
       }
+    } else {
+      var h = hash.slice(0, Math.min(7, hash.indexOf('?')));
+      var a = $('#sidebar-wrapper li [href=' + h + ']');
+      if (a.length) {
+          navactive(a.parent());
+      }
     }
     if (hash.length > 1) {
         loadContent(hash.slice(1));
@@ -97,8 +103,12 @@ function responseHandler(res) {
         }
     } else {
         $('#content').html(rst);
-        $('#tablefilter').val(window.tablefiltertext);
-        tablefilter(window.tablefiltertext);
+        $('#content').scrollTop(0)
+        var keyword = window.tablefiltertext;
+        $('#tablefilter').val(keyword);
+        if (keyword) {
+          tablefilter(keyword);
+        }
         window.tablefiltertext = "";
     }
 }

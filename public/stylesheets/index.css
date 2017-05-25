@@ -15,6 +15,59 @@ html {
 .nav .open > a:focus {
   background-color: transparent;
 }
+/* 全局自定义样式 */
+.line-btn td {
+  cursor: pointer;
+}
+.margin-20 {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.panel-green {
+  border-color: #5cb85c;
+  padding: 0;
+}
+.panel-green > .panel-heading {
+  border-color: #5cb85c;
+  color: white;
+  background-color: #5cb85c;
+}
+.panel-green > a {
+  color: #5cb85c;
+}
+.panel-green > a:hover {
+  color: #3d8b3d;
+}
+.panel-red {
+  border-color: #d9534f;
+  padding: 0;
+}
+.panel-red > .panel-heading {
+  border-color: #d9534f;
+  color: white;
+  background-color: #d9534f;
+}
+.panel-red > a {
+  color: #d9534f;
+}
+.panel-red > a:hover {
+  color: #b52b27;
+}
+.panel-yellow {
+  border-color: #f0ad4e;
+  padding: 0;
+}
+.panel-yellow > .panel-heading {
+  border-color: #f0ad4e;
+  color: white;
+  background-color: #f0ad4e;
+}
+.panel-yellow > a {
+  color: #f0ad4e;
+}
+.panel-yellow > a:hover {
+  color: #df8a13;
+}
 /*-------------------------------*/
 /*           Wrappers            */
 /*-------------------------------*/
@@ -289,15 +342,10 @@ html {
   height: 0;
 }
 .navbar-searchbox {
-    margin-left: auto;
+    margin-left: 18%;
     margin-right: auto;
     margin-top: 7px;
     max-width: 660px;
-}
-@media (max-width: 400px) {
-  .navbar-searchbox {
-      max-width: 250px;
-  }
 }
 .navbar-searchbox input {
   background: #111;

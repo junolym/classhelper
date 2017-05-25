@@ -1,1 +1,104 @@
-<h1>Hello {{user}}</h1>
+<div class="row sign-exam">
+  {{#each courses}}
+  <div class="col-md-5 panel margin-20 panel-primary">
+    <div class="panel-heading">
+      今日课程
+    </div>
+    <div class="panel-body" id="sumary">
+      <div class="panel panel-info">
+        <div class="panel-heading">课程名称</div>
+        <div class="panel-body">
+          <a href="#courseinfo?cid={{course_id}}">{{course_name}}</a>
+        </div>
+        <div class="panel-heading">上课时间</div>
+        <div class="panel-body">
+          <a href="#coursedetail?cid={{course_id}}">{{course_time}}</a>
+        </div>
+        <div class="panel-heading">学生人数</div>
+        <div class="panel-body">
+          <a href="#coursedetail?cid={{course_id}}">{{student_num}}</a>
+        </div>
+        <div class="panel-heading">签到</div>
+        <div class="panel-body">
+          <a class="btn btn-sm btn-default" target="_blank" href="/signin/create?cid={{course_id}}">开始签到</a>
+          <a class="btn btn-sm btn-default" href="#signin" onclick="setFilter('cid={{course_id}}')">查看签到</a>
+        </div>
+        <div class="panel-heading">测验</div>
+        <div class="panel-body">
+          <a class="btn btn-sm btn-default" href="#createexam?cid={{course_id}}">创建测验</a>
+          <a class="btn btn-sm btn-default" href="#exam" onclick="setFilter('cid={{course_id}}')">查看测验</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+  <div class="col-md-5 panel margin-20 panel-green">
+    <div class="panel-heading">
+      最近签到
+    </div>
+    <table class="panel-body table line-btn">
+      <thead>
+        <tr>
+          <th>签到创建时间</th>
+          <th>已签学生</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each signins}}
+        <tr onclick="document.location='#signindetail?cid={{course_id}}&sid={{sign_id}}'">
+          <td>{{time}}</td>
+          <td>{{sign_num}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="panel-footer text-center">
+      <a href="#signin">查看全部</a>
+    </div>
+  </div>
+  <div class="col-md-5 panel margin-20 panel-yellow">
+    <div class="panel-heading">
+      最近测验
+    </div>
+    <table class="panel-body table line-btn">
+      <thead>
+        <tr>
+          <th>测验名称</th>
+          <th>已测学生</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each exams}}
+        <tr onclick="document.location='#examresult?cid={{course_id}}&eid={{exam_id}}'">
+          <td>{{exam_name}}</td>
+          <td>{{exam_num}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="panel-footer text-center">
+      <a href="#exam">查看全部</a>
+    </div>
+  </div>
+  <!-- <div class="col-md-5 panel margin-20 panel-red">
+    <div class="panel-heading">
+      账户设置
+    </div>
+    <div class="panel-body">
+      <a class="btn btn-default btn-block">修改密码</a>
+ -->
+      <!-- <form class="form-group">
+        <div class="form-group">
+          <input type="password" name="oldpasswd" placeholder="原密码" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <input type="password" name="newpasswd" placeholder="新密码" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <input type="password" name="repeatpasswd" placeholder="重复新密码" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-default btn-block">修改密码</button>
+      </form> -->
+    <!-- </div>
+  </div> -->
+</div>

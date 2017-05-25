@@ -13,8 +13,8 @@
     {{#each exam}}
     <tr>
       <td><a class="btn" href="#examresult?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
-      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{name}}</a></td>
-      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{stu_num}}</a></td>
+      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{name}}</a></td>
+      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{stu_num}}</a></td>
       <td><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
       <td>
       <a class="btn  btn-default" target="_blank" href="/exam/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>

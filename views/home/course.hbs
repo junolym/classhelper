@@ -11,7 +11,7 @@
   <tbody>
     {{#each courses}}
     <tr>
-      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_name}}</td>
+      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{course_name}}</td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_time}}</td>
       <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{student_num}}</td>
       <td>
@@ -24,6 +24,16 @@
           <ul class="dropdown-menu">
             <li><a class="btn" href="#signin" onclick="setFilter('cid={{course_id}}')">本课程的签到</a></li>
             <li><a class="btn" href="#exam" onclick="setFilter('cid={{course_id}}')">本课程的测验</a></li>
+            <li><a class="btn" href="#courseinfo?cid={{course_id}}&only=stu">学生统计信息</a></li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            修改 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="btn" href="#coursedetail?cid={{course_id}}">编辑课程</a></li>
+            <li><a class="btn" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('deletecourse?cid={{course_id}}'))">删除课程</a></li>
           </ul>
         </div>
       </td>

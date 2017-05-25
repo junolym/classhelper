@@ -6,8 +6,21 @@ var qrcode = require('../plugins/qrcode-manager.js');
 var examManager = require('../plugins/exam-manager.js');
 
 router.get('/user', (req, res, next) => {
+    var data = {};
     helper.checkLogin(req).then((user) => {
-        res.render('home/user', { user : user });
+        data.user = user;
+        return dao.getcoursebyaccount(user);
+    }).then((result) => {
+        data.courses = JSON.parse(JSON.stringify(result));
+        data.courses = data.courses.slice(0,1);
+        return dao.getsignbyaccount(data.user);
+    }).then((result) => {
+        data.signins = JSON.parse(JSON.stringify(result)).slice(0,4);
+        data.signins.forEach(helper.dateConverter);
+        return dao.getexambyaccount(data.user);
+    }).then((result) => {
+        data.exams = JSON.parse(JSON.stringify(result)).slice(0,4);
+        res.render('home/user', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -231,6 +244,26 @@ router.get('/statistics', (req, res, next) => {
         return examManager.getExam(req.query.eid);
     }).then((exam) => {
         res.send(JSON.stringify(exam.statistics));
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/courseinfo', (req, res, next) => {
+    var data = { onlystu : req.query.only == 'stu' };
+    data.course_id = req.query.cid;
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        return dao.getstubycourse(req.query.cid);
+    }).then((result) => {
+        data.students = JSON.parse(JSON.stringify(result));
+        return dao.getsignbycourse(req.query.cid);
+    }).then((result) => {
+        data.signins = JSON.parse(JSON.stringify(result)).slice(0,3);
+        data.signins.forEach(helper.dateConverter);
+        return dao.getexambycourse(req.query.cid);
+    }).then((result) => {
+        data.exams = JSON.parse(JSON.stringify(result)).slice(0,3);
+        res.render('home/courseinfo', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
