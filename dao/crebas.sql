@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/05/16 23:27:24                          */
+/* Created on:     2017/05/26 0:18:58                           */
 /*==============================================================*/
 
 
@@ -13,6 +13,8 @@ drop trigger delstudent;
 drop trigger delete_exam;
 
 drop trigger delete_sign;
+
+drop trigger delsign;
 
 drop trigger stusign;
 
@@ -172,10 +174,15 @@ on signup for each row
 delete from stu_sign where ss_sign_id=old.sign_id;
 
 
+create trigger delsign after delete
+on stu_sign for each row
+update signup set sg_stu_num=sg_stu_num-1
+where sign_id=old.ss_sign_id;
+
+
 create trigger stusign after insert
 on stu_sign for each row
 update signup set sg_stu_num=sg_stu_num+1
 where sign_id=new.ss_sign_id;
 
 insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
-
