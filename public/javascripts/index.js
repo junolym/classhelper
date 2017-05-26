@@ -114,6 +114,13 @@ function responseHandler(res) {
     }
 }
 
+function warning(message) {
+    $.notify(message , {
+       type : 'warning',
+       delay : 1000
+    });
+}
+
 function loadContent(content) {
     $.get('/home/'+content).complete(responseHandler);
 }
