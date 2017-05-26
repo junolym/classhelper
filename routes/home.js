@@ -261,9 +261,10 @@ router.get('/courseinfo', (req, res, next) => {
         return dao.statsexambycourse(req.query.cid);
     }).then((result) => {
         result = JSON.parse(JSON.stringify(result));
-        data.students.forEach((s, i) => {
-            Object.assign(s, result[i])
-        });
+        for (let i = 0; i < data.students.length || i < result.length; i++) {
+            data.students[i] = data.students[i] || {};
+            Object.assign(data.students[i], result[i]);
+        }
         return dao.getsignbycourse(req.query.cid);
     }).then((result) => {
         data.signins = JSON.parse(JSON.stringify(result)).slice(0,3);

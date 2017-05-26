@@ -183,7 +183,7 @@ function addStuAnswer(eid, answer) {
         return dao.checkstudent(answer.studentid, exam.cid, answer.name);
     }).then(() => {
         answer.time = new Date();
-        helper.dateConverter(answer);
+        helper.dateConverter()(answer);
         ExamManager.resolveAnswer(exam, answer);
         exam.answers[answer.studentid] = answer;
         return dao.addanswer(eid, answer.studentid, answer.name,

@@ -4,6 +4,7 @@
     <div class="panel-heading">
       最近签到
     </div>
+    {{#if signins}}
     <table class="panel-body table line-btn">
       <thead>
         <tr>
@@ -23,11 +24,18 @@
     <div class="panel-footer text-center">
       <a href="#signin" onclick="setFilter('cid={{course_id}}')">查看全部</a>
     </div>
+    {{else}}
+    <div class="panel-body text-center">
+      无签到，<a target="_blank" href="/signin/create?cid={{course_id}}"
+        onclick="setTimeout(function(){loadContent('courseinfo?cid={{course_id}}')},200)">点此发起</a>
+    </div>
+    {{/if}}
   </div>
   <div class="col-md-5 panel margin-20 panel-yellow">
     <div class="panel-heading">
       最近测验
     </div>
+    {{#if exams}}
     <table class="panel-body table line-btn">
       <thead>
         <tr>
@@ -47,6 +55,11 @@
     <div class="panel-footer text-center">
       <a href="#exam" onclick="setFilter('cid={{course_id}}')">查看全部</a>
     </div>
+    {{else}}
+    <div class="panel-body text-center">
+      无测验，<a href="#createexam?cid={{course_id}}">点此创建</a>
+    </div>
+    {{/if}}
   </div>
 </div>
 <hr>
@@ -72,8 +85,8 @@
         <tr onclick="document.location='#studetail?cid={{../course_id}}&stu={{stu_id}}'">
           <td>{{stu_id}}</td>
           <td>{{stu_name}}</td>
-          <td>{{sign_num}}</td>
-          <td>{{exam_num}}</td>
+          <td>{{#if sign_num}}{{sign_num}}{{else}}0{{/if}}</td>
+          <td>{{#if exam_num}}{{exam_num}}{{else}}0{{/if}}</td>
           <td>{{#if sum_score}}{{sum_score}}{{else}}0{{/if}}</td>
         </tr>
         {{/each}}
@@ -83,6 +96,6 @@
 </div>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-  <p>这门课程还没有添加学生名单哦，点此<a href="#coursedetail?cid={{course_id}}">编辑课程</a>吧</p>
+  <p>尚无学生统计数据，<a href="#coursedetail?cid={{course_id}}">点此查看名单</a></p>
 </div>
 {{/if}}
