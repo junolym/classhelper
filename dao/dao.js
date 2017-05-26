@@ -776,6 +776,42 @@ var statssigndetail = function(course_id, student_id) {
     return pool.query(sql, [student_id, course_id]);
 }
 
+/**
+ * statsexambycourse
+ *
+ * @param {number} course_id
+ * @return {Object} Promise
+ * [stu_id, stu_name, total, exam_num, sum_score]
+ */
+var statsexambycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, cs_stu_name as stu_name, "
+            + "count(exam_id) as total, count(ans_ex_id) as exam_num, "
+            + "sum(ans_score) as sum_score "
+            + "from coz_stu "
+            + "inner join exams  on cs_coz_id = ex_coz_id "
+            + "left join answers on exam_id = ans_ex_id "
+            + "                     and ans_stu_id = cs_stu_id "  
+            + "where cs_coz_id= ? "
+            + "group by cs_stu_id ";
+    return pool.query(sql, course_id);
+}
+
+/**
+ * statsexamdetail
+ *
+ * @param {number} course_id
+ * @param {number} student_id
+ * @return {Object} Promise
+ * [exam_id, exam_name, score, time]
+ */
+var statsexamdetail = function(course_id, student_id) {
+    var sql = "select exam_id, exam_name, ans_score as score, "
+            + "ans_time as time "
+            + "from exams "
+            + "left join answers on exam_id = ans_ex_id and ans_stu_id=? "
+            + "where ex_coz_id = ? ";
+    return pool.query(sql, [student_id, course_id]);
+}
 
 exports.login = login;
 exports.getuser = getuser;
@@ -803,6 +839,8 @@ exports.copyexam = copyexam;
 exports.getexambyid = getexambyid;
 exports.getexambycourse = getexambycourse;
 exports.getexambyaccount = getexambyaccount;
+exports.statsexambycourse = statsexambycourse;
+exports.statsexamdetail = statsexamdetail;
 exports.checkexam = checkexam;
 
 exports.addsign = addsign;

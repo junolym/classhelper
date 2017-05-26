@@ -5371,6 +5371,335 @@
 
     
 
+    <h4 class="name" id="statsexambycourse"><span class="type-signature"></span>statsexambycourse<span class="signature">(course_id)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    statsexambycourse
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>course_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line786">line 786</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Promise[stu_id, stu_name, total, exam_num, sum_score]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="statsexamdetail"><span class="type-signature"></span>statsexamdetail<span class="signature">(course_id, student_id)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    statsexamdetail
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>course_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>student_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dao.js.html">dao.js</a>, <a href="dao.js.html#line807">line 807</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Promise[exam_id, exam_name, score, time]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="statssignbycourse"><span class="type-signature"></span>statssignbycourse<span class="signature">(course_id)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
@@ -6906,13 +7235,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addanswer">addanswer</a></li><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checkexam">checkexam</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#checkstudent">checkstudent</a></li><li><a href="global.html#copyexam">copyexam</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#delstusign">delstusign</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getanswerbyexam">getanswerbyexam</a></li><li><a href="global.html#getanswerbystudent">getanswerbystudent</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambyaccount">getexambyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getexambyid">getexambyid</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#statssignbycourse">statssignbycourse</a></li><li><a href="global.html#statssigndetail">statssigndetail</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateexam">updateexam</a></li><li><a href="global.html#updatestatistics">updatestatistics</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addanswer">addanswer</a></li><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checkexam">checkexam</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#checkstudent">checkstudent</a></li><li><a href="global.html#copyexam">copyexam</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#delstusign">delstusign</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getanswerbyexam">getanswerbyexam</a></li><li><a href="global.html#getanswerbystudent">getanswerbystudent</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambyaccount">getexambyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getexambyid">getexambyid</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#statsexambycourse">statsexambycourse</a></li><li><a href="global.html#statsexamdetail">statsexamdetail</a></li><li><a href="global.html#statssignbycourse">statssignbycourse</a></li><li><a href="global.html#statssigndetail">statssigndetail</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateexam">updateexam</a></li><li><a href="global.html#updatestatistics">updatestatistics</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri May 26 2017 11:15:52 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri May 26 2017 12:45:16 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
