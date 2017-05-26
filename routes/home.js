@@ -172,10 +172,11 @@ router.post('/createexam', (req, res, next) => {
         var examname = req.body.examname || 'untitled';
         return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
     }).then(() => {
-        res.status(207).send(JSON.stringify({
+        var response = {
             reload: '#exam',
             notify: ['测验创建成功', 'success']
-        }));
+        }
+        res.status(207).send(JSON.stringify(response));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -199,7 +200,22 @@ router.get('/editexam', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('home/examdetail', { course_id : req.query.cid });
+        res.render('home/examdetail', result);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.post('/editexam', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        var examname = req.body.examname || 'untitled';
+        return examManager.editExam(req.query.eid, examname, JSON.parse(req.body.exam));
+    }).then(() => {
+        var response = {
+            reload: '#exam',
+            notify: ['测验修改成功', 'success']
+        }
+        res.status(207).send(JSON.stringify(response));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -261,7 +277,7 @@ router.get('/courseinfo', (req, res, next) => {
         return dao.statsexambycourse(req.query.cid);
     }).then((result) => {
         result = JSON.parse(JSON.stringify(result));
-        for (let i = 0; i < data.students.length || i < result.length; i++) {
+        for (var i = 0; i < data.students.length || i < result.length; i++) {
             data.students[i] = data.students[i] || {};
             Object.assign(data.students[i], result[i]);
         }

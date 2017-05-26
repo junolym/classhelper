@@ -12,16 +12,19 @@ ExamManager = {
         examname : name,
         questions : [
             {
+                idplus1 : 1,
                 type : 0,
                 description : description,
                 standardAnswer : [0, 2], // A & C
                 selectionSet : [selection, selection, selection]
             }, {
+                idplus1 : 2,
                 type : 1,
                 description : description,
                 standardAnswer : 0, // false
                 selectionSet : []
             }, {
+                idplus1 : 3,
                 type : 2,
                 description : description,
                 standardAnswer : string,
@@ -60,6 +63,7 @@ ExamManager = {
     }
     */
     createExam : createExam,
+    editExam : editExam,
     getExam : getExam,
     resolveExam : resolveExam,
     initExam : initExam,
@@ -92,6 +96,16 @@ function createExam(cid, examname, questions) {
         ExamManager.exams[eid] = exam;
         ExamManager.resolveExam(exam);
         return dao.updatestatistics(eid, JSON.stringify(exam.statistics));
+    });
+}
+function editExam(eid, examname, questions) {
+    var exam_question = JSON.stringify(questions);
+    return ExamManager.getExam(eid).then(exam => {
+        exam.examname = examname;
+        exam.questions = questions;
+        exam.questionsWithAnswer = JSON.parse(exam_question);
+        ExamManager.resolveExam(exam);
+        return dao.updateexam(eid, examname, exam_question);
     });
 }
 function getExam(eid) {
@@ -156,6 +170,7 @@ function resolveExam(exam) {
     });
     exam.questionsWithAnswer.forEach((e, index) => {
         e[types[e.type]] = true;
+        e.idplus1 = index+1;
         e.answer = [];
         if (e.question_selection) {
             e.label = [];
