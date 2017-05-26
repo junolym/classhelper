@@ -87,7 +87,8 @@ function responseHandler(res) {
           $.notify({
             message: res.notify[0]
           },{
-            type: res.notify[1]
+            type: res.notify[1],
+            delay: 1000
           });
         }
         if (res.reload) {
@@ -229,8 +230,8 @@ function addselectquestion() {
         </div>\
       </div>\
       <div id='secbtn'>\
-        <button class='btn btn-primary delsec' style='font-size:12px' onclick='deleteselection(this.id)'>删除选项</button>\
-        <button class='btn  btn-primary addsec'  style='font-size:12px' onclick='addselection(this.id)'>添加选项</button>\
+        <button class='btn btn-default delsec' style='font-size:12px' onclick='deleteselection(this.id)'>删除选项</button>\
+        <button class='btn  btn-default addsec'  style='font-size:12px' onclick='addselection(this.id)'>添加选项</button>\
       </div>\
     </div>"
       // <a class='btn addselectionbtn' onclick='addselection(this.id)'>+</a>\

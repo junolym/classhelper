@@ -4,6 +4,7 @@
     <div class="panel-heading">
       最近签到
     </div>
+    {{#if signins}}
     <table class="panel-body table line-btn">
       <thead>
         <tr>
@@ -13,7 +14,7 @@
       </thead>
       <tbody>
         {{#each signins}}
-        <tr onclick="signinClick({{sign_id}})">
+        <tr onclick="document.location='#signindetail?cid={{../course_id}}&sid={{sign_id}}'">
           <td>{{time}}</td>
           <td>{{sign_num}}</td>
         </tr>
@@ -23,11 +24,18 @@
     <div class="panel-footer text-center">
       <a href="#signin" onclick="setFilter('cid={{course_id}}')">查看全部</a>
     </div>
+    {{else}}
+    <div class="panel-body text-center">
+      无签到，<a target="_blank" href="/signin/create?cid={{course_id}}"
+        onclick="setTimeout(function(){loadContent('courseinfo?cid={{course_id}}')},200)">点此发起</a>
+    </div>
+    {{/if}}
   </div>
   <div class="col-md-5 panel margin-20 panel-yellow">
     <div class="panel-heading">
       最近测验
     </div>
+    {{#if exams}}
     <table class="panel-body table line-btn">
       <thead>
         <tr>
@@ -37,9 +45,9 @@
       </thead>
       <tbody>
         {{#each exams}}
-        <tr onclick="examClick({{exam_id}})">
+        <tr onclick="document.location='#examresult?cid={{../course_id}}&eid={{exam_id}}'">
           <td>{{exam_name}}</td>
-          <td>{{exam_num}}</td>
+          <td>{{exam_stu_num}}</td>
         </tr>
         {{/each}}
       </tbody>
@@ -47,6 +55,11 @@
     <div class="panel-footer text-center">
       <a href="#exam" onclick="setFilter('cid={{course_id}}')">查看全部</a>
     </div>
+    {{else}}
+    <div class="panel-body text-center">
+      无测验，<a href="#createexam?cid={{course_id}}">点此创建</a>
+    </div>
+    {{/if}}
   </div>
 </div>
 <hr>
@@ -57,7 +70,7 @@
     <div class="panel-heading">
       统计数据
     </div>
-    <table class="panel-body table table-striped">
+    <table class="panel-body table table-striped line-btn">
       <thead>
         <tr>
           <th>学号</th>
@@ -69,12 +82,12 @@
       </thead>
       <tbody>
         {{#each students}}
-        <tr>
-          <td>{{id}}</td>
-          <td>{{name}}</td>
-          <td><a class="btn" href="#stusignin?cid={{course_id}}&student={{studentid}}">{{sign_num}}</a></td>
-          <td><a class="btn" href="#stuexam?cid={{course_id}}&student={{studentid}}">{{exam_num}}</a></td>
-          <td><a class="btn" href="#stuexam?cid={{course_id}}&student={{studentid}}">{{exam_score}}</a></td>
+        <tr onclick="document.location='#studetail?cid={{../course_id}}&stu={{stu_id}}'">
+          <td>{{stu_id}}</td>
+          <td>{{stu_name}}</td>
+          <td>{{#if sign_num}}{{sign_num}}{{else}}0{{/if}}</td>
+          <td>{{#if exam_num}}{{exam_num}}{{else}}0{{/if}}</td>
+          <td>{{#if sum_score}}{{sum_score}}{{else}}0{{/if}}</td>
         </tr>
         {{/each}}
       </tbody>
@@ -83,14 +96,6 @@
 </div>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-  <p>这门课程还没有添加学生名单哦，点此<a href="#coursedetail?cid={{course_id}}">编辑课程</a>吧</p>
+  <p>尚无学生统计数据，<a href="#coursedetail?cid={{course_id}}">点此查看名单</a></p>
 </div>
 {{/if}}
-<script type="text/javascript">
-  function signinClick(sid) {
-    document.location='#signindetail?cid={{course_id}}&sid='+sid;
-  }
-  function examClick(eid) {
-    document.location='#examresult?cid={{course_id}}&eid='+eid;
-  }
-</script>

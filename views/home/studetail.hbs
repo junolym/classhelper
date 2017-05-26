@@ -1,0 +1,52 @@
+<div class="col-md-11 panel margin-20 panel-green">
+  <div class="panel-heading">
+    签到情况
+  </div>
+  <table class="panel-body table line-btn">
+    <thead>
+      <tr>
+        <th>签到创建时间 ({{sign_total}})</th>
+        <th>签到人数</th>
+        <th>实际签到时间 ({{sign_num}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each signins}}
+      <tr onclick="document.location='#signindetail?cid={{../course_id}}&sid={{sign_id}}'">
+        <td>{{time}}</td>
+        <td>{{sign_num}}</td>
+        <td>{{#if stu_time}}{{stu_time}}{{else}}未签到{{/if}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="panel-footer text-center">
+    <a href="#signin" onclick="setFilter('cid={{course_id}}')">查看全部</a>
+  </div>
+</div>
+<div class="col-md-11 panel margin-20 panel-yellow">
+  <div class="panel-heading">
+    测验情况
+  </div>
+  <table class="panel-body table line-btn">
+    <thead>
+      <tr>
+        <th>测验名称 ({{exam_total}})</th>
+        <th>交卷时间 ({{exam_num}})</th>
+        <th>分数 (总分: {{sum_score}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each exams}}
+      <tr onclick="document.location='#studentanswer?cid={{../course_id}}&eid={{exam_id}}&student={{../stu_id}}'">
+        <td>{{exam_name}}</td>
+        <td>{{#if time}}{{time}}{{else}}未交卷{{/if}}</td>
+        <td>{{#if score}}{{score}}{{else}}0{{/if}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="panel-footer text-center">
+    <a href="#exam" onclick="setFilter('cid={{course_id}}')">查看全部</a>
+  </div>
+</div>

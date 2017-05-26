@@ -13,7 +13,7 @@
             </div>
       </form>
     </div>
-</div>
+  </div>
 
 <table class="table" id="questiontable">
   <thead>
@@ -23,32 +23,66 @@
       <th class="tdans">题目答案</th>
       <th class="tdop">操作</th>
     </tr>
-  </thead>
-  <tbody>
-    {{#each question}}
+    {{#each questionsWithAnswer as |question id|}}
     <tr>
-      <td><a class="btn">{{question_id}}</a></td>
-      <td><a class="btn">{{question_detail}}</a></td>
-      <td><a class="btn">{{question_answer}}</a></td>
-      <td><a class="btn btn-default" onclick="">删除题目</a></td>
+      <td>{{idplus1}}</td>
+      <td>
+        <div>
+          <textarea cols="50" rows="4">{{description}}</textarea>
+        </div>
+      </td>
+      {{#if question_selection}}
+      <td>
+        <div class="eachquestion">
+          <div class="rightans"></div>
+          <div class="allSelection">
+            {{#each selectionSet}}
+            <div class="examselection">
+              <input type="checkbox" {{lookup ../answer @index}}>{{lookup ../label @index}}<textarea cols="40" rows="1" overflow-y="scroll" class="seletext">{{this}}</textarea></div>
+            {{/each}}
+        </div>
+        <div id="secbtn">
+          <button class="btn btn-default delsec" style="font-size:12px" onclick="deleteselection(this.id)" id="delsect{{idplus1}}">删除选项</button>
+          <button class="btn  btn-default addsec" style="font-size:12px" onclick="addselection(this.id)" id="select{{idplus1}}">添加选项</button></div>
+      </td>
+      {{else if question_judgeanswer}}
+      <td>
+        <div>
+          <input type="radio" name="{{idplus1}}" value="1" {{lookup answer 1}}>正确
+          <br>
+          <input type="radio" name="{{idplus1}}" value="0" {{lookup answer 0}}>错误</div>
+      </td>
+      {{else}}
+      <td>
+        <div>
+          <textarea cols="50" rows="4">{{answer}}</textarea>
+        </div>
+      </td>
+      {{/if}}
+      <td>
+      <button class="btn btn-large" style="font-size:4px" onclick="deleteQuestion(this.id)" id="deletebtn{{idplus1}}">删除题目</button></td>
     </tr>
     {{/each}}
-  </tbody>
-
+  </thead>
 </table>
 
 
-<div id="addquestion">
-  <button type="submit" class="btn btn-large btn-primary" id="xuanze"  style="font-size:14px" onclick="addselectquestion()">添加选择题</button>
-  <button type="submit" class="btn btn-large btn-primary" id="panduan"  style="font-size:14px" onclick="addjudgequestion()">添加判断题</button>
-  <button class="addbtn btn btn-large btn-primary" id="jieda" style="font-size:14px" onclick="addlongquestion()">添加解答题</button>
+<div id="addquestion" class="container">
+  <button class="btn btn-large btn-default" id="xuanze"  style="font-size:14px" onclick="addselectquestion()">添加选择题</button>
+  <button class="btn btn-large btn-default" id="panduan"  style="font-size:14px" onclick="addjudgequestion()">添加判断题</button>
+  <button class="btn btn-large btn-default" id="jieda" style="font-size:14px" onclick="addlongquestion()">添加解答题</button>
 </div>
 
-<div id="exambtn">
+<div id="exambtn" class="container">
+  {{#if eid}}
+  <form role="form" id="examForm" action="/home/editexam?cid={{cid}}&eid={{eid}}" method="post" onsubmit="getquestion();return formSubmit('#examForm')" class="addcourse-form">
+  {{else}}
   <form role="form" id="examForm" action="/home/createexam?cid={{course_id}}" method="post" onsubmit="getquestion();return formSubmit('#examForm')" class="addcourse-form">
-  <input id="examname" type="text" name="examname" value=""/>
-  <input id="examinput" type="text" name="exam" value=""/>
-  <button type="submit" class="btn btn-large btn-primary" id="saveexam"  style="font-size:14px">保存测试</button>
-  <button class="addbtn btn btn-large btn-primary" id="saveandstart" style="font-size:14px">保存并开始</button>
+  {{/if}}
+    <input id="examname" type="text" name="examname" value=""/>
+    <input id="examinput" type="text" name="exam" value=""/>
+    <button type="submit" class="btn btn-large btn-primary btn-block" id="saveexam">保存试题</button>
   </form>
+</div>
+
 </div>

@@ -16,7 +16,7 @@ router.get('/user', (req, res, next) => {
         return dao.getsignbyaccount(data.user);
     }).then((result) => {
         data.signins = JSON.parse(JSON.stringify(result)).slice(0,4);
-        data.signins.forEach(helper.dateConverter);
+        data.signins.forEach(helper.dateConverter());
         return dao.getexambyaccount(data.user);
     }).then((result) => {
         data.exams = JSON.parse(JSON.stringify(result)).slice(0,4);
@@ -44,7 +44,7 @@ router.get('/signin', (req, res, next) => {
         return dao.getsignbyaccount(user);
     }).then((result) => {
         var signin = JSON.parse(JSON.stringify(result));
-        signin.forEach(helper.dateConverter);
+        signin.forEach(helper.dateConverter());
         res.render('home/signin', { title: '签到列表', signin: signin });
     }).catch(helper.catchError(req, res, next, true));
 });
@@ -87,7 +87,7 @@ router.get('/signindetail', (req, res, next) => {
         return dao.getsignbyid(req.query.sid)
     }).then((result) => {
         result = JSON.parse(JSON.stringify(result));
-        result.forEach(helper.dateConverter);
+        result.forEach(helper.dateConverter());
         res.render('home/signindetail', { course_id : req.query.cid, signin_id : req.query.sid, signindetail: result });
     }).catch(helper.catchError(req, res, next, true));
 });
@@ -172,10 +172,11 @@ router.post('/createexam', (req, res, next) => {
         var examname = req.body.examname || 'untitled';
         return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
     }).then(() => {
-        res.status(207).send(JSON.stringify({
+        var response = {
             reload: '#exam',
             notify: ['测验创建成功', 'success']
-        }));
+        }
+        res.status(207).send(JSON.stringify(response));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -199,7 +200,22 @@ router.get('/editexam', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('home/examdetail', { course_id : req.query.cid });
+        res.render('home/examdetail', result);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.post('/editexam', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        var examname = req.body.examname || 'untitled';
+        return examManager.editExam(req.query.eid, examname, JSON.parse(req.body.exam));
+    }).then(() => {
+        var response = {
+            reload: '#exam',
+            notify: ['测验修改成功', 'success']
+        }
+        res.status(207).send(JSON.stringify(response));
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -248,22 +264,66 @@ router.get('/statistics', (req, res, next) => {
 });
 
 router.get('/courseinfo', (req, res, next) => {
-    var data = { onlystu : req.query.only == 'stu' };
-    data.course_id = req.query.cid;
+    var data = {
+        onlystu : req.query.only == 'stu',
+        course_id : req.query.cid
+    };
     helper.checkLogin(req).then((user) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
-        return dao.getstubycourse(req.query.cid);
+        return dao.statssignbycourse(req.query.cid);
     }).then((result) => {
         data.students = JSON.parse(JSON.stringify(result));
+        return dao.statsexambycourse(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result));
+        for (var i = 0; i < data.students.length || i < result.length; i++) {
+            data.students[i] = data.students[i] || {};
+            Object.assign(data.students[i], result[i]);
+        }
         return dao.getsignbycourse(req.query.cid);
     }).then((result) => {
         data.signins = JSON.parse(JSON.stringify(result)).slice(0,3);
-        data.signins.forEach(helper.dateConverter);
+        data.signins.forEach(helper.dateConverter());
         return dao.getexambycourse(req.query.cid);
     }).then((result) => {
         data.exams = JSON.parse(JSON.stringify(result)).slice(0,3);
         res.render('home/courseinfo', data);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/studetail', (req, res, next) => {
+    var data = {
+        course_id : req.query.cid,
+        stu_id : req.query.stu,
+        sign_total : 0,
+        sign_num : 0,
+        exam_total: 0,
+        exam_num : 0,
+        sum_score : 0
+    };
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        return dao.statssigndetail(req.query.cid, req.query.stu);
+    }).then((result) => {
+        data.signins = JSON.parse(JSON.stringify(result));
+        data.sign_total = data.signins.length;
+        data.signins.forEach(s => {
+            if (s.stu_time) data.sign_num++;
+            helper.dateConverter()(s);
+            helper.dateConverter('stu_time')(s);
+        });
+        return dao.statsexamdetail(req.query.cid, req.query.stu);
+    }).then((result) => {
+        data.exams = JSON.parse(JSON.stringify(result));
+        data.exam_total = data.exams.length;
+        data.exams.forEach(e => {
+            if (e.time) data.exam_num++;
+            data.sum_score += e.score || 0;
+            helper.dateConverter()(e);
+        });
+        res.render('home/studetail', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
