@@ -204,7 +204,9 @@ var delcourse = function(course_id) {
  * 等具体需求再修改
  */
 var getexambycourse = function(course_id) {
-    var sql = "select * from exams where ex_coz_id= ?";
+    var sql = "select * from exams " 
+            + "where ex_coz_id=? "
+            + "order by exam_time desc";
     return pool.query(sql, course_id)
 };
 
@@ -416,12 +418,13 @@ var addstudent = function(student) {
  * [{sign_id, time, sign_num, stu_num}]
  */
 var getsignbycourse = function(course_id) {
-    var sql = "select sign_id, course_id, sign_time as time, "
+    var sql = "select sign_id, sign_time as time, "
             + "sg_stu_num as sign_num, "
             + "student_num as stu_num "
             + "from signup, courses "
             + "where course_id = ? and sg_coz_id = course_id "
-            + "group by sign_id";
+            + "group by sign_id "
+            + "order by sign_time desc";
     return pool.query(sql, course_id);
 }
 
@@ -718,6 +721,13 @@ var updatestatistics = function(exam_id, statistics) {
         }
     });
 }
+/**
+ * delstusign
+ *
+ * @param {number} sign_id
+ * @param {number} stu_id
+ * @return {Object} Promise
+ */
 var delstusign = function(sign_id, stu_id) {
     var sql = "delete from stu_sign " 
             + "where ss_sign_id=? and ss_stu_id=?";
@@ -728,6 +738,79 @@ var delstusign = function(sign_id, stu_id) {
             return Promise.resolve();
         }
     })
+}
+
+/**
+ * statssignbycourse
+ *
+ * @param {number} course_id
+ * @return {Object} Promise
+ * [stu_id, stu_name, total, sign_num]
+ */
+var statssignbycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, cs_stu_name as stu_name, "
+            + "count(sign_id) as total, count(ss_sign_id) as sign_num "
+            + "from coz_stu "
+            + "inner join signup   on  cs_coz_id = sg_coz_id "
+            + "left join stu_sign  on  sign_id = ss_sign_id "
+            + "                        and ss_stu_id = cs_stu_id "  
+            + "where cs_coz_id= ? "
+            + "group by cs_stu_id ";
+    return pool.query(sql, course_id);
+}
+
+/**
+ * statssigndetail
+ *
+ * @param {number} course_id
+ * @param {number} student_id
+ * @return {Object} Promise
+ * [time, stu_time]
+ * time: 签到开始时间  stu_time：学生签到时间, 未签到为NULL
+ */
+var statssigndetail = function(course_id, student_id) {
+    var sql = "select sign_time as time, stu_sign_time as stu_time "
+            + "from signup "
+            + "left join stu_sign on sign_id = ss_sign_id and ss_stu_id=? "
+            + "where sg_coz_id = ? ";
+    return pool.query(sql, [student_id, course_id]);
+}
+
+/**
+ * statsexambycourse
+ *
+ * @param {number} course_id
+ * @return {Object} Promise
+ * [stu_id, stu_name, total, exam_num, sum_score]
+ */
+var statsexambycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, cs_stu_name as stu_name, "
+            + "count(exam_id) as total, count(ans_ex_id) as exam_num, "
+            + "sum(ans_score) as sum_score "
+            + "from coz_stu "
+            + "inner join exams  on cs_coz_id = ex_coz_id "
+            + "left join answers on exam_id = ans_ex_id "
+            + "                     and ans_stu_id = cs_stu_id "  
+            + "where cs_coz_id= ? "
+            + "group by cs_stu_id ";
+    return pool.query(sql, course_id);
+}
+
+/**
+ * statsexamdetail
+ *
+ * @param {number} course_id
+ * @param {number} student_id
+ * @return {Object} Promise
+ * [exam_id, exam_name, score, time]
+ */
+var statsexamdetail = function(course_id, student_id) {
+    var sql = "select exam_id, exam_name, ans_score as score, "
+            + "ans_time as time "
+            + "from exams "
+            + "left join answers on exam_id = ans_ex_id and ans_stu_id=? "
+            + "where ex_coz_id = ? ";
+    return pool.query(sql, [student_id, course_id]);
 }
 
 exports.login = login;
@@ -756,6 +839,8 @@ exports.copyexam = copyexam;
 exports.getexambyid = getexambyid;
 exports.getexambycourse = getexambycourse;
 exports.getexambyaccount = getexambyaccount;
+exports.statsexambycourse = statsexambycourse;
+exports.statsexamdetail = statsexamdetail;
 exports.checkexam = checkexam;
 
 exports.addsign = addsign;
@@ -765,6 +850,8 @@ exports.studentsign = studentsign;
 exports.getsignbyid = getsignbyid;
 exports.getsignbyaccount = getsignbyaccount;
 exports.getsignbycourse = getsignbycourse;
+exports.statssignbycourse = statssignbycourse;
+exports.statssigndetail = statssigndetail;
 exports.checksign = checksign;
 
 exports.addanswer = addanswer;

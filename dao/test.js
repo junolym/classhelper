@@ -1,11 +1,36 @@
 var dao = require('./dao.js');
 var data = require('./data.js');
-dao.delstusign(29, 14331024)
+
+dao.statsexamdetail(6, 14331024)
 .then(function(doc) {
     console.log(doc);
 }).catch(function(err) {
     console.log(err);
 });
+// // dao.statsexambycourse(6)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.statssigndetail(6, 14331024)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.statssignbycourse(6)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
+// dao.delstusign(29, 14331024)
+// .then(function(doc) {
+//     console.log(doc);
+// }).catch(function(err) {
+//     console.log(err);
+// });
 // dao.updatestatistics("1", null)
 // .then(function(doc) {
 //     console.log(doc);
