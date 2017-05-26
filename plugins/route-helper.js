@@ -35,9 +35,13 @@ function catchError(req, res, next, reload, userError) {
     }
 }
 
-function dateConverter(d) {
-    d.time = (new Date(d.time)).toLocaleString('zh-CN', { hour12 : false })
-        .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
+function dateConverter(name) {
+    name = name || 'time';
+    return (d) => {
+        if (!d[name]) return;
+        d[name] = (new Date(d[name])).toLocaleString('zh-CN', { hour12 : false })
+            .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
+    };
 }
 
 function parseStu(cid, stuJson) {
