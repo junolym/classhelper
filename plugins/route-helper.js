@@ -37,10 +37,11 @@ function catchError(req, res, next, reload, userError) {
 
 function dateConverter(name) {
     name = name || 'time';
-    return (d) => {
-        if (!d[name]) return;
-        d[name] = (new Date(d[name])).toLocaleString('zh-CN', { hour12 : false })
-            .replace(/[\/|-]/, '年').replace(/[\/|-]/, '月').replace(/ /, '日 ');
+    return (obj) => {
+        if (!obj[name]) return;
+        var d = new Date(obj[name]);
+        obj[name] = d.getFullYear() + '年' + d.getMonth() + '月' +  d.getDate() + '日 '
+            + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
     };
 }
 
