@@ -765,14 +765,16 @@ var statssignbycourse = function(course_id) {
  * @param {number} course_id
  * @param {number} student_id
  * @return {Object} Promise
- * [time, stu_time]
+ * [sign_id, time, stu_time]
  * time: 签到开始时间  stu_time：学生签到时间, 未签到为NULL
  */
 var statssigndetail = function(course_id, student_id) {
-    var sql = "select sign_time as time, stu_sign_time as stu_time "
+    var sql = "select sign_id, sign_time as time, "
+            + "stu_sign_time as stu_time "
             + "from signup "
             + "left join stu_sign on sign_id = ss_sign_id and ss_stu_id=? "
-            + "where sg_coz_id = ? ";
+            + "where sg_coz_id = ? "
+            + "order by sign_time desc";
     return pool.query(sql, [student_id, course_id]);
 }
 
@@ -809,7 +811,8 @@ var statsexamdetail = function(course_id, student_id) {
             + "ans_time as time "
             + "from exams "
             + "left join answers on exam_id = ans_ex_id and ans_stu_id=? "
-            + "where ex_coz_id = ? ";
+            + "where ex_coz_id = ? "
+            + "order by exam_time desc ";
     return pool.query(sql, [student_id, course_id]);
 }
 
