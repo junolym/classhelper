@@ -204,7 +204,9 @@ var delcourse = function(course_id) {
  * 等具体需求再修改
  */
 var getexambycourse = function(course_id) {
-    var sql = "select * from exams where ex_coz_id= ?";
+    var sql = "select * from exams " 
+            + "where ex_coz_id=? "
+            + "order by exam_time desc";
     return pool.query(sql, course_id)
 };
 
@@ -421,7 +423,8 @@ var getsignbycourse = function(course_id) {
             + "student_num as stu_num "
             + "from signup, courses "
             + "where course_id = ? and sg_coz_id = course_id "
-            + "group by sign_id";
+            + "group by sign_id "
+            + "order by sign_time desc";
     return pool.query(sql, course_id);
 }
 
@@ -737,6 +740,43 @@ var delstusign = function(sign_id, stu_id) {
     })
 }
 
+/**
+ * statssignbycourse
+ *
+ * @param {number} course_id
+ * @return {Object} Promise
+ * [stu_id, stu_name, total, sign_num]
+ */
+var statssignbycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, cs_stu_name as stu_name, "
+            + "count(sign_id) as total, count(ss_sign_id) as sign_num "
+            + "from coz_stu "
+            + "inner join signup   on  cs_coz_id = sg_coz_id "
+            + "left join stu_sign  on  sign_id = ss_sign_id "
+            + "                        and ss_stu_id = cs_stu_id "  
+            + "where cs_coz_id= ? "
+            + "group by cs_stu_id ";
+    return pool.query(sql, course_id);
+}
+
+/**
+ * statssigndetail
+ *
+ * @param {number} course_id
+ * @param {number} student_id
+ * @return {Object} Promise
+ * [time, stu_time]
+ * time: 签到开始时间  stu_time：学生签到时间, 未签到为NULL
+ */
+var statssigndetail = function(course_id, student_id) {
+    var sql = "select sign_time as time, stu_sign_time as stu_time "
+            + "from signup "
+            + "left join stu_sign on sign_id = ss_sign_id and ss_stu_id=? "
+            + "where sg_coz_id = ? ";
+    return pool.query(sql, [student_id, course_id]);
+}
+
+
 exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
@@ -772,6 +812,8 @@ exports.studentsign = studentsign;
 exports.getsignbyid = getsignbyid;
 exports.getsignbyaccount = getsignbyaccount;
 exports.getsignbycourse = getsignbycourse;
+exports.statssignbycourse = statssignbycourse;
+exports.statssigndetail = statssigndetail;
 exports.checksign = checksign;
 
 exports.addanswer = addanswer;

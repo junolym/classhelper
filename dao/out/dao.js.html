@@ -232,7 +232,9 @@ var delcourse = function(course_id) {
  * 等具体需求再修改
  */
 var getexambycourse = function(course_id) {
-    var sql = "select * from exams where ex_coz_id= ?";
+    var sql = "select * from exams " 
+            + "where ex_coz_id=? "
+            + "order by exam_time desc";
     return pool.query(sql, course_id)
 };
 
@@ -321,7 +323,7 @@ var checkexam = function(account, course_id, exam_id) {
  *
  * @param {number} exam_id
  * @returns {Object} Promise
- * [exam_id, ex_coz_id, exam_name, exam_question, ex_statistics]
+ * [exam_id, ex_coz_id, exam_name, exam_question, exam_statistics]
  * exam_state, exam_time暂未使用
  *
  */
@@ -444,12 +446,13 @@ var addstudent = function(student) {
  * [{sign_id, time, sign_num, stu_num}]
  */
 var getsignbycourse = function(course_id) {
-    var sql = "select sign_id, course_id, sign_time as time, "
-            + "count(ss_sign_id) as sign_num, "
+    var sql = "select sign_id, sign_time as time, "
+            + "sg_stu_num as sign_num, "
             + "student_num as stu_num "
-            + "from signup, stu_sign, courses "
+            + "from signup, courses "
             + "where course_id = ? and sg_coz_id = course_id "
-            + "and ss_sign_id = sign_id group by sign_id";
+            + "group by sign_id "
+            + "order by sign_time desc";
     return pool.query(sql, course_id);
 }
 
@@ -728,6 +731,80 @@ var copyexam = function(src_exam_id, des_course_id) {
     });
 }
 
+/**
+ * updatestatistics
+ *
+ * @param {number} exam_id
+ * @param {string} statistics 新的统计结果
+ * @return {Object} Promise
+ */
+var updatestatistics = function(exam_id, statistics) {
+    var sql = "update exams set exam_statistics = ? "
+            + "where exam_id = ?";
+    return pool.query(sql, [statistics, exam_id]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject(new UserError("该测验不存在"));
+        } else {
+            return Promise.resolve();
+        }
+    });
+}
+/**
+ * delstusign
+ *
+ * @param {number} sign_id
+ * @param {number} stu_id
+ * @return {Object} Promise
+ */
+var delstusign = function(sign_id, stu_id) {
+    var sql = "delete from stu_sign " 
+            + "where ss_sign_id=? and ss_stu_id=?";
+    return pool.query(sql, [sign_id, stu_id]).then(function(result) {
+        if (result.affectedRows == 0) {
+            return Promise.reject(new UserError("该学生未签到!"));
+        } else {
+            return Promise.resolve();
+        }
+    })
+}
+
+/**
+ * statssignbycourse
+ *
+ * @param {number} course_id
+ * @return {Object} Promise
+ * [stu_id, stu_name, total, sign_num]
+ */
+var statssignbycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, cs_stu_name as stu_name, "
+            + "count(sign_id) as total, count(ss_sign_id) as sign_num "
+            + "from coz_stu "
+            + "inner join signup   on  cs_coz_id = sg_coz_id "
+            + "left join stu_sign  on  sign_id = ss_sign_id "
+            + "                        and ss_stu_id = cs_stu_id "  
+            + "where cs_coz_id= ? "
+            + "group by cs_stu_id ";
+    return pool.query(sql, course_id);
+}
+
+/**
+ * statssigndetail
+ *
+ * @param {number} course_id
+ * @param {number} student_id
+ * @return {Object} Promise
+ * [time, stu_time]
+ * time: 签到开始时间  stu_time：学生签到时间, 未签到为NULL
+ */
+var statssigndetail = function(course_id, student_id) {
+    var sql = "select sign_time as time, stu_sign_time as stu_time "
+            + "from signup "
+            + "left join stu_sign on sign_id = ss_sign_id and ss_stu_id=? "
+            + "where sg_coz_id = ? ";
+    return pool.query(sql, [student_id, course_id]);
+}
+
+
 exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
@@ -749,6 +826,7 @@ exports.checkstudent = checkstudent;
 exports.addexam = addexam;
 exports.delexam = delexam;
 exports.updateexam = updateexam;
+exports.updatestatistics = updatestatistics;
 exports.copyexam = copyexam;
 exports.getexambyid = getexambyid;
 exports.getexambycourse = getexambycourse;
@@ -757,10 +835,13 @@ exports.checkexam = checkexam;
 
 exports.addsign = addsign;
 exports.delsign = delsign;
+exports.delstusign = delstusign;
 exports.studentsign = studentsign;
 exports.getsignbyid = getsignbyid;
 exports.getsignbyaccount = getsignbyaccount;
 exports.getsignbycourse = getsignbycourse;
+exports.statssignbycourse = statssignbycourse;
+exports.statssigndetail = statssigndetail;
 exports.checksign = checksign;
 
 exports.addanswer = addanswer;
@@ -778,13 +859,13 @@ exports.addstudent = addstudent;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addanswer">addanswer</a></li><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checkexam">checkexam</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#checkstudent">checkstudent</a></li><li><a href="global.html#copyexam">copyexam</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getanswerbyexam">getanswerbyexam</a></li><li><a href="global.html#getanswerbystudent">getanswerbystudent</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambyaccount">getexambyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getexambyid">getexambyid</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateexam">updateexam</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addanswer">addanswer</a></li><li><a href="global.html#addcourse">addcourse</a></li><li><a href="global.html#addexam">addexam</a></li><li><a href="global.html#addsign">addsign</a></li><li><a href="global.html#addstudent">addstudent</a></li><li><a href="global.html#addstutocourse">addstutocourse</a></li><li><a href="global.html#adduser">adduser</a></li><li><a href="global.html#checkcourse">checkcourse</a></li><li><a href="global.html#checkexam">checkexam</a></li><li><a href="global.html#checksign">checksign</a></li><li><a href="global.html#checkstudent">checkstudent</a></li><li><a href="global.html#copyexam">copyexam</a></li><li><a href="global.html#delcourse">delcourse</a></li><li><a href="global.html#delexam">delexam</a></li><li><a href="global.html#delsign">delsign</a></li><li><a href="global.html#delstuofcourse">delstuofcourse</a></li><li><a href="global.html#delstusign">delstusign</a></li><li><a href="global.html#deluser">deluser</a></li><li><a href="global.html#getanswerbyexam">getanswerbyexam</a></li><li><a href="global.html#getanswerbystudent">getanswerbystudent</a></li><li><a href="global.html#getcoursebyaccount">getcoursebyaccount</a></li><li><a href="global.html#getcoursebyid">getcoursebyid</a></li><li><a href="global.html#getexambyaccount">getexambyaccount</a></li><li><a href="global.html#getexambycourse">getexambycourse</a></li><li><a href="global.html#getexambyid">getexambyid</a></li><li><a href="global.html#getsignbyaccount">getsignbyaccount</a></li><li><a href="global.html#getsignbycourse">getsignbycourse</a></li><li><a href="global.html#getsignbyid">getsignbyid</a></li><li><a href="global.html#getstubycourse">getstubycourse</a></li><li><a href="global.html#getuser">getuser</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#statssignbycourse">statssignbycourse</a></li><li><a href="global.html#statssigndetail">statssigndetail</a></li><li><a href="global.html#studentsign">studentsign</a></li><li><a href="global.html#updatecourse">updatecourse</a></li><li><a href="global.html#updateexam">updateexam</a></li><li><a href="global.html#updatestatistics">updatestatistics</a></li><li><a href="global.html#updateuserinfo">updateuserinfo</a></li><li><a href="global.html#updateuserpwd">updateuserpwd</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri May 19 2017 00:50:29 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri May 26 2017 11:15:52 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
