@@ -1,5 +1,10 @@
 {{#if signindetail}}
-<table class="table table-striped">
+<ol class="breadcrumb col-md-11 margin-20">
+  <li><a href="#user">{{user}}</a></li>
+  <li><a href="#courseinfo?cid={{cid}}">{{course_name}}</a></li>
+  <li class="active">签到结果</li>
+</ol>
+<table class="table table-striped line-btn">
   <thead>
     <tr>
       <th>学号</th>
@@ -9,7 +14,7 @@
   </thead>
   <tbody>
     {{#each signindetail}}
-    <tr>
+    <tr onclick="document.location='#studetail?cid={{../cid}}&stu={{stu_id}}'">
       <td>{{stu_id}}</td>
       <td>{{name}}</td>
       <td>{{time}}</td>
@@ -19,6 +24,6 @@
 </table>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-    <p>暂时还没有同学签到，点击<a target="_blank" href="/signin/showqrcode?cid={{course_id}}&sid={{signin_id}}">显示签到二维码</a></p>
+    <p>暂时还没有同学签到，点击<a target="_blank" href="/signin/showqrcode?cid={{cid}}&sid={{sid}}">显示签到二维码</a></p>
 </div>
 {{/if}}

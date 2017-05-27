@@ -81,14 +81,25 @@ router.post('/addcourse', (req, res, next) => {
 });
 
 router.get('/signindetail', (req, res, next) => {
+    var data = {
+        user : req.session.user,
+        cid : req.query.cid,
+        course_name : '',
+        sid : req.query.sid
+    }
     helper.checkLogin(req).then((user) => {
         return dao.checksign(user, req.query.cid, req.query.sid)
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
         return dao.getsignbyid(req.query.sid)
     }).then((result) => {
         result = JSON.parse(JSON.stringify(result));
         result.forEach(helper.dateConverter());
-        res.render('home/signindetail', { course_id : req.query.cid, signin_id : req.query.sid, signindetail: result });
+        data.signindetail = result;
+        res.render('home/signindetail', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -220,26 +231,46 @@ router.post('/editexam', (req, res, next) => {
 });
 
 router.get('/submitlist', (req, res, next) => {
+    var data = {
+        user : req.session.user,
+        cid : req.query.cid,
+        eid : req.query.eid,
+        course_name : ''
+    }
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
+        return examManager.getExam(req.query.eid, req.query.student);
+    }).then((result) => {
+        Object.assign(data, result);
         return examManager.getAnswers(req.query.eid);
     }).then((result) => {
-        res.render('home/submitlist', {
-            course_id: req.query.cid,
-            exam_id: req.query.eid,
-            submitlist: result
-        });
+        data.submitlist = result;
+        res.render('home/submitlist', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/examresult', (req, res, next) => {
+    var data = {
+        user : req.session.user,
+        cid : req.query.cid,
+        course_name : ''
+    }
     helper.checkLogin(req).then((user) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
         return examManager.getExam(req.query.eid, req.query.student);
     }).then((result) => {
-        res.render('home/examresult', result);
+        Object.assign(data, result);
+        res.render('home/examresult', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 
@@ -265,12 +296,18 @@ router.get('/statistics', (req, res, next) => {
 
 router.get('/courseinfo', (req, res, next) => {
     var data = {
+        user : req.session.user,
         onlystu : req.query.only == 'stu',
-        course_id : req.query.cid
+        cid : req.query.cid,
+        course_name : ''
     };
     helper.checkLogin(req).then((user) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
         return dao.statssignbycourse(req.query.cid);
     }).then((result) => {
         data.students = JSON.parse(JSON.stringify(result));
@@ -294,8 +331,11 @@ router.get('/courseinfo', (req, res, next) => {
 
 router.get('/studetail', (req, res, next) => {
     var data = {
-        course_id : req.query.cid,
+        user : req.session.user,
+        cid : req.query.cid,
+        course_name : '',
         stu_id : req.query.stu,
+        stu_name : '',
         sign_total : 0,
         sign_num : 0,
         exam_total: 0,
@@ -305,6 +345,19 @@ router.get('/studetail', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
+        return dao.getstubycourse(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result));
+        for (var i in result) {
+            if (result[i].id==data.stu_id) {
+                data.stu_name = result[i].name;
+                break;
+            }
+        }
         return dao.statssigndetail(req.query.cid, req.query.stu);
     }).then((result) => {
         data.signins = JSON.parse(JSON.stringify(result));

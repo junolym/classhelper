@@ -1,3 +1,8 @@
+<ol class="breadcrumb col-md-11 margin-20">
+  <li><a href="#user">{{user}}</a></li>
+  <li><a href="#courseinfo?cid={{cid}}">{{course_name}}</a></li>
+  <li class="active">{{stu_id}} - {{stu_name}}</li>
+</ol>
 <div class="col-md-11 panel margin-20 panel-green">
   <div class="panel-heading">
     签到情况
@@ -11,7 +16,7 @@
     </thead>
     <tbody>
       {{#each signins}}
-      <tr onclick="document.location='#signindetail?cid={{../course_id}}&sid={{sign_id}}'">
+      <tr onclick="document.location='#signindetail?cid={{../cid}}&sid={{sign_id}}'">
         <td>{{time}}</td>
         <td>{{#if stu_time}}{{stu_time}}{{else}}未签到{{/if}}</td>
       </tr>
@@ -34,7 +39,7 @@
     <tbody>
       {{#each exams}}
       {{#if time}}
-      <tr onclick="document.location='#studentanswer?cid={{../course_id}}&eid={{exam_id}}&student={{../stu_id}}'">
+      <tr onclick="document.location='#studentanswer?cid={{../cid}}&eid={{exam_id}}&student={{../stu_id}}'">
       {{else}}
       <tr onclick="warning('该生未交卷，无法查看答卷')">
       {{/if}}
