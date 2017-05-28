@@ -737,7 +737,11 @@ var delstusign = function(sign_id, stu_id) {
         } else {
             return Promise.resolve();
         }
-    })
+    }).then(function() {
+        var sql = "update signup set sg_stu_num=sg_stu_num-1 "
+                + "where sign_id = ?";
+        return pool.query(sql, sign_id);
+    });
 }
 
 /**

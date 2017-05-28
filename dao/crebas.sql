@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/05/26 0:18:58                           */
+/* Created on:     2017/05/28 21:38:02                          */
 /*==============================================================*/
 
 
@@ -13,8 +13,6 @@ drop trigger delstudent;
 drop trigger delete_exam;
 
 drop trigger delete_sign;
-
-drop trigger delsign;
 
 drop trigger stusign;
 
@@ -42,7 +40,7 @@ create table answers
    ans_ex_id            int not null,
    ans_stu_id           int not null,
    ans_stu_name         char(40),
-   ans_score            char(10),
+   ans_score            int,
    ans_answer           text,
    ans_time             datetime default CURRENT_TIMESTAMP,
    primary key (ans_ex_id, ans_stu_id)
@@ -172,12 +170,6 @@ delete from answers where ans_ex_id=old.exam_id;
 create trigger delete_sign after delete
 on signup for each row
 delete from stu_sign where ss_sign_id=old.sign_id;
-
-
-create trigger delsign after delete
-on stu_sign for each row
-update signup set sg_stu_num=sg_stu_num-1
-where sign_id=old.ss_sign_id;
 
 
 create trigger stusign after insert
