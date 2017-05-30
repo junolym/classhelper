@@ -1,8 +1,8 @@
 {{#if submitlist}}
 <ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{user}}</a></li>
-  <li><a href="#courseinfo?cid={{cid}}">{{course_name}}</a></li>
-  <li><a href="#examresult?cid={{cid}}&eid={{eid}}">{{examname}}</a></li>
+  <li><a href="#user">{{username}}</a></li>
+  <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
+  <li><a href="#exam/result?cid={{cid}}&eid={{eid}}">{{examname}}</a></li>
   <li class="active">提交列表</li>
 </ol>
 <table class="table table-striped table-hover line-btn">
@@ -16,7 +16,7 @@
   </thead>
   <tbody>
     {{#each submitlist}}
-    <tr onclick="document.location='#studentanswer?cid={{../cid}}&&eid={{../eid}}&student={{studentid}}'">
+    <tr onclick="document.location='#exam/studentanswer?cid={{../cid}}&&eid={{../eid}}&student={{studentid}}'">
       <td>{{studentid}}</td>
       <td>{{name}}</td>
       <td>{{time}}</td>

@@ -1,7 +1,7 @@
 {{#if signindetail}}
 <ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{user}}</a></li>
-  <li><a href="#courseinfo?cid={{cid}}">{{course_name}}</a></li>
+  <li><a href="#user">{{username}}</a></li>
+  <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
   <li class="active">签到结果</li>
 </ol>
 <table class="table table-striped line-btn">
@@ -14,7 +14,7 @@
   </thead>
   <tbody>
     {{#each signindetail}}
-    <tr onclick="document.location='#studetail?cid={{../cid}}&stu={{stu_id}}'">
+    <tr onclick="document.location='#course/student?cid={{../cid}}&stu={{stu_id}}'">
       <td>{{stu_id}}</td>
       <td>{{name}}</td>
       <td>{{time}}</td>

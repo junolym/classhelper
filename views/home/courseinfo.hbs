@@ -1,5 +1,5 @@
 <ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{user}}</a></li>
+  <li><a href="#user">{{username}}</a></li>
   <li class="active">{{course_name}}</li>
 </ol>
 {{#unless onlystu}}
@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         {{#each signins}}
-        <tr onclick="document.location='#signindetail?cid={{../cid}}&sid={{sign_id}}'">
+        <tr onclick="document.location='#signin/detail?cid={{../cid}}&sid={{sign_id}}'">
           <td>{{time}}</td>
           <td>{{sign_num}}</td>
         </tr>
@@ -31,7 +31,7 @@
     {{else}}
     <div class="panel-body text-center">
       无签到，<a target="_blank" href="/signin/create?cid={{cid}}"
-        onclick="setTimeout(function(){loadContent('courseinfo?cid={{cid}}')},200)">点此发起</a>
+        onclick="setTimeout(function(){loadContent('course/detail?cid={{cid}}')},200)">点此发起</a>
     </div>
     {{/if}}
   </div>
@@ -49,7 +49,7 @@
       </thead>
       <tbody>
         {{#each exams}}
-        <tr onclick="document.location='#examresult?cid={{../cid}}&eid={{exam_id}}'">
+        <tr onclick="document.location='#exam/result?cid={{../cid}}&eid={{exam_id}}'">
           <td>{{exam_name}}</td>
           <td>{{exam_stu_num}}</td>
         </tr>
@@ -61,7 +61,7 @@
     </div>
     {{else}}
     <div class="panel-body text-center">
-      无测验，<a href="#createexam?cid={{cid}}">点此创建</a>
+      无测验，<a href="#exam/create?cid={{cid}}">点此创建</a>
     </div>
     {{/if}}
   </div>
@@ -86,7 +86,7 @@
       </thead>
       <tbody>
         {{#each students}}
-        <tr onclick="document.location='#studetail?cid={{../cid}}&stu={{stu_id}}'">
+        <tr onclick="document.location='#course/student?cid={{../cid}}&stu={{stu_id}}'">
           <td>{{stu_id}}</td>
           <td>{{stu_name}}</td>
           <td>{{#if sign_num}}{{sign_num}}{{else}}0{{/if}}</td>
@@ -100,6 +100,6 @@
 </div>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-  <p>尚无学生统计数据，<a href="#coursedetail?cid={{cid}}">点此查看名单</a></p>
+  <p>尚无学生统计数据，<a href="#course/edit?cid={{cid}}">点此查看名单</a></p>
 </div>
 {{/if}}

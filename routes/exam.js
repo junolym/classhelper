@@ -5,33 +5,129 @@ var dao = require('../dao/dao.js');
 var helper = require('../plugins/route-helper.js');
 var examManager = require('../plugins/exam-manager.js');
 
-router.get('/', (req, res, next) => {
-    if (req.query.k) {
-        res.cookie('exam', req.query.k);
-        return res.redirect('/exam');
-    }
-    if (!req.cookies || !qrcode.get(req.cookies.exam)) {
-        return res.redirect('/result?msg=请求试卷失败&err=请正确扫描二维码');
-    }
-    var eid = qrcode.get(req.cookies.exam).eid;
-    examManager.getExam(eid).then((result) => {
-        res.render('exam', { title: "答题页面", examname: result.examname, exam: result.questions });
-    }).catch(helper.catchError(req, res, next, false, (err) => {
-        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
-    }));
+router.get('/create', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        res.render('home/examdetail', { course_id : req.query.cid });
+    }).catch(helper.catchError(req, res, next, true));
 });
 
-router.post('/', (req, res, next) => {
-    if (!req.cookies || !qrcode.get(req.cookies.exam)) {
-        return res.redirect('/result?msg=交卷失败&err=请正确扫描二维码');
+router.post('/create', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        var examname = req.body.examname || 'untitled';
+        return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
+    }).then(() => {
+        var response = {
+            reload: '#exam',
+            notify: ['测验创建成功', 'success']
+        }
+        res.status(207).send(JSON.stringify(response));
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/delete', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.deleteExam(req.query.eid);
+    }).then(() => {
+        res.status(207).send(JSON.stringify({
+            reload: '#exam',
+            notify: ['测验已删除', 'success']
+        }));
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/edit', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getExam(req.query.eid);
+    }).then((result) => {
+        res.render('home/examdetail', result);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.post('/edit', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        var examname = req.body.examname || 'untitled';
+        return examManager.editExam(req.query.eid, examname, JSON.parse(req.body.exam));
+    }).then(() => {
+        var response = {
+            reload: '#exam',
+            notify: ['测验修改成功', 'success']
+        }
+        res.status(207).send(JSON.stringify(response));
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/submitlist', (req, res, next) => {
+    var data = {
+        cid : req.query.cid,
+        eid : req.query.eid,
+        course_name : ''
     }
-    var eid = qrcode.get(req.cookies.exam).eid;
-    examManager.addStuAnswer(eid, req.body).then(() => {
-        res.clearCookie('exam');
-        res.redirect('/result?msg=交卷成功');
-    }).catch(helper.catchError(req, res, next, false, (err) => {
-        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
-    }));
+    helper.checkLogin(req).then((user) => {
+        Object.assign(data, req.session);
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
+        return examManager.getExam(req.query.eid, req.query.student);
+    }).then((result) => {
+        Object.assign(data, result);
+        return examManager.getAnswers(req.query.eid);
+    }).then((result) => {
+        data.submitlist = result;
+        res.render('home/submitlist', data);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/result', (req, res, next) => {
+    var data = {
+        cid : req.query.cid,
+        course_name : ''
+    }
+    helper.checkLogin(req).then((user) => {
+        Object.assign(data, req.session);
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
+        return examManager.getExam(req.query.eid, req.query.student);
+    }).then((result) => {
+        Object.assign(data, result);
+        res.render('home/examresult', data);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/studentanswer', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getStuAnswer(req.query.eid, req.query.student);
+    }).then((result) => {
+        res.render('home/studentanswer', result);
+    }).catch(helper.catchError(req, res, next, true));
+});
+
+router.get('/statistics', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkexam(user, req.query.cid, req.query.eid);
+    }).then(() => {
+        return examManager.getExam(req.query.eid);
+    }).then((exam) => {
+        res.send(JSON.stringify(exam.statistics));
+    }).catch(helper.catchError(req, res, next, true));
 });
 
 router.get('/preview', (req, res, next) => {

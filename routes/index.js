@@ -3,7 +3,7 @@ var router = express.Router();
 var dao = require('../dao/dao.js');
 
 /**
- * 本文件包含以下url的路由: /, /login, /logout, /qrcode, /result
+ * 本文件包含以下url的路由: /, /login, /logout
  * */
 
 router.get('/', (req, res, next) => {
@@ -24,10 +24,12 @@ router.get('/login', (req, res, next) => {
 
 router.post('/login', (req, res) => {
     dao.login(req.body.form_username, req.body.form_password)
-    .then(() => {
-        req.session.user = req.body.form_username;
-        // TODO
-        // get user's nick name, email, phone and store it
+    .then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        req.session.user = result.account;
+        req.session.username = result.username;
+        req.session.email = result.email;
+        req.session.phone = result.phone;
         res.redirect(req.query.next || '/');
     }).catch((err) => {
         if (err.userError) {
@@ -41,14 +43,6 @@ router.post('/login', (req, res) => {
 router.get('/logout', (req, res, next) => {
     req.session.destroy();
     res.redirect('/login');
-});
-
-router.get('/qrcode', (req, res, next) => {
-    res.render('qrcode', { title: '二维码' });
-});
-
-router.get('/result', (req, res, next) => {
-    res.render('result', { msg : req.query.msg, err : req.query.err });
 });
 
 module.exports = router;

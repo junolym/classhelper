@@ -26,31 +26,41 @@ router.get('/showqrcode', (req, res, next) => {
     }).catch(helper.catchError(req, res, next, false));
 });
 
-router.get('/', (req, res, next) => {
-    if (req.query.k) {
-        res.cookie('signin', req.query.k);
-        res.redirect('/signin');
-    } else {
-        res.render('signin', { title : '签到' });
+router.get('/detail', (req, res, next) => {
+    var data = {
+        cid : req.query.cid,
+        course_name : '',
+        sid : req.query.sid
     }
+    helper.checkLogin(req).then((user) => {
+        Object.assign(data, req.session);
+        return dao.checksign(user, req.query.cid, req.query.sid)
+    }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
+        return dao.getsignbyid(req.query.sid)
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result));
+        result.forEach(helper.dateConverter());
+        data.signindetail = result;
+        res.render('home/signindetail', data);
+    }).catch(helper.catchError(req, res, next, true));
 });
 
-router.post('/', (req, res) => {
-    if (!req.cookies || !qrcode.get(req.cookies.signin)) {
-        return res.redirect('/result?msg=签到失败&err=请正确扫描二维码');
-    }
-    var sign = qrcode.get(req.cookies.signin);
-    dao.studentsign(sign.cid, sign.sid, req.body.form_number, req.body.form_username)
-    .then((result) => {
-        res.clearCookie('signin');
-        res.redirect('/result?msg=签到成功');
-    }).catch((err) => {
-        if (err.userError) {
-            res.redirect('/result?msg=签到失败&err=' + err.message);
-        } else {
-            next(err);
-        }
-    });
+router.get('/delete', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checksign(user, req.query.cid, req.query.sid)
+    }).then(() => {
+        return dao.delsign(req.query.sid);
+    }).then(() => {
+        res.status(207).send(JSON.stringify({
+            reload: '#signin',
+            notify: ['签到记录已删除', 'success']
+        }));
+    }).catch(helper.catchError(req, res, next, true));
 });
+
 
 module.exports = router;

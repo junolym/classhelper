@@ -3,9 +3,9 @@
 	<div class="form-box">
         <div class="form-bottom">
         {{#if course_id}}
-        <form role="form" id="contentForm" action="/home/editcourse?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
+        <form role="form" id="contentForm" action="/course/edit?cid={{course_id}}" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
         {{else}}
-        <form role="form" id="contentForm" action="/home/addcourse" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
+        <form role="form" id="contentForm" action="/course/create" method="post" onsubmit="getstudents();return formSubmit('#contentForm')" class="addcourse-form">
         {{/if}}
         	<div class="form-group">
         		<label class="sr-only" for="form-coursename">课程名称</label>
@@ -35,7 +35,7 @@
                 {{#if course_id}}修改课程{{else}}新建课程{{/if}}
                 </button>
                 {{#if course_id}}
-                <a class="btn btn-danger btn-block" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('deletecourse?cid={{course_id}}'))">删除课程</a>
+                <a class="btn btn-danger btn-block" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('course/delete?cid={{course_id}}'))">删除课程</a>
                 {{/if}}
             </div>
         </form>

@@ -12,10 +12,10 @@
   <tbody>
     {{#each exam}}
     <tr>
-      <td><a class="btn" href="#examresult?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
-      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{name}}</a></td>
-      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{stu_num}}</a></td>
-      <td><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
+      <td><a class="btn" href="#exam/result?cid={{course_id}}&eid={{exam_id}}">{{exam_name}}</a></td>
+      <td><a class="btn" href="#course/detail?cid={{course_id}}">{{name}}</a></td>
+      <td><a class="btn" href="#course/detail?cid={{course_id}}">{{stu_num}}</a></td>
+      <td><a class="btn" href="#exam/submitlist?cid={{course_id}}&eid={{exam_id}}">{{exam_num}}</a></td>
       <td>
       <a class="btn  btn-default" target="_blank" href="/exam/showqrcode?cid={{course_id}}&eid={{exam_id}}">开始测验</a>
       <div class="btn-group">
@@ -23,7 +23,7 @@
           查看 <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="btn" href="#submitlist?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
+          <li><a class="btn" href="#exam/submitlist?cid={{course_id}}&eid={{exam_id}}">查看提交</a></li>
           <li><a class="btn" target="_blank" href="/exam/preview?cid={{course_id}}&eid={{exam_id}}">预览试卷</a></li>
           <li><a class="btn" target="_blank" href="/exam/showanswer?cid={{course_id}}&eid={{exam_id}}">显示答案</a></li>
         </ul>
@@ -33,8 +33,8 @@
           修改 <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="btn" href="#editexam?cid={{course_id}}&eid={{exam_id}}">编辑测验</a></li>
-          <li><a class="btn" onclick="deleteConfirm('测验《{{exam_name}}》','本操作不可恢复', ()=>loadContent('deleteexam?cid={{course_id}}&eid={{exam_id}}'))">删除测验</a></li>
+          <li><a class="btn" href="#exam/edit?cid={{course_id}}&eid={{exam_id}}">编辑测验</a></li>
+          <li><a class="btn" onclick="deleteConfirm('测验《{{exam_name}}》','本操作不可恢复', ()=>loadContent('exam/delete?cid={{course_id}}&eid={{exam_id}}'))">删除测验</a></li>
         </ul>
       </div>
       </td>
@@ -44,6 +44,6 @@
 </table>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-    <p>还没有创建测验哦，点击课程右边的按钮创建测验吧</p>
+    <p>还没有创建测验哦，点击<a href="#course">课程右边的按钮</a>创建测验吧</p>
 </div>
 {{/if}}

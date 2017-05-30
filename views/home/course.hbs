@@ -11,12 +11,12 @@
   <tbody>
     {{#each courses}}
     <tr>
-      <td><a class="btn" href="#courseinfo?cid={{course_id}}">{{course_name}}</td>
-      <td><a class="btn" href="#coursedetail?cid={{course_id}}">{{course_time}}</td>
-      <td><a class="btn" href="#courseinfo?cid={{course_id}}&only=stu">{{student_num}}</td>
+      <td><a class="btn" href="#course/detail?cid={{course_id}}">{{course_name}}</td>
+      <td><a class="btn" href="#course/edit?cid={{course_id}}">{{course_time}}</td>
+      <td><a class="btn" href="#course/detail?cid={{course_id}}&only=stu">{{student_num}}</td>
       <td>
         <a class="btn btn-default" target="_blank" href="/signin/create?cid={{course_id}}">开始签到</a>
-        <a class="btn btn-default" href="#createexam?cid={{course_id}}">创建测验</a>
+        <a class="btn btn-default" href="#exam/create?cid={{course_id}}">创建测验</a>
         <div class="btn-group">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             查看 <span class="caret"></span>
@@ -24,7 +24,7 @@
           <ul class="dropdown-menu">
             <li><a class="btn" href="#signin" onclick="setFilter('cid={{course_id}}')">本课程的签到</a></li>
             <li><a class="btn" href="#exam" onclick="setFilter('cid={{course_id}}')">本课程的测验</a></li>
-            <li><a class="btn" href="#courseinfo?cid={{course_id}}&only=stu">学生统计信息</a></li>
+            <li><a class="btn" href="#course/detail?cid={{course_id}}&only=stu">学生统计信息</a></li>
           </ul>
         </div>
         <div class="btn-group">
@@ -32,8 +32,8 @@
             修改 <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a class="btn" href="#coursedetail?cid={{course_id}}">编辑课程</a></li>
-            <li><a class="btn" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('deletecourse?cid={{course_id}}'))">删除课程</a></li>
+            <li><a class="btn" href="#course/edit?cid={{course_id}}">编辑课程</a></li>
+            <li><a class="btn" onclick="deleteConfirm('课程《{{course_name}}》', '与本课程关联的签到和测验也将删除！', ()=>loadContent('course/delete?cid={{course_id}}'))">删除课程</a></li>
           </ul>
         </div>
       </td>
@@ -41,7 +41,7 @@
     {{/each}}
     <tr>
       <td></td>
-      <td><a class="btn addcoursebtn" href="#addcourse">+</a></td>
+      <td><a class="btn addcoursebtn" href="#course/create">+</a></td>
       <td></td>
       <td></td>
     </tr>
@@ -49,6 +49,6 @@
 </table>
 {{else}}
 <div class="jumbotron alert alert-info text-center" role="alert">
-    <p>还没有课程哦，点此<a href="#addcourse">创建课程</a>吧</p>
+    <p>还没有课程哦，点此<a href="#course/create">创建课程</a>吧</p>
 </div>
 {{/if}}

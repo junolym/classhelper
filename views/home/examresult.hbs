@@ -1,6 +1,6 @@
 <ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{user}}</a></li>
-  <li><a href="#courseinfo?cid={{cid}}">{{course_name}}</a></li>
+  <li><a href="#user">{{username}}</a></li>
+  <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
   <li class="active">{{examname}}</li>
 </ol>
 <div class="container row">
@@ -10,12 +10,12 @@
     <div class="panel panel-info">
       <div class="panel-heading">班级人数</div>
       <div class="panel-body">
-        <a href="#courseinfo?cid={{cid}}&only=stu">
+        <a href="#course/detail?cid={{cid}}&only=stu">
           {{statistics.studentnum}} (查看名单)</a>
       </div>
       <div class="panel-heading">作答学生</div>
       <div class="panel-body">
-        <a href="#submitlist?cid={{cid}}&eid={{eid}}">
+        <a href="#exam/submitlist?cid={{cid}}&eid={{eid}}">
           {{statistics.answernum}} (查看提交)</a>
       </div>
       <div class="panel-heading">最高分</div>

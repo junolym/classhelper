@@ -56,17 +56,11 @@ $(document).ready(function () {
 
 function hashChange() {
     var hash = document.location.hash;
-    if (hash.indexOf('?')==-1) {
-      var a = $('#sidebar-wrapper li [href=' + hash + ']');
-      if (a.length) {
-          navactive(a.parent());
-      }
-    } else {
-      var h = hash.slice(0, Math.min(7, hash.indexOf('?')));
-      var a = $('#sidebar-wrapper li [href=' + h + ']');
-      if (a.length) {
-          navactive(a.parent());
-      }
+    var h = hash.match(/^#[\w]+/)[0];
+    var a = $('#sidebar-wrapper li [href=' + h + ']');
+    if (a.length) {
+        navactive(a.parent());
+        $('title').html('课堂助手 - '+a[0].getAttribute('value'));
     }
     if (hash.length > 1) {
         loadContent(hash.slice(1));
@@ -122,7 +116,7 @@ function warning(message) {
 }
 
 function loadContent(content) {
-    $.get('/home/'+content).complete(responseHandler);
+    $.get(content).complete(responseHandler);
 }
 
 

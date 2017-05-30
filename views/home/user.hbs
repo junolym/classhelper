@@ -8,15 +8,15 @@
       <div class="panel panel-info">
         <div class="panel-heading">课程名称</div>
         <div class="panel-body">
-          <a href="#courseinfo?cid={{course_id}}">{{course_name}}</a>
+          <a href="#course/detail?cid={{course_id}}">{{course_name}}</a>
         </div>
         <div class="panel-heading">上课时间</div>
         <div class="panel-body">
-          <a href="#coursedetail?cid={{course_id}}">{{course_time}}</a>
+          <a href="#course/edit?cid={{course_id}}">{{course_time}}</a>
         </div>
         <div class="panel-heading">学生人数</div>
         <div class="panel-body">
-          <a href="#coursedetail?cid={{course_id}}">{{student_num}}</a>
+          <a href="#course/edit?cid={{course_id}}">{{student_num}}</a>
         </div>
         <div class="panel-heading">签到</div>
         <div class="panel-body">
@@ -25,7 +25,7 @@
         </div>
         <div class="panel-heading">测验</div>
         <div class="panel-body">
-          <a class="btn btn-sm btn-default" href="#createexam?cid={{course_id}}">创建测验</a>
+          <a class="btn btn-sm btn-default" href="#exam/create?cid={{course_id}}">创建测验</a>
           <a class="btn btn-sm btn-default" href="#exam" onclick="setFilter('cid={{course_id}}')">查看测验</a>
         </div>
       </div>
@@ -45,7 +45,7 @@
       </thead>
       <tbody>
         {{#each signins}}
-        <tr onclick="document.location='#signindetail?cid={{course_id}}&sid={{sign_id}}'">
+        <tr onclick="document.location='#signin/detail?cid={{course_id}}&sid={{sign_id}}'">
           <td>{{time}}</td>
           <td>{{sign_num}}</td>
         </tr>
@@ -69,7 +69,7 @@
       </thead>
       <tbody>
         {{#each exams}}
-        <tr onclick="document.location='#examresult?cid={{course_id}}&eid={{exam_id}}'">
+        <tr onclick="document.location='#exam/result?cid={{course_id}}&eid={{exam_id}}'">
           <td>{{exam_name}}</td>
           <td>{{exam_num}}</td>
         </tr>
