@@ -37,6 +37,7 @@ app.use('/', home);
 app.use('/signin', signin);
 app.use('/exam', exam);
 app.use('/course', course);
+app.use('/docs', express.static(__dirname + '/docs'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

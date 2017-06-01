@@ -96,6 +96,9 @@ function responseHandler(res) {
               }
           }
         }
+    } else if (loc.href.slice(-3) == '.md') {
+        $('#content').val(rst);
+        loadMd();
     } else {
         $('#content').html(rst);
         $('#content').scrollTop(0)
@@ -107,6 +110,15 @@ function responseHandler(res) {
         window.tablefiltertext = "";
     }
 }
+
+function loadMd() {
+    if (!window.showdown)
+        return setTimeout(loadMd, 100);
+    var converter = new showdown.Converter(),
+        html      = converter.makeHtml($('#content').val());
+    html = html.replace(/href="(?!http|\/)/g, 'href="#docs/');
+    $('#content').html(html);
+};
 
 function warning(message) {
     $.notify(message , {
