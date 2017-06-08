@@ -70,8 +70,9 @@ function exportlist(filename) {
     var trs = $('#stutable')[0].getElementsByTagName("tr");
 
     table['!ref'] = "A1:B" + trs.length;
-
-    for (var i = 0; i < trs.length; i++) {
+    table['A1'] = {v: "学号"};
+    table['B1'] = {v: "姓名"};
+    for (var i = 1; i < trs.length; i++) {
         var td = trs[i].getElementsByTagName("td");
         table['A' + (i + 1)] = {v: td[0].innerText};
         table['B' + (i + 1)] = {v: td[1].innerText};

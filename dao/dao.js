@@ -12,6 +12,7 @@ function UserError (message) {
     this.userError = true;
     this.status = 403;
 };
+
 UserError.prototype = new Error();
 UserError.prototype.constructor = UserError;
 exports.UserError = UserError;
