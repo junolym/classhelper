@@ -1,9 +1,9 @@
-{{#if signindetail}}
 <ol class="breadcrumb col-md-11 margin-20">
   <li><a href="#user">{{username}}</a></li>
   <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
   <li class="active">签到结果</li>
 </ol>
+{{#if signindetail}}
 <table class="table table-striped line-btn">
   <thead>
     <tr>
@@ -23,6 +23,7 @@
   </tbody>
 </table>
 {{else}}
+<br><br>
 <div class="jumbotron alert alert-info text-center" role="alert">
     <p>暂时还没有同学签到，点击<a target="_blank" href="/signin/showqrcode?cid={{cid}}&sid={{sid}}">显示签到二维码</a></p>
 </div>
