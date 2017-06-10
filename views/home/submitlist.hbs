@@ -16,13 +16,18 @@
   </thead>
   <tbody>
     {{#each submitlist}}
-    <tr onclick="document.location='#exam/studentanswer?cid={{../cid}}&&eid={{../eid}}&student={{studentid}}'">
+    <tr>
       <td>{{studentid}}</td>
       <td>{{name}}</td>
       <td>{{time}}</td>
       <td>{{score}}</td>
     </tr>
     {{/each}}
+    <script type="text/javascript">
+      $('tr td').click((e) => {
+        document.location = '#exam/studentanswer?cid={{cid}}&&eid={{eid}}&student=' + $(e.target).parent().children()[0].innerText;
+      });
+    </script>
   </tbody>
 </table>
 {{else}}

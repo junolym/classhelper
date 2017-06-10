@@ -3,6 +3,7 @@ var router = express.Router();
 var qrcode = require('../plugins/qrcode-manager.js');
 var dao = require('../dao/dao.js');
 var helper = require('../plugins/route-helper.js');
+var str = helper.stringFormat;
 
 router.get('/create', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
@@ -11,9 +12,9 @@ router.get('/create', (req, res, next) => {
         return dao.addsign(req.query.cid);
     }).then((result) => {
         var key = qrcode.add({ cid: req.query.cid, sid: result });
-        res.redirect('/qrcode#/s?k=' + key);
+        res.redirect('/qrcode#/s?k={}'.format(key));
     }).catch(helper.catchError(req, res, next, false, (err) => {
-        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+        res.redirect('/result?msg=请求试卷失败&err={}'.format(err.message));
     }));
 });
 
@@ -22,7 +23,7 @@ router.get('/showqrcode', (req, res, next) => {
         return dao.checksign(user, req.query.cid, req.query.sid);
     }).then(() => {
         var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
-        res.redirect('/qrcode#/s?k=' + key);
+        res.redirect('/qrcode#/s?k={}'.format(key));
     }).catch(helper.catchError(req, res, next, false));
 });
 
@@ -57,10 +58,27 @@ router.get('/delete', (req, res, next) => {
     }).then(() => {
         res.status(207).send(JSON.stringify({
             reload: '#signin',
-            notify: ['签到记录已删除', 'success']
+            notify: ['本次签到已删除', 'success']
         }));
     }).catch(helper.catchError(req, res, next, true));
 });
 
+router.get('/deletesign', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checksign(user, req.query.cid, req.query.sid)
+    }).then(() => {
+        return dao.delstusign(req.query.sid, req.query.stu);
+    }).then(() => {
+        res.status(207).send(JSON.stringify({
+            reload: '#signin/detail?cid={}&sid={}'.format(req.query.cid, req.query.sid),
+            notify: ['学生签到记录已删除', 'danger']
+        }));
+    }).catch(helper.catchError(req, res, next, true, err => {
+        res.status(207).send(JSON.stringify({
+            reload: '#signin/detail?cid={}&sid={}'.format(req.query.cid, req.query.sid),
+            notify: ['删除失败', 'danger']
+        }));
+    }));
+});
 
 module.exports = router;

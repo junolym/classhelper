@@ -10,16 +10,30 @@
       <th>学号</th>
       <th>姓名</th>
       <th>签到时间</th>
+      <th>删除</th>
     </tr>
   </thead>
   <tbody>
     {{#each signindetail}}
-    <tr onclick="document.location='#course/student?cid={{../cid}}&stu={{stu_id}}'">
+    <tr>
       <td>{{stu_id}}</td>
       <td>{{name}}</td>
       <td>{{time}}</td>
+      <td></td>
     </tr>
     {{/each}}
+    <script type="text/javascript">
+    $('tr td:not(:nth-last-child(1))').click((e) => {
+      document.location = '#course/student?cid={{cid}}&stu=' + $(e.target).parent().children()[0].innerText;
+    });
+    $('tr td:nth-last-child(1)').html('<span class="glyphicon glyphicon-remove"></span>');
+    $('tr td:nth-last-child(1) span').click((e) => {
+      var tds = $(e.target).parent().parent().children();
+      deleteConfirm('本条记录？','学号：' + tds[0].innerText + ' ， 姓名：' + tds[1].innerText,
+        ()=>loadContent('signin/deletesign?cid={{cid}}&sid={{sid}}&stu=' + tds[0].innerText))
+    });
+    $('tr td:nth-last-child(1)').attr('style', 'color:red')
+    </script>
   </tbody>
 </table>
 {{else}}

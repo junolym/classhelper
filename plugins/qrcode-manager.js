@@ -31,7 +31,7 @@ QrcodeManager = {
     },
     del : (key) => {
         delete QrcodeManager.qrcodes[key];
-        clearTimeout(clock[key]);
+        clearTimeout(QrcodeManager.clock[key]);
     },
     get : (key) => {
         return QrcodeManager.qrcodes[key];
