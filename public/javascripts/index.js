@@ -108,7 +108,23 @@ function responseHandler(res) {
           tablefilter(keyword);
         }
         window.tablefiltertext = "";
+        setDataTable();
     }
+}
+
+function setDataTable() {
+  var dt = $('table.data-table');
+  if (dt.DataTable) {
+    dt.DataTable({
+      'paging': false,
+      'searching': false,
+      'info':   false
+    });
+  } else {
+    setTimeout(function() {
+      setDataTable();
+    }, 100);
+  }
 }
 
 function loadMd() {
