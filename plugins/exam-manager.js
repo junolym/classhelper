@@ -197,6 +197,9 @@ function addStuAnswer(eid, answer) {
         exam = result;
         return dao.checkstudent(answer.studentid, exam.cid, answer.name);
     }).then(() => {
+        if (exam.answers[answer.studentid]) {
+            return Promise.reject(new UserError('请勿重复交卷'));
+        }
         answer.time = new Date();
         helper.dateConverter()(answer);
         ExamManager.resolveAnswer(exam, answer);
@@ -212,6 +215,11 @@ function resolveAnswer(exam, answer) {
     answer.score = 100;
     var right = 0, wrong = 0;
     exam.questions.forEach((q, i) => { // 第i题，问题是q，回答是answer[i]
+        if (!answer[i]) {
+            wrong++;
+            st.questions[i].wrong++;
+            return;
+        }
         if (q.type < 2) {
             if (q.standardAnswer.toString() == answer[i].toString()) {
                 right++;

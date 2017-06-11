@@ -33,7 +33,7 @@ router.post('/e', (req, res, next) => {
         res.clearCookie('exam');
         res.redirect('/result?msg=交卷成功');
     }).catch(helper.catchError(req, res, next, false, (err) => {
-        res.redirect('/result?msg=请求试卷失败&err=' + err.message);
+        res.redirect('/result?msg=交卷失败&err=' + err.message);
     }));
 });
 
