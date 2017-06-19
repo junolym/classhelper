@@ -1,7 +1,9 @@
-<ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{username}}</a></li>
-  <li class="active">{{course_name}}</li>
-</ol>
+<div class="bc-container">
+  <ol class="breadcrumb col-md-11">
+    <li><a href="#user">{{username}}</a></li>
+    <li class="active">{{course_name}}</li>
+  </ol>
+</div>
 {{#unless onlystu}}
 <div class="row sign-exam">
   <div class="col-md-5 panel margin-20 panel-green">
@@ -66,9 +68,7 @@
     {{/if}}
   </div>
 </div>
-<hr>
 {{/unless}}
-<br><br>
 {{#if students}}
 <div class="row">
   <div class="panel panel-primary margin-20 course-student col-md-11">

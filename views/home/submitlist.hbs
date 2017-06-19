@@ -1,9 +1,11 @@
-<ol class="breadcrumb col-md-11 margin-20">
-  <li><a href="#user">{{username}}</a></li>
-  <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
-  <li><a href="#exam/result?cid={{cid}}&eid={{eid}}">{{examname}}</a></li>
-  <li class="active">提交列表</li>
-</ol>
+<div class="bc-container">
+  <ol class="breadcrumb col-md-11">
+    <li><a href="#user">{{username}}</a></li>
+    <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
+    <li><a href="#exam/result?cid={{cid}}&eid={{eid}}">{{examname}}</a></li>
+    <li class="active">提交列表</li>
+  </ol>
+</div>
 {{#if submitlist}}
 <table class="table data-table table-striped table-hover line-btn">
   <thead>
@@ -30,11 +32,7 @@
     </script>
   </tbody>
 </table>
-<script type="text/javascript">
-
-</script>
 {{else}}
-<br><br>
 <div class="jumbotron alert alert-info text-center" role="alert">
     <p>还没有学生提交答卷哦，点此<a target="_blank" href="/exam/showqrcode?cid={{cid}}&eid={{eid}}">发放试卷</a>吧</p>
 </div>

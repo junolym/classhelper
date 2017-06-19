@@ -111,12 +111,22 @@ router.get('/result', (req, res, next) => {
 });
 
 router.get('/studentanswer', (req, res, next) => {
+    var data = {
+        cid : req.query.cid,
+        course_name : ''
+    }
     helper.checkLogin(req).then((user) => {
+        Object.assign(data, req.session);
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
+        return dao.getcoursebyid(req.query.cid);
+    }).then((result) => {
+        result = JSON.parse(JSON.stringify(result))[0];
+        data.course_name = result.course_name;
         return examManager.getStuAnswer(req.query.eid, req.query.student);
     }).then((result) => {
-        res.render('home/studentanswer', result);
+        Object.assign(data, result);
+        res.render('home/studentanswer', data);
     }).catch(helper.catchError(req, res, next, true));
 });
 

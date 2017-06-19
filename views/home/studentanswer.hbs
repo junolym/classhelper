@@ -1,17 +1,18 @@
-<h1 class="examname">{{examname}}</h1>
-<div class="studentinfo row">
-<h2 class="col-md-3">学号: {{studentid}}</h2>
-<h2 class="col-md-3">姓名: {{name}}</h2>
-<form class="form-inline col-md-5" id="scoreform" onsubmit="return formSubmit('#scoreform')" method="POST" action="/home/editscore?cid={{cid}}&eid={{eid}}&student={{studentid}}">
-<h2>分数:
-  <div class="form-group">
-    <input type="number" class="form-control" name="score" value={{score}}>
-  </div>
-  <!-- <button type="submit" class="btn btn-default">修改分数</button> -->
-</h2>
-</form>
+<div class="bc-container">
+  <ol class="breadcrumb col-md-11">
+    <li><a href="#user">{{username}}</a></li>
+    <li><a href="#course/detail?cid={{cid}}">{{course_name}}</a></li>
+    <li><a href="#exam/result?cid={{cid}}&eid={{eid}}">{{examname}}</a></li>
+    <li><a href="#exam/submitlist?cid={{cid}}&eid={{eid}}">提交列表</a></li>
+    <li class="active">{{studentid}} - {{name}} - {{score}} 分</li>
+  </ol>
 </div>
-<br>
+<!-- <form class="form-inline col-md-5" id="scoreform" onsubmit="return formSubmit('#scoreform')" method="POST" action="/home/editscore?cid={{cid}}&eid={{eid}}&student={{studentid}}">
+  <div class="form-group">
+    <input type="number" class="form-control" name="score" value="{{score}}">
+  </div>
+  <button type="submit" class="btn btn-default">修改分数</button>
+</form> -->
 <ol>
   {{#each paper as |question id|}}
   <li class="eachdescription">{{description}}</br>
