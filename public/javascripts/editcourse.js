@@ -1,12 +1,65 @@
+function setDataTable() {
+  var dt = $('table.data-table');
+  if (dt.DataTable) {
+    dt.DataTable({
+      'paging': false,
+      'searching': false,
+      'info':   false
+    });
+  } else {
+    setTimeout(function() {
+      setDataTable();
+    }, 100);
+  }
+}
+
+function setEditable() {
+        //设置表格可编辑
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
+    var trLength = trs.length;
+    for (var i = 1; i < trLength; i ++) {
+        var td = trs[i].getElementsByTagName("td");
+        td[0].setAttribute("contentEditable", "true");
+        td[1].setAttribute("contentEditable", "true");
+    }
+}
+
+function getstudents() {
+    var list = [];
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
+    var invalid = false;
+
+    for (var i = 1; i < trs.length; i++) {
+        var td = trs[i].getElementsByTagName("td");
+        if (parseInt(td[0].innerText) > 0 &&
+            td[0].innerText.length <= 15 &&
+            td[1].innerText.length > 0 &&
+            td[1].innerText.length <= 40) {
+
+            list.push([td[0].innerText,td[1].innerText]);
+
+        } else if (td[0].innerText.length || td[1].innerText.length) {
+            invalid = true;
+        }
+    }
+
+    document.getElementById("stulistinput").value = JSON.stringify(list);
+    if (invalid) {
+        warning('学生名单中含有无效信息，已自动忽略');
+    }
+}
+
+function addstudent() {
+    var table = $('#stutable')[0];
+    var trs = $('#stutable')[0].getElementsByTagName("tr");
+
+    var tr = table.insertRow(trs.Length);
+    var td0 = tr.insertCell(0);
+    var td1 = tr.insertCell(1);
+}
+
 function importlist(fls) {
     if (fls && fls.length > 0) {
-        // try {
-        //     console.log(fls[0].name);
-        //     var workbook = XLSX.readFile(fls[0].name);
-        // } catch(err) {
-        //     console.log(err);
-        // }
-        // return;
         ImportFile = fls[0];
         var fileX = ImportFile.name.split(".").reverse()[0];
         var reader = new FileReader();

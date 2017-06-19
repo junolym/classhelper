@@ -13,7 +13,7 @@
       <h1>{{examname}}</h1>
     </section>
     <section>
-      <form action="/e" method="POST" id="examform">
+      <form action="/e" method="POST" id="examform" onsubmit="return confirm('确认交卷吗？')">
       {{#unless preview}}
       <div class="selectiondiv">
         学号 <input type="number" name="studentid" id="stuid"><br>
@@ -54,7 +54,6 @@
       {{#unless preview}}
       <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button>
       {{/unless}}
-      <!-- <button type="submit" class="btn btn-large btn-primary" id="jiaojuan">提交</button> -->
       </form>
     </section>
 
