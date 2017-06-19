@@ -29,7 +29,7 @@
     $('tr td:nth-last-child(1)').html('<span class="glyphicon glyphicon-remove"></span>');
     $('tr td:nth-last-child(1) span').click((e) => {
       var tds = $(e.target).parent().parent().children();
-      deleteConfirm('本条记录？','学号：' + tds[0].innerText + ' ， 姓名：' + tds[1].innerText,
+      deleteConfirm('本条记录','学号：' + tds[0].innerText + ' ， 姓名：' + tds[1].innerText,
         ()=>loadContent('signin/deletesign?cid={{cid}}&sid={{sid}}&stu=' + tds[0].innerText))
     });
     $('tr td:nth-last-child(1)').attr('style', 'color:red')
