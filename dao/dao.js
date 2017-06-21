@@ -821,6 +821,29 @@ var statsexamdetail = function(course_id, student_id) {
     return pool.query(sql, [student_id, course_id]);
 }
 
+var getallsignbycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, sign_id, stu_sign_time as sign "
+            + "from coz_stu "
+            + "inner join signup on cs_coz_id = sg_coz_id "
+            + "left join stu_sign on sign_id = ss_sign_id "
+            + "and cs_stu_id = ss_stu_id "
+            + "where cs_coz_id = ?";
+    return pool.query(sql, course_id);
+}
+
+var getallexambycourse = function(course_id) {
+    var sql = "select cs_stu_id as stu_id, exam_id, ans_score as score "
+            + "from coz_stu "
+            + "inner join exams on cs_coz_id = ex_coz_id "
+            + "left join answers on exam_id = ans_ex_id "
+            + "and ans_stu_id = cs_stu_id "
+            + "where cs_coz_id = ?";
+    return pool.query(sql, course_id);
+}
+
+exports.getallexambycourse = getallexambycourse;
+exports.getallsignbycourse = getallsignbycourse;
+
 exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
