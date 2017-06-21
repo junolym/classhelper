@@ -70,7 +70,7 @@ function encryptPassword() {
     var f = $('#login-form');
     f[0].action = f.val() + document.location.hash;
     var p = $('#form-password')[0];
-    p.value = md5('classhelper' + p.value).toUpperCase();
+    p.value = $.md5('classhelper' + p.value).toUpperCase();
 }
 function register() {
     $('#title').html('教师注册');

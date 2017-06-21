@@ -1,0 +1,53 @@
+# server config
+# use in bin/www
+server:
+    # Listen on a port or a socket file
+    # Valid values: port number
+    # Optional when socket set
+    # Default: 3000
+    port: 3000
+    # Listen address
+    # Valid values: ip or host
+    # Optional
+    # Default: ~(null) means all address
+    addr: ~
+    # Use unix socket
+    # Valid values: socket file path
+    # Optional
+    # Default: ~(null)
+    socket: ~
+
+# application config
+# use in app.js
+app:
+    # It's recomended to change the secret by yourself
+    # Valid values: any string
+    session:
+        secret: _CLASS_HELPER_
+        key: sessionid
+    # Environment
+    # Valid values: development, release
+    # Default: development
+    env: development
+    # Set which kind of error will be logged
+    # The value will be used as regular expression
+    # Valid values: *, 40*, 50* ...
+    # Default: 50*
+    errorlog: 50*
+
+# MySQL config
+# use in dao/dao.js
+sql:
+    # MySQL server host
+    # Valid values: ip or host
+    # No default values, must be set by yourself
+    host: classhelper.ml
+    # MySQL user name
+    user: root
+    # MySQL password
+    password: sysusdcs
+    # MySQL database
+    database: test
+    # MySQL charset
+    # Default value: utf8mb4_unicode_ci
+    charset: utf8mb4_unicode_ci

@@ -6,6 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var config = require('./controllers/config.js');
+
 var index = require('./routes/index');
 var home = require('./routes/home');
 var signin = require('./routes/signin');
@@ -26,10 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-  secret: '_CLASS_HELPER_',
-  key: 'sessionid'
-}));
+app.use(session(config.app.session));
 
 app.use('/', index);
 app.use('/', student)
@@ -49,13 +48,15 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  // res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.locals.error =  err;
-  // render the error page
+  if (config.app.env == 'development') {
+    res.locals.message = err.message;
+    res.locals.error = err;
+  } else {
+    res.locals.error = {};
+  }
   res.status(err.status || 500);
   res.render('error');
-  if (err.status >= 500) {
+  if (err.status.toString().match(config.app.errorlog)) {
     console.log(err);
   }
 });
