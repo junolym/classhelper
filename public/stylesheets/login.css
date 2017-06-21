@@ -89,9 +89,12 @@ img { max-width: 100%; }
 .social-login-buttons {
   margin-top: 25px;
 }
-.forget {
-  color: #CCCC99;
+.bottom {
   margin-top: 15px;
+}
+.forget {
+  float: right;
+  color: #d02c2c;
 }
 html, body, .top-content, .inner-bg {
     height: 100%;

@@ -22,6 +22,7 @@ router.get('/login', (req, res, next) => {
     }
 });
 
+
 router.post('/login', (req, res) => {
     dao.login(req.body.form_username, req.body.form_password)
     .then((result) => {
