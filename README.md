@@ -8,15 +8,17 @@
 Follow these instruments [Installing MySQL on Linux](https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html)
 
 ### config
-Edit `dao/dao.js` and put your MySql config hear.
-```
-var pool  = mysql.createPool({
-    host: 'your.host',
-    user: 'username',
-    password: 'password',
-    database: 'databasename',
-    charset: 'utf8mb4_unicode_ci'
-});
+Edit `config.yml`
+
+It's strongly recommended to read the whole config file and change the settings as you want.
+
+MySQL config is required.
+```yaml
+host: ip or host
+user: username
+password: password
+database: databasename
+charset: utf8mb4_unicode_ci
 ```
 
 ## Install requirements and Run classhelper
@@ -25,23 +27,27 @@ var pool  = mysql.createPool({
 $ npm install
 ```
 
-### Linux or MacOS run
+### Linux or MacOS run (For debug)
 ```
 $ DEBUG=classhelper:* npm start
 ```
 
-### Windows run
+### Windows run (For debug)
 ```
 set DEBUG=classhelper:* & npm start
 ```
 
 ## Enjoy it
-Open `http://localhost:3000`, recommended with Google Chrome.
+Open the address and port as you set in config file, default is `http://localhost:3000`, recommended with Google Chrome.
 
-The first account registered will be the administrator who has all permissions of the system.
+## Use as production
+There are many ways to help you run this application as production.  
+One of them is [forever](https://www.npmjs.com/package/forever)
 
-It's strongly recommended to create a teacher's account as "standard account".
+Install it with npm run `npm install forever -g`.  
+In classhelper's folder, run `forever -e error.log -o access.log start bin/www`.
 
+The server will run in background and output the error log and access log to the files.
 
 # 简体中文说明
 ## 在线版本 （支持 Github Webhooks）
@@ -52,15 +58,17 @@ It's strongly recommended to create a teacher's account as "standard account".
 从这个教程学习 [Installing MySQL on Linux](https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html)
 
 ### 配置
-编辑 `dao/dao.js` 并将你的MySQL配置填入.
-```
-var pool  = mysql.createPool({
-    host: '域名或ip',
-    user: '用户名',
-    password: '密码',
-    database: 'databasename',
-    charset: 'utf8mb4_unicode_ci'
-});
+编辑 `dao/dao.js` 
+
+强烈建议你完整阅读配置文件，并修改其中你想要改变的设置。
+
+MySQL配置是必需的
+```yaml
+host: ip or host
+user: username
+password: password
+database: databasename
+charset: utf8mb4_unicode_ci
 ```
 
 ## 安装依赖并运行“课堂助手”
@@ -69,20 +77,26 @@ var pool  = mysql.createPool({
 $ npm install
 ```
 
-### Linux 或 MacOS 执行
+### Linux 或 MacOS 执行 （debug模式）
 ```
 $ DEBUG=classhelper:* npm start
 ```
 
-### Windows 执行
+### Windows 执行 （debug模式）
 ```
 set DEBUG=classhelper:* & npm start
 ```
 
 ## 开始使用
-打开 `http://localhost:3000`, 建议使用 Google Chrome.
+打开你设置的监听地址和端口，默认是`http://localhost:3000`, 建议使用 Google Chrome.
 
-第一个注册的账户将成为“超级管理员”，拥有系统的所有权限。
 
-强烈建议将教师使用的账户创建成为“标准用户”。
+## 作为产品使用
+有许多方法可以让你运行这个应用，作为一个产品而不是调试模式。  
+其中一个是 [forever](https://www.npmjs.com/package/forever)
+
+用npm安装它，执行 `npm install forever -g`.  
+在本应用的根目录，执行 `forever -e error.log -o access.log start bin/www`.
+
+服务会在后台启动，并将错误记录和访问记录保存到文件。
 

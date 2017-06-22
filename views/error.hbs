@@ -1,12 +1,70 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1>{{message}}</h1>
-    <h2>{{error.status}}</h2>
-    <pre>{{error.stack}}</pre>
-  </body>
+<html lang="zh">
+{{#if debug}}
+<head>
+<title>{{error.message}}</title>
+<style type="text/css">
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+    color: #00B7FF;
+}
+</style>
+</head>
+<body>
+<h1>{{error.message}}</h1>
+<h2>{{error.status}}</h2>
+<pre>{{error.stack}}</pre>
+</body>
+{{else}}
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{error.message}}</title>
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
+<style>
+.h {
+  font-size: 170px;
+  font-weight: 300;
+  text-shadow: 0 1px 0 #d9d9d9, 0 2px 0 #d0d0d0, 0 5px 10px rgba(0, 0, 0, 0.125), 0 10px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+#errorBox {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px 30px;
+  padding-bottom: 30px;
+}
+#errorBox .error-info {
+  padding-bottom: 10px;
+  font-size: 16px;
+  text-align: center;
+}
+</style>
+</head>
+<body id="boxBody">
+<section id="box">
+    <div>
+        <div>
+            <h1 class="h text-white animated fadeInDown">{{error.status}}</h1>
+        </div>
+        <div id="errorBox">
+            <p class="error-info">
+            {{error.message}}
+            </p>
+
+            <div class="list-group m-b-sm bg-white m-b-lg">
+                <a href="javascript:history.go(-1);" class="list-group-item"></i> <i class="fa fa-fw fa-arrow-left icon-muted"></i> 返回上一页 </a>
+                <a href="/" class="list-group-item"></i> <i class="fa fa-fw fa-home icon-muted"></i> 回到首页 </a>
+                <a href="https://github.com/junolym/classhelper" class="list-group-item"></i> <i class="fa fa-fw fa-file-o icon-muted"></i> 寻求帮助</a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+{{/if}}
 </html>

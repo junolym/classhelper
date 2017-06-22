@@ -12,6 +12,7 @@
     "express": "~4.15.2",
     "express-session": "^1.15.2",
     "hbs": "~4.0.1",
+    "js-yaml": "^3.8.4",
     "json-tryparse": "^1.0.5",
     "morgan": "~1.8.1",
     "promise-mysql": "^3.0.1",

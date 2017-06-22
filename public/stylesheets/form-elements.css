@@ -1,7 +1,7 @@
-
 input[type="number"],
 input[type="text"],
 input[type="password"],
+input[type="email"],
 textarea,
 textarea.form-control {
 	height: 50px;
@@ -30,6 +30,7 @@ textarea.form-control {
 input[type="number"]:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
+input[type="email"]:focus,
 textarea:focus,
 textarea.form-control:focus {
 	outline: 0;
@@ -46,8 +47,6 @@ textarea:-ms-input-placeholder, textarea.form-control:-ms-input-placeholder { co
 
 input[type="text"]::-webkit-input-placeholder, input[type="password"]::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder, textarea.form-control::-webkit-input-placeholder { color: #888; }
-
-
 
 button.btn {
 	height: 50px;

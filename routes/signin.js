@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var qrcode = require('../plugins/qrcode-manager.js');
+var qrcode = require('../controllers/qrcode-manager.js');
 var dao = require('../dao/dao.js');
-var helper = require('../plugins/route-helper.js');
+var helper = require('../controllers/route-helper.js');
 var str = helper.stringFormat;
 
 router.get('/create', (req, res, next) => {

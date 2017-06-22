@@ -297,14 +297,3 @@ setInterval(() => {
 }, 1000*60*60);
 
 module.exports = ExamManager;
-
-function temp(eid, exam) {
-    var st = exam.statistics;
-    exam.questions.forEach((e, index) => {
-        if (e.type < 2) {
-            st.questions[index] = st.questions[index] || {};
-            st.questions[index].type = e.type;
-        }
-    });
-    dao.updatestatistics(eid, JSON.stringify(exam.statistics));
-}

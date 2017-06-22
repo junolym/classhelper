@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var dao = require('../dao/dao.js');
-var helper = require('../plugins/route-helper.js');
-var qrcode = require('../plugins/qrcode-manager.js');
-var examManager = require('../plugins/exam-manager.js');
+var helper = require('../controllers/route-helper.js');
+var qrcode = require('../controllers/qrcode-manager.js');
+var examManager = require('../controllers/exam-manager.js');
 
 router.get('/create', (req, res, next) => {
     helper.checkLogin(req).then((user) => {

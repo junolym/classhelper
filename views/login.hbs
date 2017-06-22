@@ -1,45 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-	<title>{{title}}</title>
+    <title>{{title}}</title>
 
     <link href="/images/loginIcon.jpg" rel="icon" >
-	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
-	<link href="/stylesheets/login.css" rel="stylesheet">
-	<link href="/stylesheets/form-elements.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" >
+    <link href="/stylesheets/login.css" rel="stylesheet">
+    <link href="/stylesheets/form-elements.css" rel="stylesheet">
 </head>
 
 <body>
-	<div class="top-content">
+    <div class="top-content">
             <div class="inner-bg">
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3 form-box">
-                        	<div class="form-top">
-                        		<div class="form-top-left">
-                        			<h3>教师登录</h3>
-                        		</div>
-                        		<div class="form-top-right">
-                        			<i class="fa fa-key"></i>
-                        		</div>
+                            <div class="form-top">
+                                <div class="form-top-left">
+                                    <h3 id="title">教师登录</h3>
+                                </div>
+                                <div class="form-top-right">
+                                    <i class="fa fa-key"></i>
+                                </div>
                             </div>
                             <div class="form-bottom">
-			                    <form role="form" action="/login" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
-			                    	<div class="form-group">
-			                    		<label class="sr-only" for="form-username">账号</label>
-			                        	<input type="text" name="form_username" placeholder="账号" class="form-username form-control" id="form-username" required>
-			                        </div>
-			                        <div class="form-group">
-			                        	<label class="sr-only" for="form-password">密码</label>
-			                        	<input type="password" name="form_password" placeholder="密码" class="form-password form-control" id="form-password" required>
-			                        </div>
-			                        <button type="submit" class="btn">登录</button>
-			                    </form>
-		                    </div>
+                                <form role="form" value="/login" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-username">账号</label>
+                                        <input type="text" name="form_username" placeholder="账号" class="form-username form-control" id="form-username" required>
+                                    </div>
+                                    <div class="form-group password-area">
+                                        <label class="sr-only" for="form-password">密码</label>
+                                        <input type="password" name="form_password" placeholder="密码" class="form-password form-control" id="form-password" required>
+                                    </div>
+                                    <div class="register-area form-group hidden">
+                                        <label class="sr-only" for="form-email">邮箱</label>
+                                        <input type="email" name="form_email" placeholder="邮箱" class="form-email form-control" id="form-email">
+                                    </div>
+                                    <button type="submit" class="btn">登录</button>
+                                </form>
+                                <div class="login-area bottom">
+                                    <a href="javascript:void(0)" onclick="register()" class="btn btn-large">注册账号</a>
+                                    <a href="javascript:void(0)" onclick="forget()" class="btn btn-large forget">找回密码</a>
+                                </div>
+                                <div class="register-area bottom hidden">
+                                    <a href="javascript:void(0)" onclick="login()" class="btn btn-large">立即登录</a>
+                                </div>
+                                <div class="forget-area bottom hidden">
+                                    <a href="javascript:void(0)" onclick="login()" class="btn btn-large">立即登录</a>
+                                </div>
+                            </div>
                             {{#if error}}
                                 <div class="alert alert-danger" role="alert">{{error}}</div>
                             {{/if}}
@@ -49,14 +63,41 @@
             </div>
     </div>
 </body>
+<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.md5.js"></script>
 <script type="text/javascript">
 function encryptPassword() {
-    var f = document.getElementById('login-form');
-    f.action = document.location.href;
-    var p = document.getElementById('form-password');
-    p.value = md5('classhelper' + p.value).toUpperCase();
-    return true;
+    var f = $('#login-form');
+    f[0].action = f.val() + document.location.hash;
+    var p = $('#form-password')[0];
+    p.value = $.md5('classhelper' + p.value).toUpperCase();
+}
+function register() {
+    $('#title').html('教师注册');
+    $('[type=submit]').html('注册');
+    $('.register-area, .password-area').removeClass('hidden');
+    $('.login-area, .forget-area').addClass('hidden');
+    $('#login-form').val('/register');
+    $('.form-email').attr('required', true);
+    $('.form-password').attr('required', true);
+}
+function login() {
+    $('#title').html('教师登录');
+    $('[type=submit]').html('登录');
+    $('.register-area, .forget-area').addClass('hidden');
+    $('.login-area, .password-area').removeClass('hidden');
+    $('#login-form').val('/login');
+    $('.form-email').removeAttr('required');
+    $('.form-password').attr('required', true);
+}
+function forget() {
+    $('#title').html('找回密码');
+    $('[type=submit]').html('验证');
+    $('.forget-area, .register-area').removeClass('hidden');
+    $('.register-area.bottom, .login-area, .password-area').addClass('hidden');
+    $('#login-form').val('/resetpassword');
+    $('.form-email').attr('required', true);
+    $('.form-password').removeAttr('required');
 }
 </script>
 </html>
