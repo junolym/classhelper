@@ -45,6 +45,10 @@ app.use('/docs', express.static(__dirname + '/docs'));
 app.use(function(req, res, next) {
   var err = new Error('找不到该页面');
   err.status = 404;
+  err.stack = JSON.stringify({
+    message: 'No route for url ' + req.url,
+    headers: req.rawHeaders
+  });
   next(err);
 });
 
@@ -52,13 +56,13 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   err.status = err.status || 500;
   if (err.status.toString().match(config.app.errorlog)) {
-    console.log(err);
+    console.error(err);
   }
 
-  if (config.app.env == 'development') {
+  if (config.app.debug) {
     res.locals.debug = true;
   } else if (err.status >= 500) {
-    err.message = '服务器错误'; // hide message detail
+    err.message = '服务器错误';
   }
 
   res.locals.error = err;

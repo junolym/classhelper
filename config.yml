@@ -1,8 +1,8 @@
-################################################################################
-# This file is the config of classhelper, it should be named as config.yml
+############################## Classhelper Config ##############################
 # The settings will not be changed until the server restart
 # Do not delete any uncommented line even if it seems useless
 # See config.default.yml for the default config
+# For more helps, see http://yaml.org/ or google "yaml"
 ################################################################################
 
 ###################### Server Section ######################
@@ -32,16 +32,21 @@ server:
 ############################################################
 app:
     # It's recomended to change the secret by yourself
-    # Valid: any string
+    # Set the store to use persistent session
+    # For more detail, see https://github.com/expressjs/session#options
     session:
         secret: _CLASS_HELPER_
         key: sessionid
-    # Environment, set to development will show debug info on the error page
-    # Valid: development, release
-    # Default: release
-    env: release
+        resave: true
+        saveUninitialized: true
+        cookie: { secure: false }
+    # Debug mode or not, error page are different
+    # Valid: true, false
+    # Default: false
+    debug: false
     # Access log level
-    # Valid: combined, common, dev, short, tiny, ~(none, means no log)
+    # Valid: combined, common, dev, short, tiny, ~(null, means no log)
+    #        or custom log format like ':method :url :response-time'
     # For more detail, see https://github.com/expressjs/morgan
     # Default: dev
     accesslog: dev
