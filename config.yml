@@ -1,50 +1,63 @@
-# server config
+################################################################################
+# This file is the config of classhelper, it should be named as config.yml
+# The settings will not be changed until the server restart
+# Do not delete any uncommented line even if it seems useless
+# See config.default.yml for the default config
+################################################################################
+
+###################### Server Section ######################
+# Control the server's network settings
 # use in bin/www
+############################################################
 server:
     # Listen on a port if no socket set
-    # Valid values: port number
+    # Valid: port number
     # Invalid when socket set
     # Default: 3000
     port: 3000
     # Listen address
-    # Valid values: ip or host
+    # Valid: ip or host
     # Optional, invalid when socket set
     # Default: ~(null) means all addresses
     addr: ~
     # Use unix socket
-    # Valid values: socket file path
+    # Valid: socket file path
     # Optional
     # Default: ~(null)
     socket: ~
 
-# application config
+################### Application Section ####################
+# Control the behaviors or secure settings
 # use in app.js
+############################################################
 app:
     # It's recomended to change the secret by yourself
-    # Valid values: any string
+    # Valid: any string
     session:
         secret: _CLASS_HELPER_
         key: sessionid
     # Environment, set to development will show debug info on the error page
-    # Valid values: development, release
+    # Valid: development, release
     # Default: release
     env: release
     # Access log level
-    # Valid values: combined, common, dev, short, tiny, ~(none, means no log)
+    # Valid: combined, common, dev, short, tiny, ~(none, means no log)
     # For more detail, see https://github.com/expressjs/morgan
     # Default: dev
     accesslog: dev
     # Set which kind of error will be logged
     # The value will be used as regular expression
-    # Valid values: ~(null), .*(all), 40*, 50* ...
+    # Valid: ~(null), .*(all), 40*, 50* ...
     # Default: 50*
     errorlog: .*
 
-# MySQL config
+###################### MySQL Section #######################
+# Control how this application connect to MySQL server
 # use in dao/dao.js
+############################################################
 sql:
     # MySQL server host
-    # Valid values: ip or host
+    # Valid: ip or host
     # No default values, must be set by yourself
     host: classhelper.ml
     # MySQL user name
@@ -54,5 +67,32 @@ sql:
     # MySQL database
     database: test
     # MySQL charset
-    # Default value: utf8mb4_unicode_ci
+    # Default: utf8mb4_unicode_ci
     charset: utf8mb4_unicode_ci
+
+####################### User Section #######################
+# Control user register
+# use in controllers/user-manager.js
+############################################################
+user:
+    # Verify user's email or not
+    # If true, application will send an email to user,
+    #     and the user account will not be valid until confirmed
+    # Remember to configure smtp if it's set to true
+    # Valid: true, false
+    # Default: false
+    verifyemail: false
+    # Allow user reset password by email
+    # Remember to configure smtp if it's set to true
+    # Valid: true, false
+    # Default: false
+    resetpassword: false
+    # Which kind of email address will be allowed
+    # The value will be used as regular expression
+    # Invalid when verifyemail is false
+    # Invalid when no any user registered yet
+    # Valid: .*(allow all), ~(allow none)
+    #        '@mail.com'(allow this email server)
+    #        '@(gmail|live).com'(allow these two kinds)
+    # Default: .*
+    allowemail: ~

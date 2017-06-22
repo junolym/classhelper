@@ -50,14 +50,20 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = err;
-  res.locals.debug = config.app.env == 'development';
-  res.status(err.status || 500);
-  res.render('error');
+  err.status = err.status || 500;
   if (err.status.toString().match(config.app.errorlog)) {
     console.log(err);
   }
+
+  if (config.app.env == 'development') {
+    res.locals.debug = true;
+  } else if (err.status >= 500) {
+    err.message = '服务器错误'; // hide message detail
+  }
+
+  res.locals.error = err;
+  res.status(err.status);
+  res.render('error');
 });
 
 module.exports = app;

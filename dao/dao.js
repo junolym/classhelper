@@ -136,7 +136,7 @@ var deluser = function(account) {
     var sql = "delete from users where account=?";
     return pool.query(sql, account).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError('用户不存在！'));
+            return Promise.reject(new UserError('用户不存在'));
         } else {
             return Promise.resolve();
         }
@@ -186,7 +186,7 @@ var delcourse = function(course_id) {
     var sql = "delete from courses where course_id=?";
     return pool.query(sql, course_id).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError('此课程不存在！'));
+            return Promise.reject(new UserError('此课程不存在'));
         } else {
             return Promise.resolve();
         }
@@ -237,7 +237,7 @@ var delexam = function(exam_id) {
     var sql = "delete from exams where exam_id=?";
     return pool.query(sql, exam_id).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError('测试不存在'));
+            return Promise.reject(new UserError('测验不存在'));
         } else {
             return Promise.resolve();
         }
@@ -259,7 +259,7 @@ var updateexam = function(exam_id, exam_name, exam_question) {
     var parameter = [exam_name, exam_question, exam_id];
     return pool.query(sql, parameter).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError('测试不存在'));
+            return Promise.reject(new UserError('测验不存在'));
         } else {
             return Promise.resolve();
         }
@@ -281,7 +281,7 @@ var checkexam = function(account, course_id, exam_id) {
     return pool.query(sql, [exam_id, course_id, account])
     .then(function(result) {
         if (result.length == 0) {
-            return Promise.reject(new UserError('测验校验失败'));
+            return Promise.reject(new UserError('测验不存在'));
         } else {
             return Promise.resolve();
         }
@@ -301,7 +301,7 @@ var getexambyid = function(exam_id) {
     var sql = "select * from exams where exam_id=?";
     return pool.query(sql, exam_id).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject(new UserError('该试卷不存在'));
+            return Promise.reject(new UserError('测验不存在'));
         } else {
             return Promise.resolve(result);
         }
@@ -476,7 +476,7 @@ var checksign = function(account, course_id, sign_id) {
     return pool.query(sql, [account, course_id, sign_id])
     .then(function(result) {
         if (result.length == 0) {
-            return Promise.reject(new UserError('签到id校验失败'));
+            return Promise.reject(new UserError('签到不存在'));
         } else {
             return Promise.resolve();
         }
@@ -673,7 +673,7 @@ var getanswerbystudent = function(exam_id, stu_id) {
             + "where ans_ex_id=? and ans_stu_id=?";
     return pool.query(sql, [exam_id, stu_id]).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject(new UserError('答卷不存在!'));
+            return Promise.reject(new UserError('答卷不存在'));
         } else {
             return Promise.resolve(result);
         }
@@ -692,7 +692,7 @@ var copyexam = function(src_exam_id, des_course_id) {
     var sql = "select * from exams where exam_id=?";
     return pool.query(sql, src_exam_id).then(function(result) {
         if (result.length == 0) {
-            return Promise.reject(new UserError('测验不存在!'));
+            return Promise.reject(new UserError('测验不存在'));
         } else {
             console.log(result);
             return addexam(des_course_id, result[0].exam_name,
@@ -713,7 +713,7 @@ var updatestatistics = function(exam_id, statistics) {
             + "where exam_id = ?";
     return pool.query(sql, [statistics, exam_id]).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError("该测验不存在"));
+            return Promise.reject(new UserError("测验不存在"));
         } else {
             return Promise.resolve();
         }
@@ -731,7 +731,7 @@ var delstusign = function(sign_id, stu_id) {
             + "where ss_sign_id=? and ss_stu_id=?";
     return pool.query(sql, [sign_id, stu_id]).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError("该学生未签到!"));
+            return Promise.reject(new UserError("学生未签到"));
         } else {
             return Promise.resolve();
         }
