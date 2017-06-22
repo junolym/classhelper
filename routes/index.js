@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var dao = require('../dao/dao.js');
 var userManager = require('../controllers/user-manager.js');
+var helper = require('../controllers/route-helper.js');
 
 /**
  * 本文件包含以下url的路由: /, /login, /logout
@@ -32,13 +33,9 @@ router.post('/login', (req, res, next) => {
         req.session.email = result.email;
         req.session.phone = result.phone;
         res.redirect(req.query.next || '/');
-    }).catch((err) => {
-        if (err.userError) {
-            res.render('login', { error : err.message });
-        } else {
-            res.render('error', { error : err });
-        }
-    })
+    }).catch(helper.catchError(req, res, next, false, err => {
+        res.render('login', { error : err.message });
+    }));
 });
 
 router.post('/register', (req, res, next) => {

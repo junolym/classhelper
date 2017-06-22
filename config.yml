@@ -59,6 +59,7 @@ app:
 ###################### MySQL Section #######################
 # Control how this application connect to MySQL server
 # use in dao/dao.js
+# For more helps, see https://github.com/mysqljs/mysql
 ############################################################
 sql:
     # MySQL server host
