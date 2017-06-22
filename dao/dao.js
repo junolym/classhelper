@@ -55,13 +55,24 @@ var getuser = function getuser(account) {
     });
 };
 
-
-
+/**
+ * checkemail
+ *
+ * @param {string} email
+ * @return {Object} Promise
+ */
+var checkemail = function(email) {
+    var sql = "select account from users where email = ? "
+    return pool.query(sql, email).then(result => {
+        if (result.length == 0) {
+            return Promise.reject(new UserError("该邮箱已注册!"));
+        }
+        return Promise.resolve()
+    })
 
 /**
  * adduser
  *
- * @param {string} admin 管理员账号
  * @param {string} n_account
  * @param {string} n_password
  * @param {string} n_username
@@ -69,24 +80,12 @@ var getuser = function getuser(account) {
  * @param {string} n_phone
  * @returns {Object} Promise
  */
-var adduser = function(admin, n_account, n_password, n_username,
-                            n_email, n_phone) {
-    // 权限
-    var sql = "select admin from users where account=?";
-    return pool.query(sql, admin).then(function(result) {
-        if (result.length == 0) {
-            return Promise.reject(new UserError('用户不存在'));
-        } else if (result[0].admin == 0) {
-            return Promise.reject(new UserError('没有添加用户的权限'));
-        } else {
-            return Promise.resolve();
-        }
-    }).then(function() {
-        sql = "insert into users(account, password, username, "
-            + "email, phone) values (?, ?, ?, ?, ?)";
-        return pool.query(sql, [n_account, n_password, n_username, n_email,
-                        n_phone]);
-    });
+var adduser = function(n_account, n_password, n_username,
+                           n_email, n_phone) {
+    var sql = "insert into users(account, password, username, "
+        + "email, phone) values (?, ?, ?, ?, ?)";
+    return pool.query(sql, [n_account, n_password, n_username,
+                        n_email, n_phone]);
 };
 
 /**
@@ -848,6 +847,7 @@ exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
 exports.deluser = deluser;
+exports.checkemail = checkemail;
 exports.updateuserinfo = updateuserinfo;
 exports.updateuserpwd = updateuserpwd;
 
