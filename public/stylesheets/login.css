@@ -94,7 +94,7 @@ img { max-width: 100%; }
 }
 .forget {
   float: right;
-  color: #d02c2c;
+  color: rgba(169, 66, 66, 0.74);
 }
 html, body, .top-content, .inner-bg {
     height: 100%;

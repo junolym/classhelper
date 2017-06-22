@@ -1,15 +1,15 @@
 # server config
 # use in bin/www
 server:
-    # Listen on a port or a socket file
+    # Listen on a port if no socket set
     # Valid values: port number
-    # Optional when socket set
+    # Invalid when socket set
     # Default: 3000
     port: 3000
     # Listen address
     # Valid values: ip or host
-    # Optional
-    # Default: ~(null) means all address
+    # Optional, invalid when socket set
+    # Default: ~(null) means all addresses
     addr: ~
     # Use unix socket
     # Valid values: socket file path
@@ -25,15 +25,20 @@ app:
     session:
         secret: _CLASS_HELPER_
         key: sessionid
-    # Environment
+    # Environment, set to development will show debug info on the error page
     # Valid values: development, release
-    # Default: development
-    env: development
+    # Default: release
+    env: release
+    # Access log level
+    # Valid values: combined, common, dev, short, tiny, ~(none, means no log)
+    # For more detail, see https://github.com/expressjs/morgan
+    # Default: dev
+    accesslog: dev
     # Set which kind of error will be logged
     # The value will be used as regular expression
-    # Valid values: *, 40*, 50* ...
+    # Valid values: ~(null), .*(all), 40*, 50* ...
     # Default: 50*
-    errorlog: 50*
+    errorlog: .*
 
 # MySQL config
 # use in dao/dao.js

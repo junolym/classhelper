@@ -22,7 +22,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+
+if (config.app.accesslog) {
+  app.use(logger(config.app.accesslog));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -40,20 +43,16 @@ app.use('/docs', express.static(__dirname + '/docs'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('找不到该页面');
   err.status = 404;
   next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  if (config.app.env == 'development') {
-    res.locals.message = err.message;
-    res.locals.error = err;
-  } else {
-    res.locals.error = {};
-  }
+  res.locals.message = err.message;
+  res.locals.error = err;
+  res.locals.debug = config.app.env == 'development';
   res.status(err.status || 500);
   res.render('error');
   if (err.status.toString().match(config.app.errorlog)) {
