@@ -65,7 +65,8 @@ var checkemail = function(email) {
             return Promise.reject(new UserError("该邮箱已注册!"));
         }
         return Promise.resolve()
-    })
+    });
+}
 
 /**
  * adduser
@@ -887,3 +888,4 @@ exports.getanswerbyexam = getanswerbyexam;
 exports.getanswerbystudent = getanswerbystudent;
 
 exports.addstudent = addstudent;
+
