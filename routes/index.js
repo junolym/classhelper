@@ -25,8 +25,12 @@ router.get('/login', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    dao.login(req.body.form_username, req.body.form_password)
-    .then((result) => {
+    helper.checkArgs({
+        '用户名': req.body.form_username,
+        '密码': req.body.form_password
+    }).then(() => {
+        return dao.login(req.body.form_username, req.body.form_password);
+    }).then((result) => {
         result = JSON.parse(JSON.stringify(result))[0];
         req.session.user = result.account;
         req.session.username = result.username;
@@ -39,20 +43,38 @@ router.post('/login', (req, res, next) => {
 });
 
 router.post('/register', (req, res, next) => {
-    userManager.register(req.body.form_username+"",
-        req.body.form_password+"",
-        req.body.form_email+"")
-    .then((message) => {
+    helper.checkArgs({
+        '用户名': req.body.form_username,
+        '密码': req.body.form_password,
+        '邮箱': req.body.form_email
+    }).then(() => {
+        return userManager.register(req.body.form_username,
+            req.body.form_password, req.body.form_email)
+    }).then((message) => {
         return res.redirect('/result?msg=' + message);
-    }).catch(next);
+    }).catch(helper.catchError(req, res, next, false, err => {
+        res.render('login', {
+            error : err.message,
+            register : true
+        });
+    }));
 });
 
 router.post('/resetpassword', (req, res, next) => {
-    userManager.resetpassword(req.body.form_username+"",
-        req.body.form_email+"")
-    .then((message) => {
+    helper.checkArgs({
+        '用户名': req.body.form_username,
+        '邮箱': req.body.form_email
+    }).then(() => {
+        return userManager.resetpassword(req.body.form_username,
+            req.body.form_email);
+    }).then((message) => {
         return res.redirect('/result?msg=' + message);
-    }).catch(next);
+    }).catch(helper.catchError(req, res, next, false, err => {
+        res.render('login', {
+            error : err.message,
+            forget : true
+        });
+    }));
 });
 
 router.get('/logout', (req, res, next) => {

@@ -61,8 +61,8 @@ var getuser = function getuser(account) {
 var checkemail = function(email) {
     var sql = "select account from users where email = ? "
     return pool.query(sql, email).then(result => {
-        if (result.length == 0) {
-            return Promise.reject(new UserError("该邮箱已注册!"));
+        if (result.length) {
+            return Promise.reject(new UserError("该邮箱已注册"));
         }
         return Promise.resolve()
     });
@@ -83,7 +83,12 @@ var adduser = function(n_account, n_password, n_username,
     var sql = "insert into users(account, password, username, "
         + "email, phone) values (?, ?, ?, ?, ?)";
     return pool.query(sql, [n_account, n_password, n_username,
-                        n_email, n_phone]);
+        n_email, n_phone]).catch(err => {
+        if (/ER_DUP_ENTRY/.test(err.message)) {
+            return Promise.reject(new UserError('用户名已被注册'));
+        }
+        return Promise.reject(err);
+    });
 };
 
 /**
@@ -369,7 +374,7 @@ var studentsign = function(course_id, sign_id, stu_id,
         var parameter = [sign_id, stu_id, stu_name];
         return pool.query(sql, parameter);
     }).catch(function(err) {
-        if (/PRIMARY/.test(err)) {
+        if (/ER_DUP_ENTRY/.test(err.message)) {
             return Promise.reject(new UserError('请勿重复签到'));
         }
         return Promise.reject(err);

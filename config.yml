@@ -54,7 +54,7 @@ app:
     # The value will be used as regular expression
     # Valid: ~(null), .*(all), 40*, 50* ...
     # Default: 50*
-    errorlog: .*
+    errorlog: 50*
 
 ###################### MySQL Section #######################
 # Control how this application connect to MySQL server
@@ -97,8 +97,8 @@ user:
     # The value will be used as regular expression
     # Invalid when verifyemail is false
     # Invalid when no any user registered yet
-    # Valid: .*(allow all), ~(allow none)
+    # Valid: '@'(allow all), ~(allow none)
     #        '@mail.com'(allow this email server)
     #        '@(gmail|live).com'(allow these two kinds)
-    # Default: .*
-    allowemail: ~
+    # Default: '@'
+    allowemail: '@'

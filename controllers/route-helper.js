@@ -1,16 +1,29 @@
+var dao = require('../dao/dao.js');
+var UserError = dao.UserError;
+
 module.exports = {
     checkLogin : checkLogin,
     catchError : catchError,
     dateConverter : dateConverter,
-    parseStu : parseStu
+    parseStu   : parseStu,
+    checkArgs  : checkArgs
 };
+
+function checkArgs(args) {
+    for (var arg in args) {
+        if (!args[arg]) {
+            return Promise.reject(new UserError(arg + '不能为空'));
+        }
+    }
+    return Promise.resolve();
+}
 
 function checkLogin(req, res) {
     return new Promise((resolve, reject) => {
         if (req.session.user) {
             resolve(req.session.user);
         } else {
-            var err = new Error('请先登录再操作');
+            var err = new UserError('请先登录再操作');
             err.needLogin = true;
             reject(err);
         }

@@ -44,14 +44,14 @@
                                     <button type="submit" class="btn">登录</button>
                                 </form>
                                 <div class="login-area bottom">
-                                    <a href="javascript:void(0)" onclick="register()" class="btn btn-large">注册账号</a>
-                                    <a href="javascript:void(0)" onclick="forget()" class="btn btn-large forget">找回密码</a>
+                                    <a href="javascript:void(0)" onclick="hideError();register()" class="btn btn-large">注册账号</a>
+                                    <a href="javascript:void(0)" onclick="hideError();forget()" class="btn btn-large forget">找回密码</a>
                                 </div>
                                 <div class="register-area bottom hidden">
-                                    <a href="javascript:void(0)" onclick="login()" class="btn btn-large">立即登录</a>
+                                    <a href="javascript:void(0)" onclick="hideError();login()" class="btn btn-large">立即登录</a>
                                 </div>
                                 <div class="forget-area bottom hidden">
-                                    <a href="javascript:void(0)" onclick="login()" class="btn btn-large">立即登录</a>
+                                    <a href="javascript:void(0)" onclick="hideError();login()" class="btn btn-large">立即登录</a>
                                 </div>
                             </div>
                             {{#if error}}
@@ -66,7 +66,11 @@
 <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.md5.js"></script>
 <script type="text/javascript">
+function hideError() {
+    $('.alert.alert-danger').addClass('hidden');
+}
 function encryptPassword() {
+    hideError();
     var f = $('#login-form');
     f[0].action = f.val() + document.location.hash;
     var p = $('#form-password')[0];
@@ -97,8 +101,12 @@ function forget() {
     $('.register-area.bottom, .login-area, .password-area').addClass('hidden');
     $('#login-form').val('/resetpassword');
     $('.form-email').attr('required', true);
-    $('.form-password').removeAttr('required');
 }
+{{#if register}}
+register();
+{{else if forget}}
+forget();
+{{/if}}
 </script>
 </html>
 
