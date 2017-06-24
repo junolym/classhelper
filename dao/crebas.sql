@@ -177,4 +177,3 @@ on stu_sign for each row
 update signup set sg_stu_num=sg_stu_num+1
 where sign_id=new.ss_sign_id;
 
-insert into users set account='root', password='4F3CC6E16818F2E5F728D5E75D93D157', username='admin', admin=1;
