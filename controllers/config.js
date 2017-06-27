@@ -1,8 +1,9 @@
 var yaml = require('js-yaml');
 var fs   = require('fs');
 var path = require('path');
+var nodemailer = require('nodemailer');
 
-var config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../config.yml'), 'utf8'));
+var config = yaml.load(fs.readFileSync(path.join(__dirname, '../config.yml'), 'utf8'));
 
 // check MySQL connection
 var mysql      = require('mysql');
@@ -14,5 +15,16 @@ connection.connect(err => {
     }
 });
 connection.end();
+
+// check mailer
+if (config.user.verifyemail || config.user.resetpassword) {
+    var transporter = nodemailer.createTransport(config.smtp);
+    transporter.verify(function(err) {
+        if (err) {
+            console.log('SMTP服务连接失败，请检查配置文件');
+            throw(err);
+        }
+    });
+}
 
 module.exports = config;

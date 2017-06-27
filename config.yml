@@ -25,6 +25,10 @@ server:
     # Optional
     # Default: ~(null)
     socket: ~
+    # Host for outer url
+    # Include the scheme (http or https), exclude the last '/'
+    # Example: https://classhelper.ml
+    host: https://classhelper.ml
 
 ################### Application Section ####################
 # Control the behaviors or secure settings
@@ -78,7 +82,7 @@ sql:
 
 ####################### User Section #######################
 # Control user register
-# use in controllers/user-manager.js
+# Use in controllers/user-manager.js
 ############################################################
 user:
     # Verify user's email or not
@@ -87,12 +91,12 @@ user:
     # Remember to configure smtp if it's set to true
     # Valid: true, false
     # Default: false
-    verifyemail: false
+    verifyemail: true
     # Allow user reset password by email
     # Remember to configure smtp if it's set to true
     # Valid: true, false
     # Default: false
-    resetpassword: false
+    resetpassword: true
     # Which kind of email address will be allowed
     # The value will be used as regular expression
     # Invalid when verifyemail is false
@@ -102,3 +106,20 @@ user:
     #        '@(gmail|live).com'(allow these two kinds)
     # Default: '@'
     allowemail: '@'
+
+####################### SMTP Section #######################
+# Email server for sending email
+# Use in controllers/user-manager.js
+# For more helps, see https://nodemailer.com/about/
+############################################################
+smtp:
+    # Use famous service or host & port
+    # Service: famous email service name (no host or port needed)
+    # Note: leave service empty to use host and port
+    service: QQ
+    host:
+    port:
+    secure: true
+    auth:
+        user: 'classhelper@qq.com'
+        pass: 'wifjiuikmipjecbb'

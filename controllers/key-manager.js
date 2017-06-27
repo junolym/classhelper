@@ -1,9 +1,9 @@
-QrcodeManager = {
-    qrcodes : {},
+KeyManager = {
+    pool : {},
     clock : {},
     add : (thing, config) => {
         if (!thing) {
-            throw new Error('Invalid object to add into qrcodes');
+            throw new Error('Invalid object to add into pool');
         }
         config = config || {};
         config.maxAge = config.maxAge || 60*60*1000;
@@ -20,22 +20,22 @@ QrcodeManager = {
             for (var i = 0; i < config.length; i++) {
                 key += chars[Math.floor(Math.random()*chars.length)];
             }
-        } while(QrcodeManager.get(key));
+        } while(KeyManager.get(key));
 
-        QrcodeManager.qrcodes[key] = thing;
-        QrcodeManager.clock[key] = setTimeout(() => {
-            QrcodeManager.del(key);
+        KeyManager.pool[key] = thing;
+        KeyManager.clock[key] = setTimeout(() => {
+            KeyManager.del(key);
         }, config.maxAge);
 
         return key;
     },
     del : (key) => {
-        delete QrcodeManager.qrcodes[key];
-        clearTimeout(QrcodeManager.clock[key]);
+        delete KeyManager.pool[key];
+        clearTimeout(KeyManager.clock[key]);
     },
     get : (key) => {
-        return QrcodeManager.qrcodes[key];
+        return KeyManager.pool[key];
     }
 }
 
-module.exports = QrcodeManager;
+module.exports = KeyManager;

@@ -53,6 +53,23 @@ var getuser = function getuser(account) {
 };
 
 /**
+ * checkuser
+ *
+ * @param {string} account
+ * @return {Object} Promise
+ */
+var checkuser = function(account) {
+    var sql = "select * from users where account=?"
+    return pool.query(sql, account).then(function(result) {
+        if (result.length != 0) {
+            return Promise.reject(new UserError('用户名已被注册'));
+        } else {
+            return Promise.resolve();
+        }
+    });
+}
+
+/**
  * checkemail
  *
  * @param {string} email
@@ -65,6 +82,23 @@ var checkemail = function(email) {
             return Promise.reject(new UserError("该邮箱已注册"));
         }
         return Promise.resolve()
+    });
+}
+
+/**
+ * verifyemail
+ *
+ * @param {string} account
+ * @param {string} email
+ * @return {Object} Promise
+ */
+var verifyemail = function(account, email) {
+    return getuser(account).then(function(result) {
+        if (result[0].email != email) {
+            return Promise.reject(new UserError('用户名和邮箱不一致'));
+        } else {
+            return Promise.resolve(result);
+        }
     });
 }
 
@@ -116,15 +150,13 @@ var updateuserinfo = function(account, userinfo) {
  * updateuserpwd
  *
  * @param {string} account
- * @param {string} oldpwd
  * @param {string} newpwd
  */
-var updateuserpwd = function(account, oldpwd, newpwd) {
-    var sql = "update users set password=? "
-            + "where account=? and password=?";
-    return pool.query(sql, [newpwd,account,oldpwd]).then(function(result) {
+var updateuserpwd = function(account, newpwd) {
+    var sql = "update users set password=? where account=?";
+    return pool.query(sql, [newpwd, account]).then(function(result) {
         if (result.affectedRows == 0) {
-            return Promise.reject(new UserError('密码验证失败'));
+            return Promise.reject(new UserError('账户不存在'));
         } else {
             return Promise.resolve();
         }
@@ -850,7 +882,9 @@ exports.login = login;
 exports.getuser = getuser;
 exports.adduser = adduser;
 exports.deluser = deluser;
+exports.checkuser = checkuser;
 exports.checkemail = checkemail;
+exports.verifyemail = verifyemail;
 exports.updateuserinfo = updateuserinfo;
 exports.updateuserpwd = updateuserpwd;
 

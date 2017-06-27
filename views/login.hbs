@@ -21,13 +21,29 @@
                         <div class="col-sm-6 col-sm-offset-3 form-box">
                             <div class="form-top">
                                 <div class="form-top-left">
-                                    <h3 id="title">教师登录</h3>
+                                    <h3 id="title">{{#if reset}}重置密码{{else}}教师登录{{/if}}</h3>
                                 </div>
                                 <div class="form-top-right">
                                     <i class="fa fa-key"></i>
                                 </div>
                             </div>
                             <div class="form-bottom">
+                                {{#if reset}}
+                                <form role="form" value="/resetpassword" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-username">账号</label>
+                                        <input type="text" name="form_username" placeholder="账号" class="form-username form-control" id="form-username" required>
+                                    </div>
+                                    <div class="form-group password-area">
+                                        <label class="sr-only" for="form-password">新密码</label>
+                                        <input type="password" name="form_password" placeholder="新密码" class="form-password form-control" id="form-password" required>
+                                    </div>
+                                    <div class="hidden">
+                                        <input name="code" value="{{code}}">
+                                    </div>
+                                    <button type="submit" class="btn">重置</button>
+                                </form>
+                                {{else}}
                                 <form role="form" value="/login" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
                                     <div class="form-group">
                                         <label class="sr-only" for="form-username">账号</label>
@@ -44,18 +60,25 @@
                                     <button type="submit" class="btn">登录</button>
                                 </form>
                                 <div class="login-area bottom">
-                                    <a href="javascript:void(0)" onclick="hideError();register()" class="btn btn-large">注册账号</a>
-                                    <a href="javascript:void(0)" onclick="hideError();forget()" class="btn btn-large forget">找回密码</a>
+                                    <a href="javascript:void(0)" onclick="hideAlert();register()" class="btn btn-large">注册账号</a>
+                                    <a href="javascript:void(0)" onclick="hideAlert();forget()" class="btn btn-large forget">找回密码</a>
                                 </div>
                                 <div class="register-area bottom hidden">
-                                    <a href="javascript:void(0)" onclick="hideError();login()" class="btn btn-large">立即登录</a>
+                                    <a href="javascript:void(0)" onclick="hideAlert();login()" class="btn btn-large">立即登录</a>
                                 </div>
                                 <div class="forget-area bottom hidden">
-                                    <a href="javascript:void(0)" onclick="hideError();login()" class="btn btn-large">立即登录</a>
+                                    <a href="javascript:void(0)" onclick="hideAlert();login()" class="btn btn-large">立即登录</a>
                                 </div>
+                                {{/if}}
                             </div>
                             {{#if error}}
-                                <div class="alert alert-danger" role="alert">{{error}}</div>
+                            <div class="alert alert-danger" role="alert">{{error}}</div>
+                            {{/if}}
+                            {{#if success}}
+                            <div class="alert alert-success" role="alert">{{success}}</div>
+                            {{/if}}
+                            {{#if info}}
+                            <div class="alert alert-info" role="alert">{{info}}</div>
                             {{/if}}
                         </div>
                     </div>
@@ -66,11 +89,11 @@
 <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.md5.js"></script>
 <script type="text/javascript">
-function hideError() {
-    $('.alert.alert-danger').addClass('hidden');
+function hideAlert() {
+    $('.alert').addClass('hidden');
 }
 function encryptPassword() {
-    hideError();
+    hideAlert();
     var f = $('#login-form');
     f[0].action = f.val() + document.location.hash;
     var p = $('#form-password')[0];
@@ -100,6 +123,7 @@ function forget() {
     $('.forget-area, .register-area').removeClass('hidden');
     $('.register-area.bottom, .login-area, .password-area').addClass('hidden');
     $('#login-form').val('/resetpassword');
+    $('.form-password').removeAttr('required');
     $('.form-email').attr('required', true);
 }
 {{#if register}}

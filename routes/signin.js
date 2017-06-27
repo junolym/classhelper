@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var qrcode = require('../controllers/qrcode-manager.js');
+var qrcode = require('../controllers/key-manager.js');
 var dao = require('../dao/dao.js');
 var helper = require('../controllers/route-helper.js');
 var str = helper.stringFormat;
