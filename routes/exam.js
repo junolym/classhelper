@@ -18,7 +18,8 @@ router.post('/create', (req, res, next) => {
         return dao.checkcourse(user, req.query.cid);
     }).then(() => {
         var examname = req.body.examname || 'untitled';
-        return examManager.createExam(req.query.cid, examname, JSON.parse(req.body.exam));
+        return examManager.createExam(req.query.cid, examname,
+          JSON.parse(req.body.exam));
     }).then(() => {
         var response = {
             reload: '#exam',
@@ -56,7 +57,8 @@ router.post('/edit', (req, res, next) => {
         return dao.checkexam(user, req.query.cid, req.query.eid);
     }).then(() => {
         var examname = req.body.examname || 'untitled';
-        return examManager.editExam(req.query.eid, examname, JSON.parse(req.body.exam));
+        return examManager.editExam(req.query.eid, examname,
+          JSON.parse(req.body.exam));
     }).then(() => {
         var response = {
             reload: '#exam',
@@ -136,8 +138,10 @@ router.get('/statistics', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((exam) => {
-        res.send(JSON.stringify(exam.statistics));
-    }).catch(helper.catchError(req, res, next, true));
+        helper.jsonOrScript(res, null, result, req.query.callback);
+    }).catch((err) => {
+        helper.jsonOrScript(res, err, null, req.query.callback);
+    });
 });
 
 router.get('/preview', (req, res, next) => {
@@ -146,7 +150,8 @@ router.get('/preview', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', { preview: true, title: "预览试卷", examname: result.examname, exam: result.questions });
+        res.render('exam', { preview: true, title: "预览试卷",
+            examname: result.examname, exam: result.questions });
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));
@@ -158,7 +163,8 @@ router.get('/showanswer', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((result) => {
-        res.render('exam', { preview: true, title: "答案", examname: result.examname, exam: result.questionsWithAnswer } );
+        res.render('exam', { preview: true, title: "答案",
+            examname: result.examname, exam: result.questionsWithAnswer } );
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));

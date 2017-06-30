@@ -1,4 +1,4 @@
-var dao = require(../dao/dao.js);
+var dao = require('../dao/dao.js');
 
 function num2char(n) {
     var c = '';
@@ -31,7 +31,7 @@ function exportall(course_id) {
     var p2 = dao.getsignbycourse(course_id).then(result => {
         for (var i = 0; i < result.length; ++i) {
             sign[result[i].sign_id] = num2char(result.length - i + 2);
-            signsheet[num2char(result.length - i + 2) + 1] = {v: result[i].time};
+            signsheet[num2char(result.length-i+2) + 1] = {v: result[i].time};
         }
         sign['length'] = result.length;
         return Promise.resolve();
@@ -46,7 +46,7 @@ function exportall(course_id) {
         return Promise.resolve();
     });
 
-    Promise.all([p1, p2, p3]).then(result => {
+    return Promise.all([p1, p2, p3]).then(result => {
         var p4 = dao.getallsignbycourse(course_id).then(result => {
             for (i in result) {
                 var t = result[i];
@@ -68,10 +68,10 @@ function exportall(course_id) {
         });
         return Promise.all([p4, p5]);
     }).then(result => {
-        signsheet['!ref'] = "A1:" + num2char(sign.length + 2) + (student.length+2);
+        signsheet['!ref'] = "A1:" + num2char(sign.length+2) + (student.length+2);
         signsheet['A1'] = {v: '学号'};
         signsheet['B1'] = {v: '姓名'};
-        examsheet['!ref'] = "A1:" + num2char(exam.length + 2) + (student.length+2);
+        examsheet['!ref'] = "A1:" + num2char(exam.length+2) + (student.length+2);
         examsheet['A1'] = {v: '学号'};
         examsheet['B1'] = {v: '姓名'};
         var workbook = {
@@ -81,5 +81,8 @@ function exportall(course_id) {
                 '测验情况' : examsheet
             }
         }
+        return Promise.resolve(workbook);
     });
 }
+
+module.exports = exportall;

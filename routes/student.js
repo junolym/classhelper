@@ -17,7 +17,8 @@ router.get('/e', (req, res, next) => {
     }
     var eid = qrcode.get(req.cookies.exam).eid;
     examManager.getExam(eid).then((result) => {
-        res.render('exam', { title: "答题页面", examname: result.examname, exam: result.questions });
+        res.render('exam', { title: "答题页面",
+            examname: result.examname, exam: result.questions });
     }).catch(helper.catchError(req, res, next, false, (err) => {
         res.redirect('/result?msg=请求试卷失败&err=' + err.message);
     }));
@@ -54,7 +55,8 @@ router.post('/s', (req, res) => {
         return res.redirect('/result?msg=签到失败&err=请正确扫描二维码');
     }
     var sign = qrcode.get(req.cookies.signin);
-    dao.studentsign(sign.cid, sign.sid, req.body.form_number, req.body.form_username)
+    dao.studentsign(sign.cid, sign.sid,
+        req.body.form_number, req.body.form_username)
     .then((result) => {
         res.clearCookie('signin');
         res.redirect('/result?msg=签到成功');

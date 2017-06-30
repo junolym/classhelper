@@ -4,6 +4,7 @@ var UserError = dao.UserError;
 module.exports = {
     checkLogin : checkLogin,
     catchError : catchError,
+    jsonOrScript: jsonOrScript,
     dateConverter : dateConverter,
     parseStu   : parseStu,
     checkArgs  : checkArgs
@@ -45,6 +46,18 @@ function catchError(req, res, next, reload, userError) {
         } else {
             next(err);
         }
+    }
+}
+
+function jsonOrScript(res, err, data, callback) {
+    var obj = {
+        success: !err,
+        data: err ? err.message : data
+    };
+    if (callback) {
+        res.send(callback + '(' + JSON.stringify(obj) + ')');
+    } else {
+        res.json(obj);
     }
 }
 

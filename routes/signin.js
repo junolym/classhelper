@@ -70,12 +70,14 @@ router.get('/deletesign', (req, res, next) => {
         return dao.delstusign(req.query.sid, req.query.stu);
     }).then(() => {
         res.status(207).send(JSON.stringify({
-            reload: '#signin/detail?cid={}&sid={}'.format(req.query.cid, req.query.sid),
+            reload: '#signin/detail?cid={}&sid={}'
+              .format(req.query.cid, req.query.sid),
             notify: ['学生签到记录已删除', 'danger']
         }));
     }).catch(helper.catchError(req, res, next, true, err => {
         res.status(207).send(JSON.stringify({
-            reload: '#signin/detail?cid={}&sid={}'.format(req.query.cid, req.query.sid),
+            reload: '#signin/detail?cid={}&sid={}'
+              .format(req.query.cid, req.query.sid),
             notify: ['删除失败', 'danger']
         }));
     }));

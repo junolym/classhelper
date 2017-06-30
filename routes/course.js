@@ -3,6 +3,7 @@ var router = express.Router();
 var dao = require('../dao/dao.js');
 var helper = require('../controllers/route-helper.js');
 var examManager = require('../controllers/exam-manager.js');
+var exportall = require('../controllers/exports.js');
 
 router.get('/create', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
@@ -12,7 +13,8 @@ router.get('/create', (req, res, next) => {
 
 router.post('/create', (req, res, next) => {
     helper.checkLogin(req).then((user) => {
-        return dao.addcourse(user, req.body.form_coursename, req.body.form_coursetime, req.body.form_courseinfo);
+        return dao.addcourse(user, req.body.form_coursename,
+          req.body.form_coursetime, req.body.form_courseinfo);
     }).then((cid) => {
         return helper.parseStu(cid, req.body.students);
     }).then((result) => {
@@ -164,5 +166,16 @@ router.get('/student', (req, res, next) => {
     }).catch(helper.catchError(req, res, next, true));
 });
 
+router.get('/exports', (req, res, next) => {
+    helper.checkLogin(req).then((user) => {
+        return dao.checkcourse(user, req.query.cid);
+    }).then(() => {
+        return exportall(req.query.cid);
+    }).then((result) => {
+        helper.jsonOrScript(res, null, result, req.query.callback);
+    }).catch((err) => {
+        helper.jsonOrScript(res, err, null, req.query.callback);
+    });
+});
 
 module.exports = router;
