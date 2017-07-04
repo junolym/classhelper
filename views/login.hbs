@@ -46,8 +46,8 @@
                                 {{else}}
                                 <form role="form" value="/login" method="post" id="login-form" class="login-form"  onsubmit="return encryptPassword()">
                                     <div class="form-group">
-                                        <label class="sr-only" for="form-username">账号</label>
-                                        <input type="text" name="form_username" placeholder="账号" class="form-username form-control" id="form-username" required>
+                                        <label class="sr-only" for="form-username">用户名</label>
+                                        <input type="text" name="form_username" placeholder="用户名" class="form-username form-control" id="form-username" required>
                                     </div>
                                     <div class="form-group password-area">
                                         <label class="sr-only" for="form-password">密码</label>
@@ -89,10 +89,20 @@
 <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.md5.js"></script>
 <script type="text/javascript">
+function showLoading() {
+    obj = 'button[type=submit]';
+    $(obj).html($(obj).html() + '中...');
+    $(obj).addClass('disabled');
+}
+function hideLoading() {
+    obj = 'button[type=submit]'
+    $(obj).removeClass('disabled');
+}
 function hideAlert() {
     $('.alert').addClass('hidden');
 }
 function encryptPassword() {
+    showLoading();
     hideAlert();
     var f = $('#login-form');
     f[0].action = f.val() + document.location.hash;
@@ -100,6 +110,7 @@ function encryptPassword() {
     p.value = $.md5('classhelper' + p.value).toUpperCase();
 }
 function register() {
+    hideLoading();
     $('#title').html('教师注册');
     $('[type=submit]').html('注册');
     $('.register-area, .password-area').removeClass('hidden');
@@ -109,15 +120,18 @@ function register() {
     $('.form-password').attr('required', true);
 }
 function login() {
+    hideLoading();
     $('#title').html('教师登录');
     $('[type=submit]').html('登录');
     $('.register-area, .forget-area').addClass('hidden');
     $('.login-area, .password-area').removeClass('hidden');
     $('#login-form').val('/login');
     $('.form-email').removeAttr('required');
+    $('.form-email').val('');
     $('.form-password').attr('required', true);
 }
 function forget() {
+    hideLoading();
     $('#title').html('找回密码');
     $('[type=submit]').html('验证');
     $('.forget-area, .register-area').removeClass('hidden');
@@ -133,4 +147,3 @@ forget();
 {{/if}}
 </script>
 </html>
-
