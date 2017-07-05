@@ -25,7 +25,7 @@ function updateCanvas(statistics) {
                 lb.push(String.fromCharCode(65+ii));
             }
         });
-        chartCvAnswer(i, lb, q.count, cbg);
+        chartCvAnswer(i, lb, q.count, cbg, q.detail);
     });
     chartCvQuestion(qs, data, bg);
 }
@@ -58,7 +58,7 @@ function chartCvQuestion(labels, data, backgroundColor) {
         }
     });
 }
-function chartCvAnswer(index, labels, data, backgroundColor) {
+function chartCvAnswer(index, labels, data, backgroundColor, details) {
     var myChart = new Chart('cv_answers_'+index, {
         type: 'pie',
         data: {
@@ -75,7 +75,32 @@ function chartCvAnswer(index, labels, data, backgroundColor) {
             },
             legend: {
                 display: false
+            },
+            onClick: function(event, obj) {
+                var d = obj[0];
+                showAnswerList(index+1, d._view.label, details[d._index]);
             }
         }
+    });
+}
+function showAnswerList(i, lb, detail) {
+    var table = $('<table class="table table-striped" id="ansList" style="width:100%"></table>').DataTable({
+        data: detail,
+        columns: [
+            { title: "学号", data: "id" },
+            { title: "姓名", data: "name" }
+        ],
+        paging: false
+    }).table();
+    bootbox.dialog({
+        title:'第 '+i+' 题选择 '+lb+' 的同学（点击列表项查看答卷）',
+        message : table.node()
+    });
+    $('#ansList tbody tr').css('cursor', 'pointer');
+    $('#ansList tbody').on('click', 'tr', function () {
+        bootbox.hideAll();
+        var data = table.row(this).data();
+        document.location.hash = document.location.hash.replace('/result', '/studentanswer')
+            + '&student=' + data.id;
     });
 }

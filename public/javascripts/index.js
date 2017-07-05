@@ -108,7 +108,7 @@ function responseHandler(res) {
           tablefilter(keyword);
         }
         window.tablefiltertext = "";
-        setDataTable();
+        typeof(setDataTable) == 'undefined' || setDataTable();
     }
 }
 

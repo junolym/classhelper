@@ -138,7 +138,7 @@ router.get('/statistics', (req, res, next) => {
     }).then(() => {
         return examManager.getExam(req.query.eid);
     }).then((exam) => {
-        helper.jsonOrScript(res, null, result, req.query.callback);
+        helper.jsonOrScript(res, null, exam.statistics, req.query.callback);
     }).catch((err) => {
         helper.jsonOrScript(res, err, null, req.query.callback);
     });

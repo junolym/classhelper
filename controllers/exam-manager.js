@@ -150,8 +150,10 @@ function initExam (exam) {
             st.questions[index].right = 0;
             st.questions[index].wrong = 0;
             st.questions[index].count = [0, 0];
+            st.questions[index].detail = [[], []];
             e.selectionSet.forEach((s, i) => {
                 st.questions[index].count[i] = 0;
+                st.questions[index].detail[i] = [];
             });
         }
     });
@@ -228,12 +230,26 @@ function resolveAnswer(exam, answer) {
                 wrong++;
                 st.questions[i].wrong++;
             }
+            // 容错
+            st.questions[i].detail = st.questions[i].detail || [];
             if (answer[i].length > 1) { // 回答是多选，每个选项是a
                 answer[i].forEach((a) => {
                     st.questions[i].count[a]++;
+                    // 容错
+                    st.questions[i].detail[a] = st.questions[i].detail[a] || [];
+                    st.questions[i].detail[a].push({
+                        id: answer.studentid,
+                        name: answer.name
+                    });
                 })
             } else {
                 st.questions[i].count[answer[i]]++;
+                // 容错
+                st.questions[i].detail[answer[i]] = st.questions[i].detail[answer[i]] || [];
+                st.questions[i].detail[answer[i]].push({
+                    id: answer.studentid,
+                    name: answer.name
+                });
             }
         }
     });
