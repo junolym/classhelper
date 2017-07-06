@@ -128,6 +128,13 @@ function warning(message) {
     });
 }
 
+function error(message) {
+    $.notify(message , {
+       type : 'danger',
+       delay : 2000
+    });
+}
+
 function loadContent(content) {
     $.get(content).complete(responseHandler);
 }
@@ -178,15 +185,3 @@ function tablefilter(keyword) {
 function setFilter(keyword) {
     window.tablefiltertext = keyword;
 }
-
-function exportall(cid, filename) {
-    var url = "/course/exports?cid=" + cid
-    $.get(url, function(workbook, status) {
-        if (workbook.success) {
-            var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
-            var wbout = XLSX.write(workbook.data, wopts);
-            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), filename+".xlsx");
-        }
-    });
-}
-

@@ -26,8 +26,10 @@ server:
     # Default: ~(null)
     socket: ~
     # Host for outer url
-    # Include the scheme (http or https), exclude the last '/'
-    # Example: https://classhelper.ml
+    # Include the scheme (http or https) and port(optinal when use default port)
+    # Exclude the last '/'
+    # Example: https://classhelper.ml or http://123.123.123.123:3000
+    # Default: http://localhost:3000
     host: https://classhelper.ml
 
 ################### Application Section ####################

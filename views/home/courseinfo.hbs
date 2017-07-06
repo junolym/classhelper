@@ -73,8 +73,10 @@
 <div class="row">
   <div class="panel panel-primary margin-20 course-student col-md-11">
     <div class="panel-heading">
-      统计数据
-      <span class="glyphicon glyphicon-download-alt" onclick="exportall({{cid}}, '{{course_name}}')"></span>
+      <a onclick="exportall({{cid}}, '{{course_name}}')" style="color:#fff;cursor:pointer">
+          统计数据
+          <span id="exportBtn" class="glyphicon glyphicon-download-alt"></span>
+      </a>
     </div>
     <table class="panel-body table data-table table-striped line-btn">
       <thead>
@@ -105,3 +107,21 @@
   <p>尚无学生统计数据，<a href="#course/edit?cid={{cid}}">点此查看名单</a></p>
 </div>
 {{/if}}
+<script type="text/javascript">
+function exportall(cid, filename) {
+    $('#exportBtn').removeClass('glyphicon glyphicon-download-alt');
+    $('#exportBtn').addClass('fa fa-spin fa-spinner');
+    var url = "/course/exports?cid=" + cid;
+    $.get(url, function(result, status) {
+        $('#exportBtn').removeClass('fa fa-spin fa-spinner');
+        $('#exportBtn').addClass('glyphicon glyphicon-download-alt');
+        if (result && result.success) {
+            var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
+            var wbout = XLSX.write(result.data, wopts);
+            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), filename+".xlsx");
+        } else {
+            error('导出失败：' + (result ? result.data : '服务器连接错误'));
+        }
+    });
+}
+</script>
