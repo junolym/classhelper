@@ -121,6 +121,13 @@ function loadMd() {
     $('#content').html(html);
 };
 
+function success(message) {
+    $.notify(message , {
+       type : 'success',
+       delay : 1000
+    });
+}
+
 function warning(message) {
     $.notify(message , {
        type : 'warning',
