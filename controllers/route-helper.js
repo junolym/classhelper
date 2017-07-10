@@ -66,7 +66,7 @@ function dateConverter(name) {
     return (obj) => {
         if (!obj[name]) return;
         var d = new Date(obj[name]);
-        obj[name] = d.getFullYear() + '年' + d.getMonth() + '月' +  d.getDate() + '日 '
+        obj[name] = d.getFullYear() + '年' + (d.getMonth()+1) + '月' +  d.getDate() + '日 '
             + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
     };
 }
