@@ -16,6 +16,7 @@
     "md5": "^2.2.1",
     "morgan": "~1.8.1",
     "mysql": "^2.14.1",
+    "nanoid": "^0.2.0",
     "nodemailer": "^4.0.1",
     "nodemailer-express-handlebars": "^2.0.0",
     "promise-mysql": "^3.0.1",

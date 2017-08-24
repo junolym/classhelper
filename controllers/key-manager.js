@@ -1,41 +1,44 @@
-KeyManager = {
-    pool : {},
-    clock : {},
-    add : (thing, config) => {
-        if (!thing) {
-            throw new Error('Invalid object to add into pool');
-        }
-        config = config || {};
-        config.maxAge = config.maxAge || 60*60*1000;
-        config.length = config.length || 4;
+const nanoid = require('nanoid');
 
-        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
-        var key;
-        var count = 0;
-        do {
-            if (++count > 1000) {
-                config.length++;
-            }
-            key = "";
-            for (var i = 0; i < config.length; i++) {
-                key += chars[Math.floor(Math.random()*chars.length)];
-            }
-        } while(KeyManager.get(key));
-
-        KeyManager.pool[key] = thing;
-        KeyManager.clock[key] = setTimeout(() => {
-            KeyManager.del(key);
-        }, config.maxAge);
-
-        return key;
-    },
-    del : (key) => {
-        delete KeyManager.pool[key];
-        clearTimeout(KeyManager.clock[key]);
-    },
-    get : (key) => {
-        return KeyManager.pool[key];
+const KeyManager = {
+  pool: {},
+  lastUsed: {},
+  maxAge: {},
+  add(thing, { maxAge = 3600, length = 4 } = {}) {
+    if (!thing) {
+      throw new Error('Invalid object to be added into pool');
     }
-}
+
+    const key = nanoid(length);
+    if (this.pool[key]) {
+      return this.add(thing, { maxAge, length: length + 1 });
+    }
+
+    this.pool[key] = thing;
+    this.lastUsed[key] = new Date();
+    this.maxAge[key] = maxAge * 1000;
+
+    return key;
+  },
+  del(key) {
+    delete this.pool[key];
+    delete this.lastUsed[key];
+    delete this.maxAge[key];
+  },
+  get(key) {
+    const obj = this.pool[key];
+    this.lastUsed[key] = new Date();
+    return obj;
+  },
+};
+
+setInterval(() => {
+  const now = new Date();
+  for (const key in KeyManager.pool) {
+    if (now - KeyManager.lastUsed[key] > KeyManager.maxAge[key]) {
+      KeyManager.del(key);
+    }
+  }
+}, 60 * 1000);
 
 module.exports = KeyManager;
