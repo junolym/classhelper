@@ -28,7 +28,11 @@ connection.end();
 // check outer url
 request(`${config.server.host}/testconnection`, (error, response, body) => {
   if (!error && body === config.var.serverHash) {
-    console.log(`Global url: ${config.server.host}`);
+    console.log(`INFO:
+      Global url checked
+      全局链接检查通过
+      ${config.server.host}
+    `);
   } else {
     console.warn(`WARNING:
       Global url check failed, outer visit will not success
