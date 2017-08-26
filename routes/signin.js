@@ -1,86 +1,78 @@
-var express = require('express');
-var router = express.Router();
-var qrcode = require('../controllers/key-manager.js');
-var dao = require('../dao/dao.js');
-var helper = require('../controllers/route-helper.js');
-var str = helper.stringFormat;
+const express = require('express');
+const qrcode = require('../controllers/key-manager.js');
+const dao = require('../dao/dao-promise.js');
+const helper = require('../controllers/route-helper.js');
 
-router.get('/create', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        return dao.checkcourse(user, req.query.cid);
-    }).then(() => {
-        return dao.addsign(req.query.cid);
-    }).then((result) => {
-        var key = qrcode.add({ cid: req.query.cid, sid: result });
-        res.redirect('/qrcode#/s?k={}'.format(key));
-    }).catch(helper.catchError(req, res, next, false, (err) => {
-        res.redirect('/result?msg=请求试卷失败&err={}'.format(err.message));
+const router = express.Router();
+
+router.get('/create', async (req, res, next) => {
+  try {
+    const {cid} = req.query;
+    const user = await helper.checkLogin(req);
+    await dao.checkCourse(user, cid);
+    const sid = await dao.addSign(cid);
+    const key = qrcode.add({cid, sid});
+    res.redirect(`/qrcode#/s?k=${key}`);
+  } catch(err) {
+    next(err);
+  }
+});
+
+router.get('/showqrcode', async (req, res, next) => {
+  try {
+    const {cid, sid} = req.query;
+    const user = await helper.checkLogin(req);
+    await dao.checkSign(user, cid, sid);
+    const key = qrcode.add({cid, sid});
+    res.redirect(`/qrcode#/s?k=${key}`);
+  } catch(err) {
+    next(err);
+  }
+});
+
+router.get('/detail', async (req, res, next) => {
+  try {
+    const {cid, sid} = req.query;
+    const user = await helper.checkLogin(req);
+    await dao.checkSign(user, cid, sid);
+    const course = await dao.getCourseById(cid);
+    const signindetail = await dao.getSignById(sid);
+    signindetail.forEach(helper.dateConverter());
+    const data = {cid, sid, ...req.session, ...course, signindetail};
+    res.render('home/signindetail', data);
+  } catch(err) {
+    next(err);
+  }
+});
+
+router.get('/delete', async (req, res, next) => {
+  try {
+    const {cid, sid} = req.query;
+    const user = await helper.checkLogin(req);
+    await dao.checkSign(user, cid, sid);
+    await dao.delSign(sid);
+    res.status(207).send(JSON.stringify({
+      reload: '#signin',
+      notify: ['本次签到已删除', 'success']
     }));
+  } catch(err) {
+    next(err);
+  }
 });
 
-router.get('/showqrcode', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        return dao.checksign(user, req.query.cid, req.query.sid);
-    }).then(() => {
-        var key = qrcode.add({ cid: req.query.cid, sid: req.query.sid });
-        res.redirect('/qrcode#/s?k={}'.format(key));
-    }).catch(helper.catchError(req, res, next, false));
-});
-
-router.get('/detail', (req, res, next) => {
-    var data = {
-        cid : req.query.cid,
-        course_name : '',
-        sid : req.query.sid
-    }
-    helper.checkLogin(req).then((user) => {
-        Object.assign(data, req.session);
-        return dao.checksign(user, req.query.cid, req.query.sid)
-    }).then(() => {
-        return dao.getcoursebyid(req.query.cid);
-    }).then((result) => {
-        result = JSON.parse(JSON.stringify(result))[0];
-        data.course_name = result.course_name;
-        return dao.getsignbyid(req.query.sid)
-    }).then((result) => {
-        result = JSON.parse(JSON.stringify(result));
-        result.forEach(helper.dateConverter());
-        data.signindetail = result;
-        res.render('home/signindetail', data);
-    }).catch(helper.catchError(req, res, next, true));
-});
-
-router.get('/delete', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        return dao.checksign(user, req.query.cid, req.query.sid)
-    }).then(() => {
-        return dao.delsign(req.query.sid);
-    }).then(() => {
-        res.status(207).send(JSON.stringify({
-            reload: '#signin',
-            notify: ['本次签到已删除', 'success']
-        }));
-    }).catch(helper.catchError(req, res, next, true));
-});
-
-router.get('/deletesign', (req, res, next) => {
-    helper.checkLogin(req).then((user) => {
-        return dao.checksign(user, req.query.cid, req.query.sid)
-    }).then(() => {
-        return dao.delstusign(req.query.sid, req.query.stu);
-    }).then(() => {
-        res.status(207).send(JSON.stringify({
-            reload: '#signin/detail?cid={}&sid={}'
-              .format(req.query.cid, req.query.sid),
-            notify: ['学生签到记录已删除', 'danger']
-        }));
-    }).catch(helper.catchError(req, res, next, true, err => {
-        res.status(207).send(JSON.stringify({
-            reload: '#signin/detail?cid={}&sid={}'
-              .format(req.query.cid, req.query.sid),
-            notify: ['删除失败', 'danger']
-        }));
+router.get('/deletesign', async (req, res, next) => {
+  try {
+    const {cid, sid, stu} = req.query;
+    const user = await helper.checkLogin(req);
+    await dao.checkSign(user, cid, sid);
+    await dao.delStudentSign(sid, stu);
+    res.status(207).send(JSON.stringify({
+      reload: `#signin/detail?cid=${cid}&sid=${sid}`,
+      notify: ['学生签到记录已删除', 'danger'],
     }));
+  } catch(err) {
+    next(err);
+  }
 });
 
 module.exports = router;
