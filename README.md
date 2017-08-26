@@ -1,4 +1,5 @@
-# classhelper 课堂助手 (Developing)
+# classhelper 课堂助手 (new version)
+Require `Node v8.0+`
 
 ## Online Version（supports Github Webhook）
 [https://classhelper.ml](https://classhelper.ml) (user&pass: test)
@@ -58,7 +59,7 @@ The server will run in background and output the error log and access log to the
 从这个教程学习 [Installing MySQL on Linux](https://dev.mysql.com/doc/refman/5.7/en/linux-installation.html)
 
 ### 配置
-编辑 `dao/dao.js` 
+编辑 `dao/dao.js`
 
 强烈建议你完整阅读配置文件，并修改其中你想要改变的设置。
 
@@ -99,4 +100,3 @@ set DEBUG=classhelper:* & npm start
 在本应用的根目录，执行 `forever -e error.log -o access.log start bin/www`.
 
 服务会在后台启动，并将错误记录和访问记录保存到文件。
-
