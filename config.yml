@@ -49,7 +49,7 @@ app:
     # Debug mode or not, error page are different
     # Valid: true, false
     # Default: false
-    debug: false
+    debug: true
     # Access log level
     # Valid: combined, common, dev, short, tiny, ~(null, means no log)
     #        or custom log format like ':method :url :response-time'

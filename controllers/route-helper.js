@@ -1,100 +1,84 @@
-var dao = require('../dao/dao.js');
-var UserError = dao.UserError;
+const dao = require('../dao/dao.js');
 
-module.exports = {
-    checkLogin : checkLogin,
-    catchError : catchError,
-    jsonOrScript: jsonOrScript,
-    dateConverter : dateConverter,
-    parseStu   : parseStu,
-    checkArgs  : checkArgs
+const UserError = dao.UserError;
+
+const checkArgs = (args) => {
+  for (const arg in args) {
+    if (!args[arg]) {
+      return Promise.reject(new UserError(`${arg}不能为空`));
+    }
+  }
+  return Promise.resolve();
 };
 
-function checkArgs(args) {
-    for (var arg in args) {
-        if (!args[arg]) {
-            return Promise.reject(new UserError(arg + '不能为空'));
-        }
-    }
-    return Promise.resolve();
-}
+const checkLogin = req => new Promise((resolve, reject) => {
+  if (req.session.user) {
+    resolve(req.session.user);
+  } else {
+    const err = new UserError('请先登录再操作');
+    err.needLogin = true;
+    reject(err);
+  }
+});
 
-function checkLogin(req, res) {
-    return new Promise((resolve, reject) => {
-        if (req.session.user) {
-            resolve(req.session.user);
-        } else {
-            var err = new UserError('请先登录再操作');
-            err.needLogin = true;
-            reject(err);
-        }
-    });
-}
-
-function catchError(req, res, next, reload, userError) {
-    return function(err) {
-        if (err.needLogin) {
-            if (reload) {
-                res.status(207).send(JSON.stringify({
-                    reload: '/login'
-                }));
-            } else {
-                res.redirect('/login?next='+encodeURIComponent(req.originalUrl));
-            }
-        } else if (err.userError && userError) {
-            userError(err);
-        } else {
-            next(err);
-        }
-    }
-}
-
-function jsonOrScript(res, err, data, callback) {
-    var obj = {
-        success: !err,
-        data: err ? err.message : data
-    };
-    if (callback) {
-        res.send(callback + '(' + JSON.stringify(obj) + ')');
+const catchError = (req, res, next, reload, userError) => (err) => {
+  if (err.needLogin) {
+    if (reload) {
+      res.status(207).send(JSON.stringify({
+        reload: '/login',
+      }));
     } else {
-        res.json(obj);
+      res.redirect(`/login?next=${encodeURIComponent(req.originalUrl)}`);
     }
-}
+  } else if (err.userError && userError) {
+    userError(err);
+  } else {
+    next(err);
+  }
+};
 
-function dateConverter(name) {
-    name = name || 'time';
-    return (obj) => {
-        if (!obj[name]) return;
-        var d = new Date(obj[name]);
-        obj[name] = d.getFullYear() + '年' + (d.getMonth()+1) + '月' +  d.getDate() + '日 '
-            + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-    };
-}
+const jsonOrScript = (res, err, data, callback) => {
+  const obj = {
+    success: !err,
+    data: err ? err.message : data,
+  };
+  if (callback) {
+    res.send(`${callback}(${JSON.stringify(obj)})`);
+  } else {
+    res.json(obj);
+  }
+};
 
-function parseStu(cid, stuJson) {
-    return new Promise((resolve, reject) => {
-        stuJson = JSON.parse(stuJson);
-        var stuMap = {};
-        var stuArray = [];
-        for (var i = 0; i < stuJson.length; i++) {
-            stuJson[i][0] = parseInt(stuJson[i][0]);
-            if (!isNaN(stuJson[i][0])
-                && stuJson[i][0].toString().length <= 15
-                && stuJson[i][1].length <= 40) {
-                stuMap[stuJson[i][0]] = stuJson[i][1];
-            }
-        }
-        for (var i in stuMap) {
-            stuArray.push([i, stuMap[i]]);
-        }
-        resolve({ cid : cid, stuArray : stuArray });
-    });
-}
+const dateConverter = (name = 'time') => (obj) => {
+  if (!obj[name]) return;
+  const d = new Date(obj[name]);
+  obj[name] = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ` +
+      `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+};
 
-String.prototype.format = function() {
-    var str = this;
-    for (var i = 0; i < arguments.length; i++) {
-        str = str.replace('{}', arguments[i]);
+const parseStu = (cid, stuJson) => new Promise((resolve, reject) => {
+  stuJson = JSON.parse(stuJson);
+  const stuMap = new Map();
+  for (let i = 0; i < stuJson.length; i++) {
+    stuJson[i][0] = parseInt(stuJson[i][0]);
+    if (!isNaN(stuJson[i][0]) &&
+        stuJson[i][0].toString().length <= 15 &&
+        stuJson[i][1].length <= 40) {
+      stuMap[stuJson[i][0]] = stuJson[i][1];
     }
-    return str;
-}
+  }
+  const stuArray = [];
+  for (const i in stuMap) {
+    stuArray.push([i, stuMap[i]]);
+  }
+  resolve({ cid, stuArray });
+});
+
+module.exports = {
+  checkLogin,
+  catchError,
+  jsonOrScript,
+  dateConverter,
+  parseStu,
+  checkArgs,
+};
